@@ -3,6 +3,7 @@
  * Separators have one meaningful field (character) plus presets.
  */
 import { App } from "obsidian";
+import { t } from "../../i18n";
 import { CustomBadge } from "../../types";
 import { BaseModal } from "./modal-shell";
 
@@ -20,11 +21,11 @@ export class SeparatorEditModal extends BaseModal {
 		this.character = (source as CustomBadge)?.property ?? "|";
 	}
 
-	getTitle(): string { return this.source ? "Edit separator" : "Add separator"; }
+	getTitle(): string { return this.source ? t("modal.separator.titleEdit") : t("modal.separator.titleAdd"); }
 	getContentClasses(): string[] { return ["rb-separator-edit-modal"]; }
 
 	renderBody(bodyEl: HTMLElement): void {
-		bodyEl.createDiv({ cls: "rb-modal-desc", text: "Choose a character to display between badge groups." });
+		bodyEl.createDiv({ cls: "rb-modal-desc", text: t("modal.separator.desc") });
 
 		const presetRow = bodyEl.createDiv({ cls: "rb-separator-presets" });
 		PRESETS.forEach((char) => {
@@ -36,16 +37,16 @@ export class SeparatorEditModal extends BaseModal {
 		});
 
 		const customRow = bodyEl.createDiv({ cls: "rb-separator-custom-row" });
-		customRow.createSpan({ text: "Custom:" });
+		customRow.createSpan({ text: t("modal.separator.custom") });
 		const customInput = customRow.createEl("input", { type: "text", value: this.character, cls: "rb-separator-input" });
 		customInput.maxLength = 4;
 		customInput.addEventListener("input", () => { this.character = customInput.value; });
 	}
 
 	renderFooter(footerEl: HTMLElement): void {
-		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: "Cancel" })
+		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: t("common.cancel") })
 			.addEventListener("click", () => this.close());
-		footerEl.createEl("button", { cls: "mod-cta", text: "Save" })
+		footerEl.createEl("button", { cls: "mod-cta", text: t("common.save") })
 			.addEventListener("click", () => {
 				this.onSave({
 					type: "separator",

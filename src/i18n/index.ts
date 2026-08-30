@@ -48,6 +48,14 @@ export function getActiveLocale(): Locale {
 }
 
 /**
+ * BCP-47 tag for the active locale, for Intl / toLocaleDateString calls so
+ * dates format in the plugin's language rather than the OS default.
+ */
+export function getLocaleTag(): string {
+	return activeLocale === "es" ? "es" : "en";
+}
+
+/**
  * Look up a translated string. `vars` fills `{name}` placeholders in the
  * template; an unmatched placeholder is left intact so missing data is
  * visible rather than silently blank.

@@ -29,12 +29,14 @@ import { NotePathSuggest } from "../components/note-path-suggest";
 import { ensureParentFolders } from "../../utils/vault-notes";
 import { BaseModal } from "./modal-shell";
 
-const FORMAT_LABELS: Record<RecipeExportFormat, string> = {
-	"plain-markdown": "Markdown (plain)",
-	"importable-markdown": "Markdown (importable)",
-	json: "JSON",
-	"json-ld": "JSON-LD",
-};
+function formatLabels(): Record<RecipeExportFormat, string> {
+	return {
+		"plain-markdown": t("set.opt.exportFormat.plainMarkdown"),
+		"importable-markdown": t("set.opt.exportFormat.importableMarkdown"),
+		json: "JSON",
+		"json-ld": "JSON-LD",
+	};
+}
 
 function isMarkdownFormat(format: RecipeExportFormat): boolean {
 	return format === "plain-markdown" || format === "importable-markdown";
@@ -70,16 +72,16 @@ export class RecipeExportModal extends BaseModal {
 		this.currentMultiplier = readRecipeMultiplier(app.metadataCache.getFileCache(file));
 	}
 
-	getTitle(): string { return "Export recipe"; }
+	getTitle(): string { return t("rview.menu.exportRecipe"); }
 	getContentClasses(): string[] { return ["rb-export-modal"]; }
 
 	renderBody(bodyEl: HTMLElement): void {
 		const opts = bodyEl.createDiv({ cls: "rb-modal-fields" });
 
 		const fmtField = opts.createDiv({ cls: "rb-modal-field" });
-		fmtField.createEl("label", { text: "Format" });
+		fmtField.createEl("label", { text: t("modal.export.format") });
 		const fmtSelect = fmtField.createEl("select", { cls: "rb-modal-select" });
-		for (const [value, label] of Object.entries(FORMAT_LABELS) as [RecipeExportFormat, string][]) {
+		for (const [value, label] of Object.entries(formatLabels()) as [RecipeExportFormat, string][]) {
 			const opt = fmtSelect.createEl("option", { value, text: label });
 			if (value === this.format) opt.selected = true;
 		}
@@ -92,7 +94,7 @@ export class RecipeExportModal extends BaseModal {
 		const cookHistoryField = opts.createDiv({ cls: "rb-modal-field rb-modal-field-row" });
 		const cookHistoryBox = cookHistoryField.createEl("input", { type: "checkbox" });
 		cookHistoryBox.checked = this.options.includeCookHistoryAndSections;
-		cookHistoryField.createEl("label", { text: "Include cook history and other sections" });
+		cookHistoryField.createEl("label", { text: t("modal.export.includeHistory") });
 		cookHistoryBox.addEventListener("change", () => {
 			this.options.includeCookHistoryAndSections = cookHistoryBox.checked;
 			void this.refreshPreview();
@@ -101,10 +103,10 @@ export class RecipeExportModal extends BaseModal {
 		const imagesField = opts.createDiv({ cls: "rb-modal-field rb-modal-field-row" });
 		const imagesBox = imagesField.createEl("input", { type: "checkbox" });
 		imagesBox.checked = this.options.includeImages;
-		imagesField.createEl("label", { text: "Include images" });
+		imagesField.createEl("label", { text: t("modal.export.includeImages") });
 		imagesField.createDiv({
 			cls: "rb-modal-field-hint",
-			text: "Image bundling isn't implemented yet, local images are omitted with a marker instead of embedded.",
+			text: t("modal.export.imagesNote"),
 		});
 		imagesBox.addEventListener("change", () => {
 			this.options.includeImages = imagesBox.checked;
@@ -135,7 +137,7 @@ export class RecipeExportModal extends BaseModal {
 		this.previewContainer = bodyEl.createDiv({ cls: "rb-export-preview-container" });
 		this.previewContainer.createEl("p", {
 			cls: "rb-modal-section-desc",
-			text: "Select all text below, then use your system's copy shortcut (Ctrl+C / ⌘C).",
+			text: t("modal.export.copyHint"),
 		});
 		this.previewEl = this.previewContainer.createEl("textarea", {
 			cls: "rb-export-preview",
@@ -152,14 +154,14 @@ export class RecipeExportModal extends BaseModal {
 	renderFooter(footerEl: HTMLElement): void {
 		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: "Cancel" })
 			.addEventListener("click", () => this.close());
-		this.primaryBtn = footerEl.createEl("button", { cls: "mod-cta", text: "Save" });
+		this.primaryBtn = footerEl.createEl("button", { cls: "mod-cta", text: t("common.save") });
 		this.primaryBtn.addEventListener("click", () => { void this.handlePrimaryAction(); });
 	}
 
 	private updatePreviewVisibility(): void {
 		this.previewContainer.toggleClass("rb-export-preview-hidden", !this.previewVisible);
 		setIcon(this.togglePreviewIconEl, this.previewVisible ? "chevron-down" : "chevron-right");
-		this.togglePreviewLabelEl.setText(this.previewVisible ? "Hide preview" : "Show preview");
+		this.togglePreviewLabelEl.setText(this.previewVisible ? t("modal.export.hidePreview") : t("modal.export.showPreview"));
 		if (this.previewVisible) void this.refreshPreview();
 	}
 
@@ -168,26 +170,26 @@ export class RecipeExportModal extends BaseModal {
 		this.pathInput = null;
 
 		if (isMarkdownFormat(this.format)) {
-			this.outputSection.createDiv({ cls: "rb-modal-section-heading", text: "Save as note" });
+			this.outputSection.createDiv({ cls: "rb-modal-section-heading", text: t("modal.export.saveAsNote") });
 			const pathField = this.outputSection.createDiv({ cls: "rb-modal-field" });
 			const defaultName = `${this.file.basename} (export)`;
 			const defaultPath = this.settings.exportFolder ? `${this.settings.exportFolder}/${defaultName}` : defaultName;
 			this.pathInput = pathField.createEl("input", {
 				cls: "rb-modal-input",
 				type: "text",
-				placeholder: "Vault-relative path, e.g. Exports/Carbonara",
+				placeholder: t("modal.export.pathPlaceholderRecipe"),
 				value: defaultPath,
 			});
 			new NotePathSuggest(this.app, this.pathInput);
 		} else {
-			this.outputSection.createDiv({ cls: "rb-modal-section-heading", text: "Download" });
+			this.outputSection.createDiv({ cls: "rb-modal-section-heading", text: t("modal.export.download") });
 			this.outputSection.createEl("p", {
 				cls: "rb-modal-section-desc",
-				text: "This format isn't vault content, saving triggers a file download instead of writing a note.",
+				text: t("modal.export.downloadNote"),
 			});
 		}
 
-		this.primaryBtn?.setText(isMarkdownFormat(this.format) ? "Save" : "Download");
+		this.primaryBtn?.setText(isMarkdownFormat(this.format) ? t("common.save") : t("modal.export.download"));
 	}
 
 	private async buildContent(): Promise<string> {
