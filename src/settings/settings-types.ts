@@ -63,6 +63,8 @@ export interface RecipeBoxSettings {
 	ingredientsHeading: string;
 	instructionsHeading: string;
 	notesHeading: string;
+	// Note listing what is in the kitchen, for the "what can I cook?" matcher.
+	pantryNotePath: string;
 	// Trailing tag on an ingredient line: the ingredient stays visible in the
 	// recipe view but is left out of automatic grocery-list additions (and
 	// export/share). Configurable so non-English vaults can use a localised
@@ -119,6 +121,9 @@ export interface RecipeBoxSettings {
 	// Frontmatter key holding the recipe source (URL / cookbook / person).
 	// "source", "url", "sourceUrl", "source_url" are always tried as fallbacks.
 	sourceProperty: string;
+	// Frontmatter key holding the recipe's ingredient-name list (array), used
+	// by the pantry matcher. "ingredientes" / "ingredients" tried as fallbacks.
+	ingredientsListProperty: string;
 	ratingProperty: string;
 	caloriesProperty: string;
 	proteinProperty: string;
