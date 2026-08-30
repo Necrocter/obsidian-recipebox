@@ -1,4 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+// category-labels -> i18n imports getLanguage() from obsidian; stub it for Node.
+vi.mock("obsidian", () => ({ getLanguage: () => "" }));
+
 import { renderGroceryLine, renderGrocerySections } from "../../src/grocery/grocery-note/render";
 import { DEFAULT_SETTINGS } from "../../src/settings/settings-defaults";
 import type { GrocerySection } from "../../src/grocery/grocery-note/parse";

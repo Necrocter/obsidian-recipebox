@@ -4,6 +4,7 @@
  */
 import { Menu } from "obsidian";
 import { t } from "../../i18n";
+import { categoryLabel } from "../../grocery/category-labels";
 import { GroceryItemEntry } from "../../types";
 import { LongPressPosition } from "./long-press";
 import { GroceryViewDeps } from "./grocery-view-deps";
@@ -35,7 +36,7 @@ export function openGroceryItemContextMenu(
 
 			for (const cat of categories) {
 				sub.addItem((catItem) => {
-					catItem.setTitle(cat).setChecked(item.categoryOverride === cat);
+					catItem.setTitle(categoryLabel(cat)).setChecked(item.categoryOverride === cat);
 					catItem.onClick(() =>
 						void deps.updateGroceryItem(item.id, { categoryOverride: cat })
 					);

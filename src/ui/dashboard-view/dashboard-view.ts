@@ -78,7 +78,7 @@ export class DashboardView extends ItemView {
 			planBtn.addEventListener("click", () => this.deps.openSuggestMealModal());
 		}
 
-		const footer = card.createEl("button", { cls: "rb-dashboard-footer-btn", text: "View/edit meal plan →" });
+		const footer = card.createEl("button", { cls: "rb-dashboard-footer-btn", text: t("dash.viewEditMealPlan") });
 		footer.addEventListener("click", () => this.deps.openMealPlanView());
 	}
 

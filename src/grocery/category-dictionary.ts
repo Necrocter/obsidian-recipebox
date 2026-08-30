@@ -1,6 +1,10 @@
 /**
  * Static keyword dictionary mapping grocery category names to lists of ingredient
  * substrings used for automatic categorisation via longest-match lookup.
+ *
+ * Keywords are bilingual (English + Spanish). Longer keywords win, so a Spanish
+ * name that also contains a shorter unrelated English substring still lands in
+ * the right place (e.g. "chipotle" -> Produce beats "chip" -> Snack).
  */
 // category name → keywords (substring match, longer keywords checked first)
 export const CATEGORY_KEYWORDS: Record<string, string[]> = {
@@ -21,18 +25,36 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
 		"papaya", "peach", "pear", "pineapple", "plum",
 		"pomegranate", "raspberry", "strawberry", "tangerine", "watermelon",
 		"vegetable", "fruit", "produce",
+		// Spanish
+		"jitomate", "tomate", "cebolla", "cebollín", "ajo", "chile", "chiles", "chipotle",
+		"serrano", "poblano", "habanero", "morrón", "pimiento", "aguacate",
+		"papa", "patata", "zanahoria", "lechuga", "espinaca", "acelga",
+		"brócoli", "coliflor", "calabacita", "calabaza", "elote", "maíz",
+		"pepino", "nopal", "ejote", "chícharo", "champiñón", "hongo", "seta",
+		"betabel", "rábano", "apio", "poro", "jengibre", "limón", "manzana",
+		"plátano", "fresa", "frambuesa", "piña", "mango", "naranja", "toronja",
+		"mandarina", "uva", "sandía", "melón", "durazno", "pera", "guayaba",
+		"ciruela", "granada", "kiwi", "verdura", "fruta", "tomatillo",
 	],
 	Herb: [
 		"basil", "bay leaf", "chervil", "chive", "cilantro",
 		"coriander", "dill", "lavender", "lemon balm", "lemongrass",
 		"marjoram", "mint", "oregano", "parsley", "rosemary",
 		"sage", "tarragon", "thyme", "herb",
+		// Spanish
+		"hierbabuena", "yerbabuena", "perejil", "menta", "albahaca",
+		"epazote", "hoja santa", "laurel", "romero", "tomillo",
+		"orégano", "eneldo", "hierba", "cilantro fresco",
 	],
 	Bread: [
 		"sourdough", "whole wheat bread", "whole grain bread",
 		"baguette", "brioche", "ciabatta", "focaccia", "pita",
 		"rye bread", "tortilla", "wrap", "bread", "roll", "bun",
 		"naan", "english muffin", "bagel", "crouton",
+		// Spanish
+		"tortilla de maíz", "tortilla de harina", "tortilla", "tostada",
+		"bolillo", "telera", "pan de caja", "pan blanco", "pan integral",
+		"pan dulce", "pan", "baguette", "concha",
 	],
 	Meat: [
 		"ground beef", "ground pork", "ground turkey", "ground chicken",
@@ -45,6 +67,13 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
 		"skirt steak", "short rib", "rack of lamb", "leg of lamb",
 		"lamb chop", "veal", "venison", "duck", "goose",
 		"chicken", "turkey", "pork", "beef", "lamb", "meat",
+		// Spanish
+		"carne molida", "carne de res", "carne para", "carne", "res",
+		"bistec", "milanesa", "arrachera", "falda", "aguja", "diezmillo",
+		"pierna", "pechuga", "muslo", "ala de pollo", "pollo entero", "pollo",
+		"puerco", "cerdo", "lomo", "costilla", "chuleta", "tocino", "jamón",
+		"chorizo", "longaniza", "salchicha", "salchichón", "pavo", "cordero",
+		"chicharrón",
 	],
 	Seafood: [
 		"salmon fillet", "tuna steak", "cod fillet",
@@ -54,6 +83,12 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
 		"trout", "bass", "catfish", "mahi", "swordfish",
 		"snapper", "flounder", "haddock", "sardine", "anchovy",
 		"mackerel", "herring", "fish", "seafood",
+		// Spanish
+		"pescado", "filete de pescado", "camarón", "camarones", "gamba",
+		"atún", "salmón", "mojarra", "tilapia", "róbalo", "huachinango",
+		"bacalao", "trucha", "sardina", "anchoa", "pulpo", "calamar",
+		"almeja", "mejillón", "ostión", "jaiba", "cangrejo", "langosta",
+		"marisco", "mariscos",
 	],
 	Dairy: [
 		"whole milk", "skim milk", "2% milk", "almond milk",
@@ -61,6 +96,11 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
 		"heavy whipping cream", "whipping cream", "half and half",
 		"sour cream", "cream cheese", "whipped cream",
 		"milk", "cream", "butter", "yogurt", "kefir",
+		// Spanish (queso -> Cheese below; crema/leche/mantequilla here)
+		"leche entera", "leche descremada", "leche evaporada", "leche condensada",
+		"media crema", "crema para batir", "crema ácida", "crema de leche",
+		"crema", "leche", "mantequilla", "yogur", "yogurt natural",
+		"jocoque", "nata",
 	],
 	Cheese: [
 		"parmesan", "parmigiano", "mozzarella", "cheddar",
@@ -70,8 +110,12 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
 		"provolone", "havarti", "goat cheese", "blue cheese",
 		"gorgonzola", "manchego", "colby", "american cheese",
 		"cheese",
+		// Spanish
+		"queso panela", "queso fresco", "queso oaxaca", "queso cotija",
+		"queso manchego", "queso crema", "queso de cabra", "requesón",
+		"queso", "panela",
 	],
-	Egg: ["egg"],
+	Egg: ["egg", "huevo", "huevos"],
 	Pasta: [
 		"spaghetti", "linguine", "fettuccine", "pappardelle",
 		"tagliatelle", "angel hair", "bucatini", "rigatoni",
@@ -79,6 +123,9 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
 		"orzo", "orecchiette", "cavatappi", "elbow macaroni",
 		"lasagna", "ravioli", "tortellini", "gnocchi", "pasta",
 		"noodle", "ramen", "udon", "soba",
+		// Spanish
+		"espagueti", "fideo", "fideos", "coditos", "moño", "sopa de pasta",
+		"macarrón", "tallarín", "lasaña", "ñoquis",
 	],
 	Grain: [
 		"long grain rice", "short grain rice", "brown rice",
@@ -87,6 +134,10 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
 		"barley", "bulgur", "couscous", "millet", "polenta",
 		"cornmeal", "grits", "wheat berry", "spelt",
 		"rice", "oat", "grain", "flour",
+		// Spanish
+		"arroz", "avena", "quinoa", "amaranto", "trigo", "cebada",
+		"harina de maíz", "harina de trigo", "harina", "masa de maíz",
+		"masa", "sémola", "cuscús", "salvado", "grano",
 	],
 	Canned: [
 		"canned tomato", "crushed tomato", "diced tomato",
@@ -94,11 +145,19 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
 		"canned chickpea", "canned lentil", "canned corn",
 		"canned pumpkin", "canned coconut", "canned tuna",
 		"canned salmon", "canned sardine", "canned", "tinned",
+		// Spanish
+		"chiles en lata", "chile en escabeche", "chiles enteros",
+		"jitomate en lata", "puré de tomate", "frijoles refritos de lata",
+		"frijoles de lata", "elote en lata", "atún en lata", "media crema en lata",
+		"enlatado", "en lata",
 	],
 	Broth: [
 		"chicken stock", "beef stock", "vegetable stock",
 		"chicken broth", "beef broth", "vegetable broth",
 		"bone broth", "dashi", "stock", "broth", "bouillon",
+		// Spanish
+		"caldo de pollo", "caldo de res", "caldo de verduras", "caldo de pescado",
+		"caldo", "consomé", "fondo de", "sustancia",
 	],
 	Sauce: [
 		"tomato sauce", "marinara", "alfredo", "pesto",
@@ -107,17 +166,29 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
 		"buffalo sauce", "bbq sauce", "barbecue sauce",
 		"tahini", "hummus", "salsa", "pasta sauce",
 		"enchilada sauce", "curry sauce", "sauce",
+		// Spanish
+		"salsa verde", "salsa roja", "salsa de tomate", "salsa inglesa",
+		"salsa de soya", "salsa bbq", "salsa picante", "mole", "adobo",
+		"recado", "chile en adobo", "chiles en adobo", "pasta de tamarindo",
 	],
 	Condiment: [
 		"mayonnaise", "mustard", "ketchup", "relish",
 		"pickle", "vinegar", "lemon juice", "lime juice",
 		"ranch dressing", "caesar dressing", "italian dressing",
 		"balsamic", "aioli", "guacamole", "dressing", "condiment",
+		// Spanish
+		"mayonesa", "mostaza", "catsup", "cátsup", "vinagre", "jugo de limón",
+		"aderezo", "chamoy", "salsa valentina", "salsa huichol", "pepinillo",
+		"chile en polvo tajín", "tajín",
 	],
 	Oil: [
 		"olive oil", "vegetable oil", "canola oil", "coconut oil",
 		"avocado oil", "sesame oil", "sunflower oil", "grapeseed oil",
 		"peanut oil", "cooking spray", "oil", "lard", "ghee", "shortening",
+		// Spanish
+		"aceite de oliva", "aceite vegetal", "aceite de coco", "aceite de canola",
+		"aceite de girasol", "aceite", "manteca de cerdo", "manteca vegetal",
+		"manteca",
 	],
 	Seasoning: [
 		"black pepper", "white pepper", "cayenne pepper", "red pepper flake",
@@ -129,6 +200,13 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
 		"star anise", "bay leaf dried", "curry powder", "garam masala",
 		"five spice", "za'atar", "sumac", "seasoning", "spice", "salt",
 		"pepper",
+		// Spanish
+		"sal de mar", "sal", "pimienta negra", "pimienta", "comino",
+		"canela", "clavo de olor", "pimentón", "chile en polvo", "chile de árbol seco",
+		"chile ancho", "chile guajillo", "chile pasilla", "achiote",
+		"ajo en polvo", "cebolla en polvo", "consomé en polvo", "caldo en polvo",
+		"knorr", "sazonador", "especia", "hierbas de olor", "nuez moscada",
+		"laurel seco", "orégano seco",
 	],
 	Baking: [
 		"all-purpose flour", "bread flour", "cake flour", "self-rising flour",
@@ -139,6 +217,13 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
 		"brown sugar", "powdered sugar", "granulated sugar",
 		"honey", "maple syrup", "molasses", "agave",
 		"yeast", "sugar", "chocolate", "cocoa",
+		// Spanish
+		"azúcar mascabado", "azúcar glas", "azúcar de coco", "azúcar",
+		"polvo para hornear", "bicarbonato", "levadura", "vainilla",
+		"esencia de vainilla", "cocoa en polvo", "chocolate de mesa",
+		"chocolate amargo", "chispas de chocolate", "miel", "piloncillo",
+		"jarabe de maple", "leche condensada azucarada", "gelatina sin sabor",
+		"fécula de maíz", "maicena",
 	],
 	"Nuts & Seeds": [
 		"almond", "cashew", "pecan", "walnut", "pistachio",
@@ -148,30 +233,55 @@ export const CATEGORY_KEYWORDS: Record<string, string[]> = {
 		"raisin", "dried cranberry", "dried apricot", "dried mango",
 		"dried fig", "medjool date", "coconut flake", "shredded coconut",
 		"peanut butter", "almond butter", "tahini",
+		// Spanish
+		"crema de cacahuate", "crema de almendra", "crema de avellana",
+		"almendra", "nuez de la india", "nuez", "cacahuate", "pistache",
+		"avellana", "semilla de girasol", "pepita de calabaza", "pepitas",
+		"linaza", "chía", "ajonjolí", "amaranto tostado", "pasas",
+		"dátil", "arándano deshidratado", "coco rallado",
 	],
 	Snack: [
 		"tortilla chip", "potato chip", "popcorn", "granola bar",
 		"protein bar", "rice cake", "cracker", "pretzel snack", "chip",
+		// Spanish
+		"totopos", "totopo", "papas fritas", "papitas", "palomitas",
+		"galleta", "galletas", "botana", "fritura", "cacahuates japoneses",
+		"barrita de granola", "churritos",
 	],
 	Frozen: [
 		"frozen vegetable", "frozen fruit", "frozen pizza",
 		"frozen meal", "ice cream", "frozen", "gelato", "sorbet",
+		// Spanish
+		"verduras congeladas", "fruta congelada", "congelado", "congelada",
+		"helado", "nieve", "paleta helada",
 	],
 	Beverage: [
 		"orange juice", "apple juice", "lemonade", "iced tea",
 		"coffee", "tea", "espresso", "sparkling water",
 		"mineral water", "coconut water", "kombucha", "juice",
 		"water", "beverage", "drink",
+		// Spanish
+		"jugo de naranja", "jugo", "agua mineral", "agua natural", "agua",
+		"refresco", "café", "té", "horchata", "agua de jamaica",
+		"agua de horchata", "bebida",
 	],
 	Alcohol: [
 		"red wine", "white wine", "rosé wine", "sparkling wine",
 		"champagne", "prosecco", "beer", "ale", "lager",
 		"vodka", "gin", "rum", "tequila", "whiskey", "whisky",
 		"bourbon", "brandy", "vermouth", "liqueur", "wine", "alcohol",
+		// Spanish
+		"vino tinto", "vino blanco", "vino", "cerveza", "mezcal", "ron",
+		"aguardiente", "licor", "brandy de", "jerez",
 	],
 	Household: [
 		"aluminum foil", "plastic wrap", "parchment paper",
 		"wax paper", "paper towel", "zip lock", "storage bag",
 		"dish soap", "sponge", "household",
+		// Spanish
+		"papel aluminio", "papel encerado", "papel para hornear",
+		"plástico adherente", "bolsa de plástico", "bolsa ziploc",
+		"servilleta", "servilletas", "jabón para trastes", "fibra",
+		"esponja",
 	],
 };
