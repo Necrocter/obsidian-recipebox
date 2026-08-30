@@ -6,6 +6,7 @@
  * frontmatter image still resolve one from the note body.
  */
 import { App, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { renderGalleryCard, GalleryCardHandle, GalleryCardActions } from "../gallery-view/gallery-card";
 import { runLazyImagePass, getFrontmatterImageSrc } from "../gallery-view/gallery-image";
@@ -24,7 +25,7 @@ export function renderNewRecipesStrip(
 	isCancelled: () => boolean,
 ): void {
 	const card = container.createDiv({ cls: "rb-dashboard-card rb-dashboard-new-recipes rb-dashboard-span-8" });
-	card.createDiv({ cls: "rb-dashboard-card-label", text: "New recipes" });
+	card.createDiv({ cls: "rb-dashboard-card-label", text: t("dash.newRecipes") });
 
 	const newest = [...files].sort((a, b) => b.stat.ctime - a.stat.ctime).slice(0, STRIP_RECIPE_LIMIT);
 
@@ -50,6 +51,6 @@ export function renderNewRecipesStrip(
 		);
 	}
 
-	const footer = card.createEl("button", { cls: "rb-dashboard-footer-btn", text: "Browse all recipes →" });
+	const footer = card.createEl("button", { cls: "rb-dashboard-footer-btn", text: t("dash.browseAll") });
 	footer.addEventListener("click", () => openGalleryView());
 }
