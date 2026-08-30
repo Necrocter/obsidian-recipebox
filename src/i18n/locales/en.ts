@@ -772,6 +772,20 @@ export const en = {
 	"modal.groceryExport.includeChecked": "Include checked items",
 	"modal.groceryExport.appendToNote": "Append to note",
 	"modal.groceryExport.pathPlaceholder": "Vault-relative path, e.g. Notes/Grocery Export",
+
+	// ── Misc ─────────────────────────────────────────────────────────
+	"misc.recipeMode": "Recipe mode",
+	"misc.openAsRecipe": "Open as recipe",
+	"misc.fieldPlaceholder": "-- field --",
+	"info.neverMade": "Never made",
+	"info.lastMadeDaysAgo": "Last made {days}d ago",
+	"info.favorited": "Favorited",
+	"info.madeNx": "Made {n}x",
+	"info.prepToken": "Prep {value}",
+	"info.cookToken": "Cook {value}",
+	"cookHistory.empty": "No cook history yet. Use \"Mark as cooked\" to add your first entry.",
+	"cookHistory.deleteTitle": "Delete entry?",
+	"cookHistory.deleteBody": "Remove the {date} cook history entry. This cannot be undone.",
 } as const;
 
 export type TranslationKey = keyof typeof en;

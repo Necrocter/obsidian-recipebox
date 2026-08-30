@@ -1,4 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+// result-info-line -> i18n -> obsidian's getLanguage(). Node can't resolve the
+// real "obsidian" module in tests, so stub the one symbol i18n touches.
+vi.mock("obsidian", () => ({ getLanguage: () => "en" }));
+
 import { buildInfoTokens } from "../../src/suggester/result-info-line";
 import { DEFAULT_SETTINGS } from "../../src/settings/settings-defaults";
 import { localDateISO } from "../../src/utils/date";

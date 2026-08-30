@@ -2,6 +2,7 @@
  * Injects an "Open as recipe" action button into the Markdown view toolbar
  * whenever the active file qualifies as a recipe, and removes it otherwise.
  */
+import { t } from "../i18n";
 import { MarkdownView, Plugin, TFile, WorkspaceLeaf } from "obsidian";
 import { RecipeBoxSettings } from "../settings/settings-types";
 import { isRecipeFile } from "./recipe-file-detection";
@@ -18,7 +19,7 @@ function injectButton(
 	view: MarkdownView,
 	onClick: () => void
 ): void {
-	const btn = view.addAction("chef-hat", "Open as recipe", onClick);
+	const btn = view.addAction("chef-hat", t("misc.openAsRecipe"), onClick);
 	btn.setAttribute(BUTTON_ATTR, "");
 
 	// Move button before the last existing action icon so it doesn't trail pinned icons
