@@ -6,6 +6,7 @@ import { MealPlanEntry } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { slugifyMealType } from "../../utils/text-case";
 import { canonicalDay, dayLabel } from "../../i18n";
+import { noteTitleFromPath, isH1Line } from "../../utils/note-title";
 import { MealPlanSection } from "./parse";
 
 const WEEKDAY_ORDER = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
@@ -58,6 +59,13 @@ export function insertMealPlanEntryIntoText(noteText: string, entry: MealPlanEnt
 	});
 
 	if (headingIdx >= 0) {
+		// Heal a section heading left in another language (or the canonical
+		// English key) by an older write, so the note does not end up with a
+		// mix of "## Monday" and "## Lunes".
+		if (!isQueueLabel(targetHeader)) {
+			const desired = `## ${dayLabel(targetHeader)}`;
+			if (lines[headingIdx].trim() !== desired) lines[headingIdx] = desired;
+		}
 		let endIdx = lines.length;
 		for (let i = headingIdx + 1; i < lines.length; i++) {
 			if (lines[i].startsWith("## ")) { endIdx = i; break; }
@@ -102,11 +110,14 @@ export function writeMealPlanNote(
 	const existingDays = new Set(sections.map((s) => s.header ?? "Meal Plan Queue"));
 	const allDays = [...new Set([...byDay.keys(), ...existingDays])].sort((a, b) => dayRank(a) - dayRank(b));
 
-	const lines: string[] = ["# Meal Plan", ""];
+	// H1 follows the note's own filename ("Plan de comida.md" -> "# Plan de
+	// comida") rather than a hardcoded English title.
+	const lines: string[] = [`# ${noteTitleFromPath(settings.mealPlanPath)}`, ""];
 	for (const day of allDays) {
 		const dayEntries = byDay.get(day) ?? [];
 		const oldSection = sections.find((s) => (s.header ?? "Meal Plan Queue") === day);
-		const preserved = oldSection?.lines.filter((l) => l.kind === "raw" && l.raw.trim()) ?? [];
+		// Drop the old H1 from preserved body lines -- it is re-emitted above.
+		const preserved = oldSection?.lines.filter((l) => l.kind === "raw" && l.raw.trim() && !isH1Line(l.raw)) ?? [];
 
 		if (dayEntries.length === 0 && preserved.length === 0) continue;
 
