@@ -772,4 +772,18 @@ export const es: Record<TranslationKey, string> = {
 	"modal.groceryExport.includeChecked": "Incluir los artículos marcados",
 	"modal.groceryExport.appendToNote": "Añadir a una nota",
 	"modal.groceryExport.pathPlaceholder": "Ruta relativa al almacén, p. ej. Notas/Exportación de la compra",
+
+	// ── Varios ───────────────────────────────────────────────────────
+	"misc.recipeMode": "Modo receta",
+	"misc.openAsRecipe": "Abrir como receta",
+	"misc.fieldPlaceholder": "-- campo --",
+	"info.neverMade": "Nunca preparada",
+	"info.lastMadeDaysAgo": "Última preparación hace {days} d",
+	"info.favorited": "Favorita",
+	"info.madeNx": "Hecha {n} veces",
+	"info.prepToken": "Prep. {value}",
+	"info.cookToken": "Cocción {value}",
+	"cookHistory.empty": "Aún no hay historial de preparaciones. Usa \"Marcar como cocinada\" para añadir tu primera entrada.",
+	"cookHistory.deleteTitle": "¿Eliminar la entrada?",
+	"cookHistory.deleteBody": "Se eliminará la entrada del historial del {date}. No se puede deshacer.",
 };
