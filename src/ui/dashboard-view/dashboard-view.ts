@@ -62,7 +62,7 @@ export class DashboardView extends ItemView {
 
 	private renderMealPlanCard(grid: HTMLElement, settings: RecipeBoxSettings): void {
 		const card = grid.createDiv({ cls: "rb-dashboard-card rb-dashboard-span-12" });
-		card.createDiv({ cls: "rb-dashboard-card-label", text: "Meal plan this week" });
+		card.createDiv({ cls: "rb-dashboard-card-label", text: t("dash.mealPlanThisWeek") });
 
 		const mealPlan = this.deps.getMealPlan();
 		renderMealPlanMiniGrid(card, this.app, mealPlan, settings, {
@@ -73,8 +73,8 @@ export class DashboardView extends ItemView {
 
 		if (mealPlan.length === 0) {
 			const empty = card.createDiv({ cls: "rb-dashboard-empty-cta" });
-			empty.createSpan({ cls: "rb-dashboard-empty-text", text: "Your meal plan is empty." });
-			const planBtn = empty.createEl("button", { cls: "rb-dashboard-empty-cta-btn", text: "Plan a meal" });
+			empty.createSpan({ cls: "rb-dashboard-empty-text", text: t("dash.mealPlanEmpty") });
+			const planBtn = empty.createEl("button", { cls: "rb-dashboard-empty-cta-btn", text: t("dash.planAMeal") });
 			planBtn.addEventListener("click", () => this.deps.openSuggestMealModal());
 		}
 
@@ -84,7 +84,7 @@ export class DashboardView extends ItemView {
 
 	private renderEmptyVaultCard(grid: HTMLElement): void {
 		const card = grid.createDiv({ cls: "rb-dashboard-card rb-dashboard-span-8 rb-dashboard-empty-vault-cta" });
-		const btn = card.createEl("button", { cls: "rb-dashboard-empty-cta-btn", text: "Add your first recipe" });
+		const btn = card.createEl("button", { cls: "rb-dashboard-empty-cta-btn", text: t("dash.addFirstRecipe") });
 		btn.addEventListener("click", () => this.deps.openImportModal());
 	}
 

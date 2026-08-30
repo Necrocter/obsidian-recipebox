@@ -474,7 +474,7 @@ export async function renderMobileLayout(
 
 	// 4th tab: cook history (icon-only to keep tab bar compact)
 	if (settings.cookHistoryEnabled) {
-		const tabHistory = tabBar.createEl("button", { cls: "rb-tab-btn rb-tab-btn--icon", attr: { "aria-label": "Cook history" } });
+		const tabHistory = tabBar.createEl("button", { cls: "rb-tab-btn rb-tab-btn--icon", attr: { "aria-label": t("rview.menu.cookHistory") } });
 		setIcon(tabHistory, "clock");
 		const panelHistory = panelsWrapper.createDiv({ cls: "rb-tab-panel" });
 		_panels.push(panelHistory);

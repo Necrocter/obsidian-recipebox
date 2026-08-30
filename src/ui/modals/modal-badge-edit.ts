@@ -112,9 +112,9 @@ export class BadgeEditModal extends BaseModal {
 	}
 
 	private rebuildButtons(footer: HTMLElement): void {
-		footer.createEl("button", { cls: "rb-shell-cancel-btn", text: "Cancel" })
+		footer.createEl("button", { cls: "rb-shell-cancel-btn", text: t("common.cancel") })
 			.addEventListener("click", () => this.close());
-		footer.createEl("button", { cls: "mod-cta", text: "Save" })
+		footer.createEl("button", { cls: "mod-cta", text: t("common.save") })
 			.addEventListener("click", () => {
 				this.onSave({ ...this.draft });
 				this.close();

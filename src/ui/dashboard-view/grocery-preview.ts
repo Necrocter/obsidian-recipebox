@@ -41,6 +41,6 @@ export function renderGroceryPreview(
 		if (remaining > 0) list.createDiv({ cls: "rb-dashboard-grocery-more", text: `+${remaining} more` });
 	}
 
-	const footer = card.createEl("button", { cls: "rb-dashboard-footer-btn", text: "View grocery list →" });
+	const footer = card.createEl("button", { cls: "rb-dashboard-footer-btn", text: t("dash.viewGroceryList") });
 	footer.addEventListener("click", () => actions.openGroceryView());
 }
