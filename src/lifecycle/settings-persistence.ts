@@ -238,6 +238,7 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 		ingredientsHeading: str(r.ingredientsHeading, d.ingredientsHeading),
 		instructionsHeading: str(r.instructionsHeading, d.instructionsHeading),
 		notesHeading: str(r.notesHeading, d.notesHeading),
+		pantryNotePath: str(r.pantryNotePath, d.pantryNotePath),
 		ignoreIngredientTag: str(r.ignoreIngredientTag, d.ignoreIngredientTag),
 
 		groupingMode: oneOf<GroupingMode>(r.groupingMode, ["category", "recipe", "source", "none"], d.groupingMode),
@@ -280,6 +281,7 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 
 		imageProperty: str(r.imageProperty, d.imageProperty),
 		sourceProperty: str(r.sourceProperty, d.sourceProperty),
+		ingredientsListProperty: str(r.ingredientsListProperty, d.ingredientsListProperty),
 		ratingProperty: str(r.ratingProperty, d.ratingProperty),
 		caloriesProperty: str(r.caloriesProperty, d.caloriesProperty),
 		proteinProperty: str(r.proteinProperty, d.proteinProperty),

@@ -12,6 +12,7 @@ export interface QuickActionsActions {
 	openImportModal: () => void;
 	openAddGroceryItemModal: () => void;
 	openSuggestMealModal: () => void;
+	openPantryMatchModal: () => void;
 	searchRecipes: (query: string) => void;
 }
 
@@ -46,4 +47,5 @@ export function renderQuickActions(container: HTMLElement, actions: QuickActions
 	renderActionButton(buttons, "plus", t("dash.qa.addRecipe"), actions.openImportModal);
 	renderActionButton(buttons, "shopping-cart", t("dash.qa.addGrocery"), actions.openAddGroceryItemModal);
 	renderActionButton(buttons, "wand-sparkles", t("mpv.suggestMeal"), actions.openSuggestMealModal);
+	renderActionButton(buttons, "chef-hat", t("dash.qa.pantryMatch"), actions.openPantryMatchModal);
 }

@@ -1,3 +1,18 @@
+## 0.1.13-es.1 — Necrocter/obsidian-recipebox fork
+
+### Features
+
+* **pantry:** "¿Qué puedo cocinar?" — a new command and dashboard button that
+  reads a **pantry note** (`pantryNotePath`, default `Despensa.md`; one
+  ingredient per list item) and groups every recipe by how many of its
+  `ingredientes` frontmatter entries you're missing: **Listas para cocinar** /
+  **Te falta 1** / **Te faltan 2-3**. Click a recipe to open it, or `+` to
+  push its missing items to the grocery list. Favourites sort first, then the
+  simplest recipes. New settings: pantry note path (Notes section) and the
+  ingredient-list frontmatter key (`ingredientsListProperty`, Property names).
+
+---
+
 ## 0.1.12-es.2 — Necrocter/obsidian-recipebox fork
 
 ### Features

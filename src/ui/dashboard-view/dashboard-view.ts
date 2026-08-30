@@ -106,6 +106,7 @@ export class DashboardView extends ItemView {
 			openImportModal: this.deps.openImportModal,
 			openAddGroceryItemModal: this.deps.openAddGroceryItemModal,
 			openSuggestMealModal: this.deps.openSuggestMealModal,
+			openPantryMatchModal: this.deps.openPantryMatchModal,
 			searchRecipes: this.deps.searchRecipes,
 		});
 

@@ -28,6 +28,7 @@ export const es: Record<TranslationKey, string> = {
 	"command.shareThisRecipe": "Compartir esta receta",
 	"command.suggestMeal": "Sugerir una comida",
 	"command.openDashboard": "Abrir el panel de recetas",
+	"command.pantryMatch": "¿Qué puedo cocinar?",
 
 	// ── Avisos (mensajes temporales) ──────────────────────────────────────
 	"notice.mealPlanCleared.one": "Se ha borrado 1 entrada del plan de comidas.",
@@ -200,6 +201,8 @@ export const es: Record<TranslationKey, string> = {
 	"set.notes.instructionsHeading.desc": "Encabezado que marca la sección de instrucciones en una nota de receta.",
 	"set.notes.notesHeading.name": "Encabezado de notas",
 	"set.notes.notesHeading.desc": "Encabezado que marca la sección opcional de notas en una nota de receta.",
+	"set.notes.pantryPath.name": "Ruta de la nota de despensa",
+	"set.notes.pantryPath.desc": "Nota con lo que tienes en la cocina, un ingrediente por elemento de lista. La usa \"¿Qué puedo cocinar?\".",
 	"set.notes.ignoreTag.name": "Etiqueta para ignorar ingredientes",
 	"set.notes.ignoreTag.desc": "Etiqueta al final de una línea de ingrediente. El ingrediente se sigue mostrando en la receta, pero no se añade automáticamente a la lista de la compra. La etiqueta integrada \"ignore-ingredient\" también se reconoce siempre.",
 
@@ -350,6 +353,8 @@ export const es: Record<TranslationKey, string> = {
 	"set.pn.recipeType.placeholder": "Tipo",
 	"set.pn.rating.name": "Valoración de la receta",
 	"set.pn.rating.desc": "Nombre de la propiedad donde se guarda la valoración con estrellas (1-5).",
+	"set.pn.ingredientsList.name": "Lista de ingredientes",
+	"set.pn.ingredientsList.desc": "Array de frontmatter con los nombres de los ingredientes de la receta; se compara con la nota de despensa. \"ingredientes\" / \"ingredients\" se prueban como alternativas.",
 	"set.pn.image.name": "Imagen de la receta",
 	"set.pn.image.desc": "Nombre de la propiedad que se usa para la imagen principal de la receta.",
 	"set.pn.source.name": "Origen de la receta",
@@ -450,6 +455,7 @@ export const es: Record<TranslationKey, string> = {
 	"dash.greeting.evening": "Buenas noches",
 	"dash.qa.addRecipe": "Añadir receta",
 	"dash.qa.addGrocery": "Añadir artículo a la compra",
+	"dash.qa.pantryMatch": "¿Qué puedo cocinar?",
 	"dash.newRecipes": "Recetas nuevas",
 	"dash.browseAll": "Ver todas las recetas →",
 	"dash.groceryList": "Lista de la compra",
@@ -672,6 +678,22 @@ export const es: Record<TranslationKey, string> = {
 
 	"modal.mpEntryMenu.viewInMealPlan": "Ver en el plan de comidas",
 	"modal.mpEntryMenu.changeDayMeal": "Cambiar día / tipo de comida",
+
+	// ── Buscador según la despensa ─────────────────────────────────
+	"modal.pantry.title": "¿Qué puedo cocinar?",
+	"modal.pantry.editPantry": "Editar despensa",
+	"modal.pantry.createNote": "Crear nota de despensa",
+	"modal.pantry.noNote": "Todavía no hay una nota de despensa en \"{path}\". Créala y anota lo que tienes, un ingrediente por línea.",
+	"modal.pantry.summary": "{count} ingredientes en {path}.",
+	"modal.pantry.emptyPantry": "Tu nota de despensa está vacía. Añade ingredientes, uno por elemento de lista.",
+	"modal.pantry.bucket.ready": "Listas para cocinar",
+	"modal.pantry.bucket.readyEmpty": "Aún no hay nada que coincida con tu despensa.",
+	"modal.pantry.bucket.missing1": "Te falta 1",
+	"modal.pantry.bucket.missing1Empty": "Ninguna receta está a un ingrediente de distancia.",
+	"modal.pantry.bucket.missing23": "Te faltan 2-3",
+	"modal.pantry.bucket.missing23Empty": "Ninguna receta está a dos o tres ingredientes de distancia.",
+	"modal.pantry.noListNote": "{count} recetas omitidas: no tienen una lista \"{prop}\" en su frontmatter.",
+	"modal.pantry.addMissing": "Añadir lo que falta a la lista de la compra",
 
 	// ── Editor de modos del sugeridor + operadores de filtro ─────────
 	"modal.strategy.name": "Nombre",
