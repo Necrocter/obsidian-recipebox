@@ -1,3 +1,13 @@
+## 0.2.1 -- Necrocter/obsidian-recipebox fork
+
+### Bug Fixes
+
+* **pantry:** an auto-created pantry note now takes its `# heading` from the
+  note's own filename (`Despensa.md` -> `# Despensa`) instead of a hardcoded
+  `# Pantry`. Cosmetic -- the matcher ignores headings.
+
+---
+
 ## 0.2.0 -- Necrocter/obsidian-recipebox fork
 
 Version scheme switched to plain semver (no `-es` prerelease suffix) so BRAT
