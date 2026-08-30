@@ -285,6 +285,10 @@ export const en = {
 	"set.shop.overrides.name": "Category overrides",
 	"set.shop.overrides.desc": "Map ingredient substrings to specific categories.",
 	"set.shop.overrides.button": "Edit overrides…",
+	"set.gd.title": "Grocery list display",
+	"set.gd.groupingMode": "Grouping mode",
+	"set.gd.reorderHint": "Drag or use buttons to reorder.",
+	"set.gd.addOverride": "+ add override",
 
 	"set.suggester.title": "Meal suggester",
 	"set.suggester.desc": "Mode list and editor for meal suggestion rules.",

@@ -1,3 +1,25 @@
+## Unreleased (Necrocter/obsidian-recipebox fork)
+
+### Features
+
+* **i18n:** add a `t()`-based translation layer with English + Spanish
+  catalogues typed against a single source of truth, a **Settings → Language**
+  control (`Automatic` follows Obsidian's UI language, or pin `English` /
+  `Español`), and locale-aware date formatting.
+* **i18n:** every user-facing string across the ribbon, command palette,
+  notices, settings tab (both renderers), all five views and every modal now
+  resolves through `t()`.
+* **parser:** Spanish-aware recipe parsing (bilingual, not locale-switched):
+  ingredient/instruction section headings, prep/cook/total time labels,
+  `hora`/`minuto` units, servings (`Para 4 personas`, `6 raciones`), step
+  durations (`10 a 15 minutos`) and ingredient units (`taza`, `cucharada`,
+  `pizca`, …).
+* **settings:** the previously hardcoded `#ignore-ingredient` tag is now a
+  configurable `ignoreIngredientTag` setting (the built-in English tag is
+  still always recognised).
+
+---
+
 ## [0.1.11](https://github.com/AdamArcane/obsidian-recipebox/compare/0.1.11-beta.0...0.1.11) (2026-08-08)
 
 ### Features

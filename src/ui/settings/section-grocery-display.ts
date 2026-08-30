@@ -3,21 +3,26 @@
  * source selection.
  */
 import { Setting } from "obsidian";
+import { t } from "../../i18n";
 import { GroupingMode, CategorySource, CategoryOverride } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 
-const GROUPING_OPTIONS: Record<GroupingMode, string> = {
-	category: "By category",
-	recipe: "By recipe",
-	source: "By source",
-	none: "No grouping",
-};
+function groupingOptions(): Record<GroupingMode, string> {
+	return {
+		category: t("set.shop.group.category"),
+		recipe: t("set.shop.group.recipe"),
+		source: t("set.shop.group.source"),
+		none: t("set.shop.group.none"),
+	};
+}
 
-const CATEGORY_SOURCE_OPTIONS: Record<CategorySource, string> = {
-	dictionary: "Built-in dictionary",
-	tag: "Recipe tags",
-	"tag-then-dictionary": "Tags, then dictionary",
-};
+function categorySourceOptions(): Record<CategorySource, string> {
+	return {
+		dictionary: t("set.shop.source.dictionary"),
+		tag: t("set.shop.source.tag"),
+		"tag-then-dictionary": t("set.shop.source.tagThenDictionary"),
+	};
+}
 
 export function renderSectionGroceryDisplay(
 	container: HTMLElement,
@@ -25,13 +30,13 @@ export function renderSectionGroceryDisplay(
 	save: () => Promise<void>,
 	rerender: () => void
 ): void {
-	new Setting(container).setName("Grocery list display").setHeading();
+	new Setting(container).setName(t("set.gd.title")).setHeading();
 
 	new Setting(container)
-		.setName("Grouping mode")
+		.setName(t("set.gd.groupingMode"))
 		.addDropdown((dd) =>
 			dd
-				.addOptions(GROUPING_OPTIONS)
+				.addOptions(groupingOptions())
 				.setValue(settings.groupingMode)
 				.onChange(async (v) => {
 					settings.groupingMode = v as GroupingMode;
@@ -40,10 +45,10 @@ export function renderSectionGroceryDisplay(
 		);
 
 	new Setting(container)
-		.setName("Category source")
+		.setName(t("set.shop.categorySource"))
 		.addDropdown((dd) =>
 			dd
-				.addOptions(CATEGORY_SOURCE_OPTIONS)
+				.addOptions(categorySourceOptions())
 				.setValue(settings.categorySource)
 				.onChange(async (v) => {
 					settings.categorySource = v as CategorySource;
@@ -52,9 +57,9 @@ export function renderSectionGroceryDisplay(
 		);
 
 	new Setting(container)
-		.setName("Auto-sort categories alphabetically")
-		.addToggle((t) =>
-			t.setValue(settings.autoSortCategories).onChange(async (v) => {
+		.setName(t("set.shop.autoSort"))
+		.addToggle((c) =>
+			c.setValue(settings.autoSortCategories).onChange(async (v) => {
 				settings.autoSortCategories = v;
 				await save();
 				rerender();
@@ -66,9 +71,9 @@ export function renderSectionGroceryDisplay(
 	}
 
 	new Setting(container)
-		.setName("Auto-collapse completed sections")
-		.addToggle((t) =>
-			t.setValue(settings.autoCollapseCompletedSections).onChange(async (v) => {
+		.setName(t("set.shop.autoCollapse"))
+		.addToggle((c) =>
+			c.setValue(settings.autoCollapseCompletedSections).onChange(async (v) => {
 				settings.autoCollapseCompletedSections = v;
 				await save();
 			})
@@ -83,8 +88,8 @@ function renderCategoryOrder(
 	save: () => Promise<void>
 ): void {
 	const setting = new Setting(container)
-		.setName("Category order")
-		.setDesc("Drag or use buttons to reorder.");
+		.setName(t("set.shop.categoryOrder.name"))
+		.setDesc(t("set.gd.reorderHint"));
 
 	const list = setting.settingEl.createDiv("rb-order-list");
 
@@ -122,8 +127,8 @@ function renderCategoryOverrides(
 	save: () => Promise<void>
 ): void {
 	const setting = new Setting(container)
-		.setName("Category overrides")
-		.setDesc("Map ingredient name substrings to specific categories.");
+		.setName(t("set.shop.overrides.name"))
+		.setDesc(t("modal.categoryOverrides.desc"));
 
 	const list = setting.settingEl.createDiv("rb-override-list");
 
@@ -131,8 +136,8 @@ function renderCategoryOverrides(
 		list.empty();
 		settings.categoryOverrides.forEach((override: CategoryOverride, i: number) => {
 			const row = list.createDiv("rb-list-row");
-			const matchInput = row.createEl("input", { type: "text", value: override.match, placeholder: "Ingredient substring" });
-			const catInput = row.createEl("input", { type: "text", value: override.category, placeholder: "Category" });
+			const matchInput = row.createEl("input", { type: "text", value: override.match, placeholder: t("modal.categoryOverrides.substring") });
+			const catInput = row.createEl("input", { type: "text", value: override.category, placeholder: t("field.category") });
 			const del = row.createEl("button", { text: "✕" });
 
 			matchInput.addEventListener("change", () => {
@@ -149,7 +154,7 @@ function renderCategoryOverrides(
 			});
 		});
 
-		const addBtn = list.createEl("button", { text: "+ add override" });
+		const addBtn = list.createEl("button", { text: t("set.gd.addOverride") });
 		addBtn.addEventListener("click", () => {
 			settings.categoryOverrides.push({ match: "", category: "" });
 			void save().then(() => render());
