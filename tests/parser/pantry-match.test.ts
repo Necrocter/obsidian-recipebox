@@ -13,8 +13,10 @@ describe("parsePantryNote", () => {
 			"",
 			"Esto es una nota, no un ingrediente",
 			"> cita",
-			"- [ ] Cebolla morada",
+			"- [x] Cebolla morada",
+			"- [ ] Perejil fresco",
 		].join("\n");
+		// "[ ]" (explicitly unchecked) does NOT count as available
 		expect([...parsePantryNote(text)].sort()).toEqual(
 			["aceite de oliva", "ajo", "cebolla morada", "sal"].sort(),
 		);

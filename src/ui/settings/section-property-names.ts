@@ -72,7 +72,7 @@ function renderBody(
 		.setDesc(t("set.pn.ingredientsList.desc"))
 		.addText((c) =>
 			c.setValue(settings.ingredientsListProperty).onChange(async (v) => {
-				settings.ingredientsListProperty = v.trim() || "ingredientes";
+				settings.ingredientsListProperty = v.trim() || "ingredients";
 				await save();
 			})
 		);

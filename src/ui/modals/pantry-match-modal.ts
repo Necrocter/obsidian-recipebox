@@ -7,7 +7,8 @@ import { App, TFile, setIcon } from "obsidian";
 import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { findValue } from "../../parser/frontmatter-lookup";
-import { parsePantryNote, matchRecipe } from "../../parser/pantry-match";
+import { matchRecipe } from "../../parser/pantry-match";
+import { pantrySet } from "../../parser/pantry-note";
 import { BaseModal } from "./modal-shell";
 
 export interface PantryMatchDeps {
@@ -63,7 +64,7 @@ export class PantryMatchModal extends BaseModal {
 			return;
 		}
 
-		const pantry = parsePantryNote(await this.app.vault.cachedRead(pantryFile));
+		const pantry = pantrySet(await this.app.vault.cachedRead(pantryFile));
 		bodyEl.createEl("p", {
 			cls: "rb-modal-section-desc",
 			text: t("modal.pantry.summary", { count: pantry.size, path: settings.pantryNotePath }),
