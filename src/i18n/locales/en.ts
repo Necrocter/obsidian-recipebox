@@ -214,6 +214,20 @@ export const en = {
 	"set.notes.ignoreTag.name": "Ignore-ingredient tag",
 	"set.notes.ignoreTag.desc": "Trailing tag on an ingredient line. The ingredient still shows in the recipe, but is left out of automatic grocery-list additions. The built-in \"ignore-ingredient\" is always recognised too.",
 
+	// Language-dependent defaults for settings that name a vault artifact
+	// (note paths, section headings, folders, the ignore tag). Applied as the
+	// fallback when the user has not set the field; an explicit value wins.
+	"default.mealPlanPath": "Meal Plan.md",
+	"default.groceryListPath": "Grocery List.md",
+	"default.pantryNotePath": "Pantry.md",
+	"default.ingredientsHeading": "Ingredients",
+	"default.instructionsHeading": "Instructions",
+	"default.notesHeading": "Notes",
+	"default.cookHistoryHeading": "Cook History",
+	"default.ignoreIngredientTag": "ignore-ingredient",
+	"default.recipeFolder": "Recipes",
+	"default.exportFolder": "Recipe Exports",
+
 	"set.recipeView.title": "Recipe view",
 	"set.recipeView.desc": "Recipe view toggles and the header-badge editor.",
 	"set.recipeView.row": "Recipe view settings",
