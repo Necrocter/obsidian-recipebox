@@ -1,6 +1,12 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
+
+// render.ts now pulls in the i18n module (dayLabel / canonicalDay), which
+// imports getLanguage() from obsidian; Node can't resolve the real package.
+vi.mock("obsidian", () => ({ getLanguage: () => "en" }));
+
 import { dayRank, renderMealPlanLine, insertMealPlanEntryIntoText, writeMealPlanNote } from "../../src/meal-plan/meal-plan-note/render";
 import { DEFAULT_SETTINGS } from "../../src/settings/settings-defaults";
+import { setActiveLanguage } from "../../src/i18n";
 import type { MealPlanEntry } from "../../src/types";
 import type { MealPlanSection } from "../../src/meal-plan/meal-plan-note/parse";
 
@@ -118,5 +124,40 @@ describe("writeMealPlanNote", () => {
 	it("always starts with the '# Meal Plan' title", () => {
 		const result = writeMealPlanNote([], [], (p) => p, DEFAULT_SETTINGS);
 		expect(result.startsWith("# Meal Plan")).toBe(true);
+	});
+});
+
+describe("localised day headings", () => {
+	afterEach(() => setActiveLanguage("en"));
+
+	it("writeMealPlanNote emits the heading in the active language", () => {
+		setActiveLanguage("es");
+		const entries = [entry({ recipePath: "Pasta.md", day: "Monday" })];
+		const result = writeMealPlanNote([], entries, (p) => p.replace(".md", ""), DEFAULT_SETTINGS);
+		expect(result).toContain("## Lunes");
+		expect(result).not.toContain("## Monday");
+	});
+
+	it("insertMealPlanEntryIntoText writes a new localised section", () => {
+		setActiveLanguage("es");
+		const e = entry({ recipePath: "Salad.md", day: "Tuesday" });
+		const result = insertMealPlanEntryIntoText("# Meal Plan\n", e, "Salad", DEFAULT_SETTINGS);
+		expect(result).toContain("## Martes");
+	});
+
+	it("insertMealPlanEntryIntoText appends into an existing localised section", () => {
+		setActiveLanguage("es");
+		const noteText = "# Meal Plan\n\n## Lunes\n- [ ] [[Pasta]]\n";
+		const e = entry({ recipePath: "Salad.md", day: "Monday" });
+		const result = insertMealPlanEntryIntoText(noteText, e, "Salad", DEFAULT_SETTINGS);
+		// no duplicate "## Monday" / second "## Lunes" section
+		expect(result.match(/^## /gm)?.length).toBe(1);
+		expect(result).toContain("- [ ] [[Salad]]");
+	});
+
+	it("dayRank accepts a localised heading", () => {
+		setActiveLanguage("es");
+		expect(dayRank("Lunes")).toBe(dayRank("Monday"));
+		expect(dayRank("Lunes")).toBeLessThan(dayRank("Martes"));
 	});
 });

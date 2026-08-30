@@ -1,5 +1,11 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
+
+// parse.ts now pulls in the i18n module (canonicalDay), which imports
+// getLanguage() from obsidian; Node can't resolve the real package in tests.
+vi.mock("obsidian", () => ({ getLanguage: () => "en" }));
+
 import { parseMealPlanNote } from "../../src/meal-plan/meal-plan-note/parse";
+import { setActiveLanguage } from "../../src/i18n";
 
 describe("parseMealPlanNote", () => {
 	it("groups entries under day headings", () => {
@@ -75,5 +81,28 @@ describe("parseMealPlanNote", () => {
 		const body = "## Monday\nSome free-form note.";
 		const sections = parseMealPlanNote(body);
 		expect(sections[1].lines[0]).toMatchObject({ kind: "raw", raw: "Some free-form note." });
+	});
+});
+
+describe("parseMealPlanNote — localised day headings", () => {
+	afterEach(() => setActiveLanguage("en"));
+
+	it("canonicalises a Spanish day heading to the English key", () => {
+		setActiveLanguage("es");
+		const sections = parseMealPlanNote("## Lunes\n- [ ] [[Pasta]]");
+		expect(sections[1].header).toBe("Monday");
+		expect(sections[1].lines[0]).toMatchObject({ day: "Monday", wikilink: "Pasta" });
+	});
+
+	it("still accepts an English heading regardless of active language", () => {
+		setActiveLanguage("es");
+		const sections = parseMealPlanNote("## Wednesday\n- [ ] [[Soup]]");
+		expect(sections[1].header).toBe("Wednesday");
+	});
+
+	it("leaves a non-weekday heading untouched", () => {
+		setActiveLanguage("es");
+		const sections = parseMealPlanNote("## Sobras\n- [ ] Tacos");
+		expect(sections[1].header).toBe("Sobras");
 	});
 });

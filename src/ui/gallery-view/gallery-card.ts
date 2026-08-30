@@ -10,7 +10,7 @@
  * where they already are (RecipeView / register-views.ts).
  */
 import { App, Menu, setIcon, TFile } from "obsidian";
-import { t } from "../../i18n";
+import { t, getLocaleTag } from "../../i18n";
 import { CustomBadge } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { renderBadgeRow } from "../recipe-view/badges";
@@ -32,7 +32,7 @@ export interface GalleryCardHandle {
 
 function formatLastMadeDisplay(iso: string): string {
 	const d = new Date(iso + "T00:00:00");
-	return isNaN(d.getTime()) ? iso : d.toLocaleDateString(undefined, { dateStyle: "medium" });
+	return isNaN(d.getTime()) ? iso : d.toLocaleDateString(getLocaleTag(), { dateStyle: "medium" });
 }
 
 function renderMetaItem(row: HTMLElement, icon: string, text: string): void {

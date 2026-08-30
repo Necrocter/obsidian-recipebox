@@ -5,6 +5,7 @@
 import { MealPlanEntry } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { slugifyMealType } from "../../utils/text-case";
+import { canonicalDay, dayLabel } from "../../i18n";
 import { MealPlanSection } from "./parse";
 
 const WEEKDAY_ORDER = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
@@ -16,7 +17,9 @@ function isQueueLabel(day: string): boolean {
 
 export function dayRank(day: string | undefined): number {
 	if (!day || isQueueLabel(day)) return 0;
-	const idx = WEEKDAY_ORDER.indexOf(day.trim().toLowerCase());
+	// Accept a localised heading straight from the note ("Lunes") as well as
+	// the canonical key.
+	const idx = WEEKDAY_ORDER.indexOf(canonicalDay(day).trim().toLowerCase());
 	return idx >= 0 ? idx + 1 : WEEKDAY_ORDER.length + 1;
 }
 
@@ -45,7 +48,14 @@ export function insertMealPlanEntryIntoText(noteText: string, entry: MealPlanEnt
 	const newLine = renderMealPlanLine(entry, recipeName, settings);
 	const lines = noteText.split("\n");
 
-	const headingIdx = lines.findIndex((l) => l.trim() === `## ${targetHeader}` || (!entry.day && l.trim() === "## Unscheduled"));
+	// targetHeader is the canonical English key; an existing section heading in
+	// the note may be localised ("## Lunes"), so compare canonicalised.
+	const headingIdx = lines.findIndex((l) => {
+		const tl = l.trim();
+		if (!tl.startsWith("## ")) return false;
+		if (!entry.day && tl === "## Unscheduled") return true;
+		return canonicalDay(tl.slice(3).trim()) === targetHeader;
+	});
 
 	if (headingIdx >= 0) {
 		let endIdx = lines.length;
@@ -68,7 +78,7 @@ export function insertMealPlanEntryIntoText(noteText: string, entry: MealPlanEnt
 		}
 	}
 	if (!isQueueLabel(targetHeader)) {
-		lines.splice(insertSectionAt, 0, `## ${targetHeader}`, newLine, "");
+		lines.splice(insertSectionAt, 0, `## ${dayLabel(targetHeader)}`, newLine, "");
 	} else {
 		lines.splice(insertSectionAt, 0, newLine);
 	}
@@ -100,7 +110,7 @@ export function writeMealPlanNote(
 
 		if (dayEntries.length === 0 && preserved.length === 0) continue;
 
-		if (!isQueueLabel(day)) lines.push(`## ${day}`);
+		if (!isQueueLabel(day)) lines.push(`## ${dayLabel(day)}`);
 		for (const entry of dayEntries) {
 			lines.push(renderMealPlanLine(entry, getRecipeName(entry.recipePath), settings));
 		}
