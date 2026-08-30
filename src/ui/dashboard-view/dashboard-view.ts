@@ -6,6 +6,7 @@
  * math instead of nested flexbox rows.
  */
 import { ItemView, WorkspaceLeaf } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings, DashboardActivityRangeWeeks } from "../../settings/settings-types";
 import { DashboardViewDeps } from "./dashboard-view-deps";
 import { computeDashboardStats, computeCookingActivity } from "./dashboard-stats";
@@ -34,7 +35,7 @@ export class DashboardView extends ItemView {
 	}
 
 	getViewType(): string { return DASHBOARD_VIEW_TYPE; }
-	getDisplayText(): string { return "Dashboard"; }
+	getDisplayText(): string { return t("dash.title"); }
 	getIcon(): string { return "chef-hat"; }
 
 	async onOpen(): Promise<void> {

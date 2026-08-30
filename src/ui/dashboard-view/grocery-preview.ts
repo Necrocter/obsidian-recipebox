@@ -4,6 +4,7 @@
  * what the user sees when they click through. See dashboard-spec.md section 5.
  */
 import { GroceryItem } from "../../types";
+import { t } from "../../i18n";
 import { buildDisplayGroups } from "../grocery-view/display-groups";
 import { toTitleCase } from "../../utils/text-case";
 
@@ -20,11 +21,11 @@ export function renderGroceryPreview(
 	actions: GroceryPreviewActions,
 ): void {
 	const card = container.createDiv({ cls: "rb-dashboard-card rb-dashboard-grocery-preview rb-dashboard-span-4" });
-	card.createDiv({ cls: "rb-dashboard-card-label", text: "Grocery list" });
+	card.createDiv({ cls: "rb-dashboard-card-label", text: t("dash.groceryList") });
 
 	const unchecked = items.filter((i) => !i.checked);
 	if (unchecked.length === 0) {
-		card.createDiv({ cls: "rb-dashboard-empty-text", text: "Grocery list is empty." });
+		card.createDiv({ cls: "rb-dashboard-empty-text", text: t("dash.groceryEmpty") });
 	} else {
 		const ordered = buildDisplayGroups(unchecked, "category").flatMap((g) => g.items);
 		const shown = ordered.slice(0, PREVIEW_ITEM_LIMIT);

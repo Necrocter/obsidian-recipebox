@@ -9,6 +9,7 @@
  * dashboard-spec.md section 11.3).
  */
 import { App, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { MealPlanEntry } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { getFrontmatterImageSrc } from "../gallery-view/gallery-image";
@@ -22,19 +23,19 @@ export interface MealPlanMiniGridActions {
 }
 
 const DAY_COLUMNS: Array<{ label: string; abbrev: string }> = [
-	{ label: "Monday", abbrev: "Mon" },
-	{ label: "Tuesday", abbrev: "Tue" },
-	{ label: "Wednesday", abbrev: "Wed" },
-	{ label: "Thursday", abbrev: "Thu" },
-	{ label: "Friday", abbrev: "Fri" },
-	{ label: "Saturday", abbrev: "Sat" },
-	{ label: "Sunday", abbrev: "Sun" },
+	{ label: "monday", abbrev: t("day.abbr.monday") },
+	{ label: "tuesday", abbrev: t("day.abbr.tuesday") },
+	{ label: "wednesday", abbrev: t("day.abbr.wednesday") },
+	{ label: "thursday", abbrev: t("day.abbr.thursday") },
+	{ label: "friday", abbrev: t("day.abbr.friday") },
+	{ label: "saturday", abbrev: t("day.abbr.saturday") },
+	{ label: "sunday", abbrev: t("day.abbr.sunday") },
 ];
 
 const MAX_VISIBLE_ENTRIES = 3;
 
 function entryTitle(entry: MealPlanEntry): string {
-	return entry.recipePath ? entry.recipePath.split("/").pop()!.replace(/\.md$/, "") : (entry.label ?? "Custom meal");
+	return entry.recipePath ? entry.recipePath.split("/").pop()!.replace(/\.md$/, "") : (entry.label ?? t("mpv.customMeal"));
 }
 
 // Frontmatter-only resolution, same as shared-recipes-preview.ts -- no lazy

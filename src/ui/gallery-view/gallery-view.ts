@@ -4,6 +4,7 @@
  * rating/cook-history edits made elsewhere) via GalleryViewDeps.subscribeToChanges.
  */
 import { ItemView, WorkspaceLeaf } from "obsidian";
+import { t } from "../../i18n";
 import { GalleryViewDeps } from "./gallery-view-deps";
 import { GallerySavedState } from "../../settings/settings-types";
 import { renderGalleryToolbar } from "./gallery-toolbar";
@@ -34,7 +35,7 @@ export class GalleryView extends ItemView {
 	}
 
 	getViewType(): string { return GALLERY_VIEW_TYPE; }
-	getDisplayText(): string { return "Recipe gallery"; }
+	getDisplayText(): string { return t("gallery.title"); }
 	getIcon(): string { return "layout-grid"; }
 
 	async onOpen(): Promise<void> {
@@ -115,7 +116,7 @@ export class GalleryView extends ItemView {
 		if (sorted.length === 0) {
 			content.createDiv({
 				cls: "rb-gallery-empty",
-				text: files.length === 0 ? "No recipes found in your recipe folders." : "No recipes match the current filters.",
+				text: files.length === 0 ? t("gallery.noneInFolders") : t("gallery.noneMatch"),
 			});
 			return;
 		}
