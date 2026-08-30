@@ -3,6 +3,7 @@
  * and persists its state to the "favorite" frontmatter property.
  */
 import { App, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { getRecipeMetaAliases } from "../../parser/recipe-meta-aliases";
 import { toBoolean } from "../../parser/frontmatter-coerce";
@@ -30,7 +31,7 @@ export function renderFavoriteToggle(
 	let active = toBoolean(findValue(fm, getRecipeMetaAliases(settings).favorite));
 	const btn = container.createEl("button", {
 		cls: ["rb-action-btn", active ? "rb-favorite-active" : ""],
-		attr: { "aria-pressed": String(active), "aria-label": "Toggle favorite" },
+		attr: { "aria-pressed": String(active), "aria-label": t("rview.toggleFavorite") },
 	});
 	const iconEl = btn.createSpan();
 	setIcon(iconEl, "heart");

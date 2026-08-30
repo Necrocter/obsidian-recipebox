@@ -2,6 +2,7 @@
  * Renders the add-to / remove-from meal plan toggle button in the recipe view header.
  */
 import { App, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { MealPlanEntry } from "../../types";
 import { RecipeViewDeps } from "./recipe-view-deps";
 import { openMealPlanEntryMenu } from "../modals/meal-plan-entry-menu";
@@ -20,7 +21,7 @@ export function renderMealPlanToggle(
 		cls: ["rb-action-btn", inPlan ? "rb-meal-plan-active" : ""],
 		attr: {
 			"aria-pressed": String(inPlan),
-			"aria-label": inPlan ? "Remove from meal plan" : "Add to meal plan",
+			"aria-label": inPlan ? t("rview.removeFromMealPlan") : t("gallery.card.addToMealPlan"),
 		},
 	});
 	const iconEl = btn.createSpan();

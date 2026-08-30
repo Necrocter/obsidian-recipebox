@@ -3,6 +3,7 @@
  * the quick-stamp path (no modal) as well as the full history modal path.
  */
 import { App, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { RecipeViewDeps } from "./recipe-view-deps";
 import { addCookHistoryEntry } from "../../recipe-history/cook-history";
@@ -20,7 +21,7 @@ export function renderMarkCookedButton(
 
 	const btn = container.createEl("button", {
 		cls: "rb-action-btn",
-		attr: { "aria-label": "Mark as cooked" },
+		attr: { "aria-label": t("rview.markCooked") },
 	});
 	const iconEl = btn.createSpan();
 	setIcon(iconEl, "circle-check-big");
