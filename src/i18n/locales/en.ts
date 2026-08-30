@@ -28,6 +28,7 @@ export const en = {
 	"command.shareThisRecipe": "Share this recipe",
 	"command.suggestMeal": "Suggest a meal",
 	"command.openDashboard": "Open recipe dashboard",
+	"command.pantryMatch": "What can I cook?",
 
 	// ── Notices (transient toasts) ─────────────────────────────────────────
 	"notice.mealPlanCleared.one": "Cleared 1 meal plan entry.",
@@ -201,6 +202,8 @@ export const en = {
 	"set.notes.instructionsHeading.desc": "Heading that marks the instructions section in a recipe note.",
 	"set.notes.notesHeading.name": "Notes heading",
 	"set.notes.notesHeading.desc": "Heading that marks the optional notes section in a recipe note.",
+	"set.notes.pantryPath.name": "Pantry note path",
+	"set.notes.pantryPath.desc": "Note listing what you have in the kitchen, one ingredient per list item. Used by \"What can I cook?\".",
 	"set.notes.ignoreTag.name": "Ignore-ingredient tag",
 	"set.notes.ignoreTag.desc": "Trailing tag on an ingredient line. The ingredient still shows in the recipe, but is left out of automatic grocery-list additions. The built-in \"ignore-ingredient\" is always recognised too.",
 
@@ -365,6 +368,8 @@ export const en = {
 	"set.pn.recipeType.placeholder": "Type",
 	"set.pn.rating.name": "Recipe rating",
 	"set.pn.rating.desc": "The property name used to store star ratings (1-5).",
+	"set.pn.ingredientsList.name": "Ingredient list",
+	"set.pn.ingredientsList.desc": "Frontmatter array of the recipe's ingredient names, matched against the pantry note. \"ingredientes\" / \"ingredients\" are tried as fallbacks.",
 	"set.pn.image.name": "Recipe image",
 	"set.pn.image.desc": "Property name used for the recipe hero image.",
 	"set.pn.source.name": "Recipe source",
@@ -465,6 +470,7 @@ export const en = {
 	"dash.greeting.evening": "Good evening",
 	"dash.qa.addRecipe": "Add recipe",
 	"dash.qa.addGrocery": "Add grocery item",
+	"dash.qa.pantryMatch": "What can I cook?",
 	"dash.newRecipes": "New recipes",
 	"dash.browseAll": "Browse all recipes →",
 	"dash.groceryList": "Grocery list",
@@ -718,6 +724,22 @@ export const en = {
 
 	"modal.mpEntryMenu.viewInMealPlan": "View in meal plan",
 	"modal.mpEntryMenu.changeDayMeal": "Change day / meal type",
+
+	// ── Pantry matcher ──────────────────────────────────────────────
+	"modal.pantry.title": "What can I cook?",
+	"modal.pantry.editPantry": "Edit pantry",
+	"modal.pantry.createNote": "Create pantry note",
+	"modal.pantry.noNote": "No pantry note at \"{path}\" yet. Create one and list what you have, one ingredient per line.",
+	"modal.pantry.summary": "{count} ingredients in {path}.",
+	"modal.pantry.emptyPantry": "Your pantry note is empty. Add ingredients to it, one per list item.",
+	"modal.pantry.bucket.ready": "Ready to cook",
+	"modal.pantry.bucket.readyEmpty": "Nothing matches your pantry yet.",
+	"modal.pantry.bucket.missing1": "Missing 1",
+	"modal.pantry.bucket.missing1Empty": "No recipes are one ingredient away.",
+	"modal.pantry.bucket.missing23": "Missing 2-3",
+	"modal.pantry.bucket.missing23Empty": "No recipes are two or three ingredients away.",
+	"modal.pantry.noListNote": "{count} recipes skipped: no \"{prop}\" list in their frontmatter.",
+	"modal.pantry.addMissing": "Add missing to grocery list",
 
 	// ── Suggester mode editor + filter operators ──────────────────────
 	"modal.strategy.name": "Name",
