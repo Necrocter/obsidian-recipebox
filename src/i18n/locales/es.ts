@@ -467,6 +467,11 @@ export const es: Record<TranslationKey, string> = {
 	"dash.share.revokeBody": "El enlace público de \"{name}\" dejará de funcionar de inmediato.",
 	"dash.share.revoke": "Revocar",
 	"dash.share.revokeAria": "Revocar la compartición",
+	"dash.viewGroceryList": "Ver la lista de la compra →",
+	"dash.mealPlanThisWeek": "Plan de comidas de esta semana",
+	"dash.mealPlanEmpty": "Tu plan de comidas está vacío.",
+	"dash.planAMeal": "Planificar una comida",
+	"dash.addFirstRecipe": "Añade tu primera receta",
 
 	// ── Vista de receta ────────────────────────────────────────────────
 	"rview.fallbackTitle": "Receta",

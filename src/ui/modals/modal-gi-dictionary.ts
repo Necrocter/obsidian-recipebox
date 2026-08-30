@@ -62,7 +62,7 @@ export class GiDictionaryModal extends BaseModal {
 				void this.save().then(() => {
 					showErrors(DEFAULT_GI_DICTIONARY);
 					resetPending = false;
-					resetBtn.textContent = "Reset to defaults";
+					resetBtn.textContent = t("common.resetToDefaults");
 				});
 			}
 		});

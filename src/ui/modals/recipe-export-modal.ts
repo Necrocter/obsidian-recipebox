@@ -255,7 +255,7 @@ export class RecipeExportModal extends BaseModal {
 	private async downloadExport(): Promise<void> {
 		const content = await this.buildContent();
 		if (!content.trim()) {
-			new Notice("Nothing to export.");
+			new Notice(t("notice.nothingToExport"));
 			return;
 		}
 

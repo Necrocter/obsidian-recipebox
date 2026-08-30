@@ -379,7 +379,7 @@ export class ModeEditorModal extends BaseModal {
 	renderFooter(footerEl: HTMLElement): void {
 		// Delete — only for custom (non-built-in) modes, and only when a callback is wired up.
 		if (!this.draft.isBuiltin && this.deps.onDelete) {
-			const deleteBtn = footerEl.createEl("button", { cls: "mod-warning rb-mode-delete-btn", text: "Delete mode" });
+			const deleteBtn = footerEl.createEl("button", { cls: "mod-warning rb-mode-delete-btn", text: t("modal.strategy.deleteMode") });
 			let deletePending = false;
 			let deleteTimer: number | null = null;
 			deleteBtn.addEventListener("click", () => {
@@ -400,7 +400,7 @@ export class ModeEditorModal extends BaseModal {
 
 		// "Reset to default" is only meaningful for built-in modes that have shipped defaults.
 		if (this.draft.isBuiltin) {
-			const resetBtn = footerEl.createEl("button", { cls: "mod-warning rb-mode-reset-btn", text: "Reset to default" });
+			const resetBtn = footerEl.createEl("button", { cls: "mod-warning rb-mode-reset-btn", text: t("modal.strategy.resetToDefault") });
 			let resetPending = false;
 			let resetTimer: number | null = null;
 			resetBtn.addEventListener("click", () => {

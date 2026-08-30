@@ -467,6 +467,11 @@ export const en = {
 	"dash.share.revokeBody": "The public link for \"{name}\" will stop working immediately.",
 	"dash.share.revoke": "Revoke",
 	"dash.share.revokeAria": "Revoke share",
+	"dash.viewGroceryList": "View grocery list →",
+	"dash.mealPlanThisWeek": "Meal plan this week",
+	"dash.mealPlanEmpty": "Your meal plan is empty.",
+	"dash.planAMeal": "Plan a meal",
+	"dash.addFirstRecipe": "Add your first recipe",
 
 	// ── Recipe view ────────────────────────────────────────────────────
 	"rview.fallbackTitle": "Recipe",
