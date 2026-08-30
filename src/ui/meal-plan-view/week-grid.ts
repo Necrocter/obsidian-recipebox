@@ -3,7 +3,7 @@
  * the meal plan view, wiring drag-drop, recipe picker, and meal type popover.
  */
 import { App, setIcon } from "obsidian";
-import { t } from "../../i18n";
+import { t, canonicalDay } from "../../i18n";
 import { MealPlanEntry } from "../../types";
 import { MealPlanViewDeps } from "./meal-plan-view-deps";
 import { renderRecipeCard } from "./recipe-card";
@@ -121,6 +121,11 @@ export function renderWeekGrid(
 	const daysRow = grid.createDiv({ cls: "rb-mpv-days-row" });
 	for (const col of DAY_COLUMNS) {
 		const colEntries = entries.filter(e => e.day?.toLowerCase() === col.dayKey);
-		renderColumn(daysRow, col.label, colEntries, col.label, app, deps);
+		// Pass the canonical English day ("Monday"), not the localised label,
+		// as the column's day: it becomes the drop-target day and is written
+		// into entry.day, which the rest of the plugin keys off in English.
+		// (Previously this passed col.label, which happened to be "Monday" in
+		// English but "Lunes" once the UI language changed, corrupting state.)
+		renderColumn(daysRow, col.label, colEntries, canonicalDay(col.dayKey), app, deps);
 	}
 }

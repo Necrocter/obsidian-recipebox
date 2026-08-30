@@ -6,7 +6,7 @@ vi.mock("obsidian", () => ({ getLanguage: () => "" }));
 
 import { en } from "../../src/i18n/locales/en";
 import { es } from "../../src/i18n/locales/es";
-import { t, tPlural, setActiveLanguage, resolveLocale } from "../../src/i18n";
+import { t, tPlural, setActiveLanguage, resolveLocale, dayLabel, canonicalDay } from "../../src/i18n";
 
 const PLACEHOLDER_RE = /\{(\w+)\}/g;
 
@@ -71,5 +71,28 @@ describe("t / tPlural", () => {
 		expect(resolveLocale("es")).toBe("es");
 		expect(resolveLocale("en")).toBe("en");
 		expect(resolveLocale("auto")).toBe("en"); // mocked getLanguage() returns ""
+	});
+});
+
+describe("dayLabel / canonicalDay", () => {
+	it("dayLabel localises a canonical key, canonicalDay is its inverse", () => {
+		setActiveLanguage("es");
+		expect(dayLabel("Monday")).toBe("Lunes");
+		expect(canonicalDay("Lunes")).toBe("Monday");
+		expect(canonicalDay(dayLabel("Saturday"))).toBe("Saturday");
+		setActiveLanguage("en");
+	});
+
+	it("canonicalDay accepts English names and any case, in any active language", () => {
+		setActiveLanguage("es");
+		expect(canonicalDay("monday")).toBe("Monday");
+		expect(canonicalDay("MIÉRCOLES")).toBe("Wednesday");
+		expect(canonicalDay("Domingo")).toBe("Sunday");
+		setActiveLanguage("en");
+	});
+
+	it("canonicalDay returns non-weekday input unchanged", () => {
+		expect(canonicalDay("Meal Plan Queue")).toBe("Meal Plan Queue");
+		expect(canonicalDay("Taco Night")).toBe("Taco Night");
 	});
 });
