@@ -7,6 +7,7 @@ import { ContributionMap } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { categorize } from "../category-match";
 import { readNoteOrEmpty, writeNote, resolveNotePath } from "../../utils/vault-notes";
+import { noteTitleFromPath } from "../../utils/note-title";
 import { parseGroceryNoteText, GrocerySection } from "./parse";
 import { renderGroceryLine, renderGrocerySections } from "./render";
 
@@ -70,7 +71,7 @@ export function removeFromGroceryText(noteText: string, contributions: Contribut
 export async function addToGroceryNote(app: App, contributions: ContributionMap, settings: RecipeBoxSettings): Promise<void> {
 	if (Object.keys(contributions).length === 0) return;
 	const path = resolveNotePath(settings.groceryListPath);
-	const text = await readNoteOrEmpty(app, path) || "# Grocery List\n";
+	const text = await readNoteOrEmpty(app, path) || `# ${noteTitleFromPath(settings.groceryListPath)}\n`;
 	await writeNote(app, path, mergeIntoGroceryText(text, contributions, settings));
 }
 

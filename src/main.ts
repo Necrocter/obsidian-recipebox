@@ -10,6 +10,7 @@ import { GroceryManager } from "./grocery/manager";
 import { DiscoveryCache } from "./discovery/discovery-cache";
 import { mergeSettings } from "./lifecycle/settings-persistence";
 import { resolveNotePath } from "./utils/vault-notes";
+import { noteTitleFromPath } from "./utils/note-title";
 import { registerViews } from "./lifecycle/register-views";
 import { registerVaultWatchers } from "./lifecycle/register-vault-watchers";
 import { registerAutoOpen, registerContextMenu, suppressAutoOpenOnce } from "./lifecycle/recipe-file-detection";
@@ -199,7 +200,7 @@ export default class RecipeBoxPlugin extends Plugin {
 	async navigateToGroceryCategory(category: string): Promise<void> {
 		const path = resolveNotePath(this.settings.groceryListPath);
 		let file = this.app.vault.getFileByPath(path);
-		if (!file) file = await this.app.vault.create(path, "# Grocery List\n");
+		if (!file) file = await this.app.vault.create(path, `# ${noteTitleFromPath(path)}\n`);
 		const leaf = this.app.workspace.getLeaf("tab");
 		await leaf.openFile(file);
 		window.setTimeout(() => scrollToHeading(leaf.view.containerEl, category), 50);
