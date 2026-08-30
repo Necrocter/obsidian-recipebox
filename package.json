@@ -1,47 +1,47 @@
 {
-  "name": "recipe-box",
-  "version": "0.1.11",
-  "main": "main.js",
-  "type": "module",
-  "scripts": {
-    "dev": "node esbuild.config.mjs",
-    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production && eslint src/",
-    "lint": "eslint src/",
-    "lint:fix": "eslint src/ --fix",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:typecheck": "tsc -noEmit -skipLibCheck -p tests/tsconfig.json",
-    "changelog:first": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s --first-release",
-    "changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s",
-    "version": "node -e \"const fs=require('fs'); const next=process.env.npm_new_version || process.env.npm_package_version; if(!next){throw new Error('Missing npm_new_version/npm_package_version');} const m=JSON.parse(fs.readFileSync('manifest.json')); m.version=next; fs.writeFileSync('manifest.json', JSON.stringify(m, null, '\\t'));\" && npm run changelog && git add manifest.json CHANGELOG.md",
-    "postversion": "git push && git push --tags",
-    "release:beta": "npm version prerelease --preid=beta",
-    "release:minor": "npm version minor --no-git-tag-version && git add package.json manifest.json && git commit -m \"chore: bump minor version\"",
-    "release:major": "npm version major --no-git-tag-version && git add package.json manifest.json && git commit -m \"chore: bump major version\"",
-    "release:stable": "bash scripts/release-stable.sh",
-    "release:rc": "bash scripts/release-stable.sh -- --rc"
-  },
-  "license": "GPL-3.0-or-later",
-  "devDependencies": {
-    "@types/node": "^22.0.0",
-    "conventional-changelog": "^8.0.1",
-    "conventional-changelog-conventionalcommits": "^10.2.1",
-    "esbuild": "^0.28.1",
-    "eslint": "^9.39.4",
-    "eslint-plugin-obsidianmd": "^0.3.0",
-    "globals": "^17.7.0",
-    "jiti": "^2.7.0",
-    "obsidian": "latest",
-    "tslib": "^2.4.0",
-    "typescript": "^5.8.0",
-    "typescript-eslint": "^8.62.0",
-    "vitest": "^4.1.10"
-  },
-  "dependencies": {
-    "cheerio": "^1.2.0",
-    "recipe-scrapers": "^1.9.0"
-  },
-  "overrides": {
-    "undici": "^7.29.0"
-  }
+	"name": "recipe-box",
+	"version": "0.1.12-es.1",
+	"main": "main.js",
+	"type": "module",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production && eslint src/",
+		"lint": "eslint src/",
+		"lint:fix": "eslint src/ --fix",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:typecheck": "tsc -noEmit -skipLibCheck -p tests/tsconfig.json",
+		"changelog:first": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s --first-release",
+		"changelog": "conventional-changelog -p conventionalcommits -i CHANGELOG.md -s",
+		"version": "node -e \"const fs=require('fs'); const next=process.env.npm_new_version || process.env.npm_package_version; if(!next){throw new Error('Missing npm_new_version/npm_package_version');} const m=JSON.parse(fs.readFileSync('manifest.json')); m.version=next; fs.writeFileSync('manifest.json', JSON.stringify(m, null, '\\t'));\" && npm run changelog && git add manifest.json CHANGELOG.md",
+		"postversion": "git push && git push --tags",
+		"release:beta": "npm version prerelease --preid=beta",
+		"release:minor": "npm version minor --no-git-tag-version && git add package.json manifest.json && git commit -m \"chore: bump minor version\"",
+		"release:major": "npm version major --no-git-tag-version && git add package.json manifest.json && git commit -m \"chore: bump major version\"",
+		"release:stable": "bash scripts/release-stable.sh",
+		"release:rc": "bash scripts/release-stable.sh -- --rc"
+	},
+	"license": "GPL-3.0-or-later",
+	"devDependencies": {
+		"@types/node": "^22.0.0",
+		"conventional-changelog": "^8.0.1",
+		"conventional-changelog-conventionalcommits": "^10.2.1",
+		"esbuild": "^0.28.1",
+		"eslint": "^9.39.4",
+		"eslint-plugin-obsidianmd": "^0.3.0",
+		"globals": "^17.7.0",
+		"jiti": "^2.7.0",
+		"obsidian": "latest",
+		"tslib": "^2.4.0",
+		"typescript": "^5.8.0",
+		"typescript-eslint": "^8.62.0",
+		"vitest": "^4.1.10"
+	},
+	"dependencies": {
+		"cheerio": "^1.2.0",
+		"recipe-scrapers": "^1.9.0"
+	},
+	"overrides": {
+		"undici": "^7.29.0"
+	}
 }
