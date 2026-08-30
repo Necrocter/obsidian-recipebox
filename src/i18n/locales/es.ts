@@ -502,6 +502,7 @@ export const es: Record<TranslationKey, string> = {
 	"dash.share.revoke": "Revocar",
 	"dash.share.revokeAria": "Revocar la compartición",
 	"dash.viewGroceryList": "Ver la lista de la compra →",
+	"dash.viewEditMealPlan": "Ver/editar el plan de comidas →",
 	"dash.mealPlanThisWeek": "Plan de comidas de esta semana",
 	"dash.mealPlanEmpty": "Tu plan de comidas está vacío.",
 	"dash.planAMeal": "Planificar una comida",

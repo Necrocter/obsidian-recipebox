@@ -505,6 +505,7 @@ export const en = {
 	"dash.share.revoke": "Revoke",
 	"dash.share.revokeAria": "Revoke share",
 	"dash.viewGroceryList": "View grocery list →",
+	"dash.viewEditMealPlan": "View/edit meal plan →",
 	"dash.mealPlanThisWeek": "Meal plan this week",
 	"dash.mealPlanEmpty": "Your meal plan is empty.",
 	"dash.planAMeal": "Plan a meal",
