@@ -1,15 +1,37 @@
-## 0.1.13-es.1 — Necrocter/obsidian-recipebox fork
+## 0.1.13-es.2 -- Necrocter/obsidian-recipebox fork
 
 ### Features
 
-* **pantry:** "¿Qué puedo cocinar?" — a new command and dashboard button that
-  reads a **pantry note** (`pantryNotePath`, default `Despensa.md`; one
-  ingredient per list item) and groups every recipe by how many of its
-  `ingredientes` frontmatter entries you're missing: **Listas para cocinar** /
-  **Te falta 1** / **Te faltan 2-3**. Click a recipe to open it, or `+` to
-  push its missing items to the grocery list. Favourites sort first, then the
-  simplest recipes. New settings: pantry note path (Notes section) and the
-  ingredient-list frontmatter key (`ingredientsListProperty`, Property names).
+* **pantry:** the pantry note is now a living checklist. `- [ ] item`
+  (explicitly unchecked) counts as *out of stock*; `- [x] item` and a plain
+  `- item` count as had -- so you tick / untick instead of add / delete.
+* **pantry:** **"Add to pantry"** command -- type ingredients (comma- or
+  newline-separated), appended to the pantry note as had items.
+* **pantry:** **"Sync pantry from grocery list"** command -- every checked-off
+  grocery item is ticked / added in the pantry, closing the shopping loop.
+
+### Changes
+
+* **pantry:** the `pantryNotePath` and `ingredientsListProperty` defaults are
+  now the language-neutral `Pantry.md` / `ingredients` (the feature always
+  worked in any language; only the defaults were Spanish). `ingredientes` is
+  still tried as a fallback for the ingredient list.
+
+---
+
+## 0.1.13-es.1 -- Necrocter/obsidian-recipebox fork
+
+### Features
+
+* **pantry:** "What can I cook?" -- a new command and dashboard button that
+  reads a **pantry note** (`pantryNotePath`, default `Pantry.md`; one
+  ingredient per list item, in any language) and groups every recipe by how
+  many of its ingredient-list frontmatter entries you are missing:
+  **Ready to cook** / **Missing 1** / **Missing 2-3**. Click a recipe to open
+  it, or the cart button to push its missing items to the grocery list.
+  Favourites sort first, then the simplest recipes. New settings: pantry note
+  path (Notes) and the ingredient-list frontmatter key
+  (`ingredientsListProperty`, default `ingredients`, Property names).
 
 ---
 
