@@ -3,9 +3,10 @@
  * (Breakfast, Lunch, Dinner, Snack, or a custom value) after a recipe is dropped.
  */
 import { Platform } from "obsidian";
+import { t } from "../../i18n";
 import { MealPlanViewDeps } from "./meal-plan-view-deps";
 
-const MEAL_CHIPS = ["Breakfast", "Lunch", "Dinner", "Snack"];
+function mealChips(): string[] { return [t("meal.breakfast"), t("meal.lunch"), t("meal.dinner"), t("meal.snack")]; }
 
 export type PopoverAnchor =
 	| { kind: "point"; x: number; y: number }
@@ -24,13 +25,13 @@ export function showMealTypePopover(
 ): void {
 	const popover = activeDocument.body.createDiv({ cls: "rb-meal-type-popover" });
 
-	const closeBtn = popover.createEl("button", { cls: "rb-meal-type-close", attr: { title: "Dismiss", "aria-label": "Dismiss" }, text: "×" });
+	const closeBtn = popover.createEl("button", { cls: "rb-meal-type-close", attr: { title: t("mealType.dismiss"), "aria-label": t("mealType.dismiss") }, text: "×" });
 
 	const header = popover.createDiv({ cls: "rb-meal-type-popover-header" });
-	header.createDiv({ cls: "rb-meal-type-popover-label", text: "Meal type?" });
+	header.createDiv({ cls: "rb-meal-type-popover-label", text: t("mealType.prompt") });
 
 	const chips = popover.createDiv({ cls: "rb-meal-type-chips" });
-	for (const option of MEAL_CHIPS) {
+	for (const option of mealChips()) {
 		const btn = chips.createEl("button", { cls: "rb-meal-type-chip", text: option });
 		btn.addEventListener("click", () => commit(option));
 	}
@@ -38,7 +39,7 @@ export function showMealTypePopover(
 	const row = popover.createDiv({ cls: "rb-meal-type-popover-row" });
 	const input = row.createEl("input", {
 		cls: "rb-meal-type-input",
-		attr: { type: "text", placeholder: "Custom…" },
+		attr: { type: "text", placeholder: t("mealType.customPlaceholder") },
 	});
 	const confirmBtn = row.createEl("button", { cls: "rb-meal-type-confirm", text: "✓" });
 

@@ -3,6 +3,7 @@
  * thumbnail, name, meal type, and drag handle.
  */
 import { App, TFile, setIcon } from "obsidian";
+import { t } from "../../i18n";
 import { MealPlanEntry } from "../../types";
 import { makeDraggable } from "./drag-reschedule";
 import { MealPlanViewDeps } from "./meal-plan-view-deps";
@@ -57,13 +58,13 @@ export function renderRecipeCard(
 	const body = card.createDiv({ cls: "rb-mpv-card-body" });
 	body.createDiv({ cls: "rb-mpv-card-name", text: name });
 	if (entry.meal) body.createDiv({ cls: "rb-mpv-card-meal", text: entry.meal });
-	if (entry.isLeftovers) body.createDiv({ cls: "rb-mpv-card-leftovers-badge", text: "(Leftovers)" });
+	if (entry.isLeftovers) body.createDiv({ cls: "rb-mpv-card-leftovers-badge", text: t("mpv.leftovers") });
 
 	const actions = card.createDiv({ cls: "rb-mpv-card-actions" });
-	const editBtn = actions.createEl("button", { cls: "rb-mpv-card-action-btn", attr: { title: "Edit" } });
+	const editBtn = actions.createEl("button", { cls: "rb-mpv-card-action-btn", attr: { title: t("common.edit") } });
 	setIcon(editBtn, "pencil");
 	editBtn.addEventListener("click", (e) => { e.stopPropagation(); deps.openEditEntryModal(entry); });
-	const removeBtn = actions.createEl("button", { cls: "rb-mpv-card-action-btn rb-mpv-card-action-btn--danger", attr: { title: "Remove" } });
+	const removeBtn = actions.createEl("button", { cls: "rb-mpv-card-action-btn rb-mpv-card-action-btn--danger", attr: { title: t("common.remove") } });
 	setIcon(removeBtn, "trash-2");
 	removeBtn.addEventListener("click", (e) => { e.stopPropagation(); void deps.removeFromMealPlan(entry.id); });
 

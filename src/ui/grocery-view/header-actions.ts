@@ -10,12 +10,14 @@ import { GroceryViewDeps } from "./grocery-view-deps";
 import { ConfirmModal } from "../modals/confirm-modal";
 import { App } from "obsidian";
 
-const GROUPING_LABELS: Record<GroupingMode, string> = {
-	category: "Group by category",
-	recipe: "Group by recipe",
-	source: "Group by source",
-	none: "No grouping",
-};
+function groupingLabels(): Record<GroupingMode, string> {
+	return {
+		category: t("gv.group.category"),
+		recipe: t("gv.group.recipe"),
+		source: t("gv.group.source"),
+		none: t("gv.group.none"),
+	};
+}
 
 export function renderHeaderActions(
 	container: HTMLElement,
@@ -28,7 +30,7 @@ export function renderHeaderActions(
 	// Labeled dropdown makes the current grouping visible without requiring a click,
 	// replacing the old icon-only button that opened a hidden menu.
 	const groupSelect = bar.createEl("select", { cls: "rb-gv-group-select" });
-	for (const [mode, label] of Object.entries(GROUPING_LABELS) as [GroupingMode, string][]) {
+	for (const [mode, label] of Object.entries(groupingLabels()) as [GroupingMode, string][]) {
 		const opt = groupSelect.createEl("option", { value: mode, text: label });
 		if (deps.getSettings().groupingMode === mode) opt.selected = true;
 	}
@@ -37,18 +39,18 @@ export function renderHeaderActions(
 		void deps.saveSettings().then(() => onRefresh());
 	});
 
-	const exportBtn = bar.createDiv({ cls: "rb-gv-header-btn", attr: { "aria-label": "Export grocery list" } });
+	const exportBtn = bar.createDiv({ cls: "rb-gv-header-btn", attr: { "aria-label": t("gv.exportList") } });
 	setIcon(exportBtn, "share");
 	exportBtn.addEventListener("click", () => deps.openExportModal());
 
-	const clearBtn = bar.createDiv({ cls: "rb-gv-header-btn rb-gv-header-btn--danger", attr: { "aria-label": "Clear grocery list" } });
+	const clearBtn = bar.createDiv({ cls: "rb-gv-header-btn rb-gv-header-btn--danger", attr: { "aria-label": t("gv.clearList") } });
 	setIcon(clearBtn, "trash-2");
 	clearBtn.addEventListener("click", () => {
 		new ConfirmModal(
 			app,
-			"Clear grocery list",
-			"This will remove all items from the grocery note. The meal plan is not affected.",
-			"Clear grocery list",
+			t("gv.clearList"),
+			t("gv.clearConfirm.body"),
+			t("gv.clearList"),
 			{
 				destructive: true,
 				onConfirm: () => {
