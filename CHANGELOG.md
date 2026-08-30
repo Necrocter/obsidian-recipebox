@@ -1,4 +1,17 @@
-## Unreleased (Necrocter/obsidian-recipebox fork)
+## 0.1.12-es.2 — Necrocter/obsidian-recipebox fork
+
+### Features
+
+* **settings:** the recipe **source** frontmatter key is now configurable
+  (`sourceProperty`, default `source`), so a non-English vault can use
+  `fuente`. `source` / `url` / `sourceUrl` / `source_url` are still checked as
+  fallbacks. Lives in **Settings → Property names → Recipe source**, and now
+  drives the recipe-view banner, the mobile Info tab and the shared page. The
+  "Source" / "Source:" labels are also localised.
+
+---
+
+## 0.1.12-es.1 — Necrocter/obsidian-recipebox fork
 
 ### Features
 
@@ -17,6 +30,12 @@
 * **settings:** the previously hardcoded `#ignore-ingredient` tag is now a
   configurable `ignoreIngredientTag` setting (the built-in English tag is
   still always recognised).
+
+### Bug Fixes
+
+* **recipe-view:** `#ignore-ingredient` ingredients stay visible in the recipe
+  view (matching the docs) while remaining excluded from automatic
+  grocery-list additions.
 
 ---
 

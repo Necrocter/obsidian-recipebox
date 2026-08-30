@@ -84,6 +84,7 @@ export const DEFAULT_SETTINGS: RecipeBoxSettings = {
 	showMeatTempWarnings: true,
 
 	imageProperty: "image",
+	sourceProperty: "source",
 	ratingProperty: "rating",
 	caloriesProperty: "calories",
 	proteinProperty: "protein",

@@ -279,6 +279,7 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 		showMeatTempWarnings: bool(r.showMeatTempWarnings, d.showMeatTempWarnings),
 
 		imageProperty: str(r.imageProperty, d.imageProperty),
+		sourceProperty: str(r.sourceProperty, d.sourceProperty),
 		ratingProperty: str(r.ratingProperty, d.ratingProperty),
 		caloriesProperty: str(r.caloriesProperty, d.caloriesProperty),
 		proteinProperty: str(r.proteinProperty, d.proteinProperty),
