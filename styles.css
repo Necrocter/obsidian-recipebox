@@ -6058,3 +6058,22 @@ input[type='search'].rb-gallery-search {
 .rb-hidden {
   display: none;
 }
+/* ── Pantry matcher modal ─────────────────────────────────────────────────── */
+.rb-pantry-bucket { margin-top: 0.75rem; }
+.rb-pantry-footnote { opacity: 0.65; font-size: 0.85em; margin-top: 0.75rem; }
+.rb-pantry-list { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.rb-pantry-row {
+	display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+	padding: 6px 8px; border-radius: 6px; background: var(--background-secondary);
+}
+.rb-pantry-row.is-added { opacity: 0.5; }
+.rb-pantry-row-name {
+	background: none; border: none; box-shadow: none; padding: 0;
+	font-weight: 600; color: var(--text-normal); cursor: pointer;
+	display: inline-flex; align-items: center; gap: 4px;
+}
+.rb-pantry-row-name:hover { color: var(--text-accent); }
+.rb-pantry-fav { color: var(--text-accent); display: inline-flex; }
+.rb-pantry-fav svg { width: 0.9em; height: 0.9em; }
+.rb-pantry-missing { display: flex; flex-wrap: wrap; gap: 4px; flex: 1; }
+.rb-pantry-add { margin-left: auto; }
