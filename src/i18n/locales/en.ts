@@ -511,6 +511,33 @@ export const en = {
 	"dash.planAMeal": "Plan a meal",
 	"dash.addFirstRecipe": "Add your first recipe",
 
+	// ── Grocery categories (internal key -> display; canonicalised back on
+	// read so a note written in one language still round-trips in another) ──
+	"category.produce": "Produce",
+	"category.herb": "Herb",
+	"category.meat": "Meat",
+	"category.seafood": "Seafood",
+	"category.dairy": "Dairy",
+	"category.cheese": "Cheese",
+	"category.egg": "Egg",
+	"category.bread": "Bread",
+	"category.pasta": "Pasta",
+	"category.grain": "Grain",
+	"category.canned": "Canned",
+	"category.broth": "Broth",
+	"category.sauce": "Sauce",
+	"category.condiment": "Condiment",
+	"category.oil": "Oil",
+	"category.seasoning": "Seasoning",
+	"category.baking": "Baking",
+	"category.nutsSeeds": "Nuts & Seeds",
+	"category.snack": "Snack",
+	"category.frozen": "Frozen",
+	"category.beverage": "Beverage",
+	"category.alcohol": "Alcohol",
+	"category.household": "Household",
+	"category.other": "Other",
+
 	// ── Recipe view ────────────────────────────────────────────────────
 	"rview.fallbackTitle": "Recipe",
 	"rview.toggleFavorite": "Toggle favorite",

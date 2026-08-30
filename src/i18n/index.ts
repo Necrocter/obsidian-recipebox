@@ -127,3 +127,12 @@ const CANONICAL_DAY_BY_LOCALISED: Record<string, string> = (() => {
 export function canonicalDay(day: string): string {
 	return CANONICAL_DAY_BY_LOCALISED[day.trim().toLowerCase()] ?? day;
 }
+
+/**
+ * The value of `key` in every shipped locale. For building reverse lookups
+ * (localised label -> internal key) that must accept a note written under a
+ * different active language than the one now selected.
+ */
+export function localisedVariants(key: TranslationKey): string[] {
+	return Object.values(DICTIONARIES).map((d) => d[key]);
+}

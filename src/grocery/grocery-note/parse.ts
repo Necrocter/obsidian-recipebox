@@ -4,6 +4,7 @@
  */
 import { parseIngredientLine } from "../../parser/ingredient-parse";
 import { ingredientKey } from "../../parser/ingredient-clean";
+import { canonicalCategory } from "../category-labels";
 
 export interface GroceryLine {
 	kind: "item" | "opaque";
@@ -29,7 +30,9 @@ export function parseGroceryNoteText(text: string): GrocerySection[] {
 	for (const raw of text.split("\n")) {
 		if (raw.startsWith("## ")) {
 			if (current) sections.push(current);
-			current = { category: raw.slice(3).trim(), lines: [] };
+			// Heading may be a localised label ("## Verduras y frutas"); store
+			// the canonical English key so ordering and de-duplication work.
+			current = { category: canonicalCategory(raw.slice(3).trim()), lines: [] };
 			continue;
 		}
 		if (!current) continue;
