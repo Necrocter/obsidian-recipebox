@@ -4,6 +4,7 @@
  * "Add item" and "check all / uncheck all" live above the list, not here.
  */
 import { Notice, setIcon } from "obsidian";
+import { t } from "../../i18n";
 import { GroupingMode } from "../../types";
 import { GroceryViewDeps } from "./grocery-view-deps";
 import { ConfirmModal } from "../modals/confirm-modal";
@@ -51,7 +52,7 @@ export function renderHeaderActions(
 			{
 				destructive: true,
 				onConfirm: () => {
-					void deps.clearGroceryOnly().then(() => new Notice("Grocery list cleared."));
+					void deps.clearGroceryOnly().then(() => new Notice(t("notice.groceryListCleared")));
 				},
 			},
 		).open();

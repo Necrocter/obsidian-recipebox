@@ -5,6 +5,7 @@
  * logic here -- this is purely a glance surface over that same state.
  */
 import { App, Notice, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { getShareData } from "../../sharing/share-frontmatter";
 import { getShareStatus, ShareStatus } from "../../sharing/share-status";
@@ -52,8 +53,8 @@ function confirmAndRevoke(app: App, file: TFile, actions: SharedRecipesPreviewAc
 			destructive: true,
 			onConfirm: () => {
 				void actions.unshareRecipe(file)
-					.then(() => new Notice("Recipe unshared."))
-					.catch((err: unknown) => new Notice(`Failed to unshare recipe: ${err instanceof Error ? err.message : String(err)}`));
+					.then(() => new Notice(t("notice.recipeUnshared")))
+					.catch((err: unknown) => new Notice(t("notice.failedUnshare", { error: err instanceof Error ? err.message : String(err) })));
 			},
 		},
 	).open();

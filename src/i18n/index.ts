@@ -57,3 +57,17 @@ export function t(key: TranslationKey, vars?: Record<string, string | number>): 
 		Object.prototype.hasOwnProperty.call(vars, name) ? String(vars[name]) : whole
 	);
 }
+
+/**
+ * Plural helper: picks the `one` key for a count of exactly 1, the `other`
+ * key otherwise, and passes `count` (plus any extra vars) to t(). Both keys
+ * are real TranslationKeys so completeness stays compile-checked.
+ */
+export function tPlural(
+	one: TranslationKey,
+	other: TranslationKey,
+	count: number,
+	vars?: Record<string, string | number>
+): string {
+	return t(count === 1 ? one : other, { count, ...vars });
+}

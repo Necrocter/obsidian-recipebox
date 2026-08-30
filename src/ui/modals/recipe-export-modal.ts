@@ -12,6 +12,7 @@
  * eagerly computing it on every option change.
  */
 import { App, Notice, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings, RecipeExportFormat } from "../../settings/settings-types";
 import {
 	RecipeExportOptions,
@@ -222,30 +223,30 @@ export class RecipeExportModal extends BaseModal {
 	private async saveToNote(rawPath: string): Promise<void> {
 		const path = rawPath.trim();
 		if (!path) {
-			new Notice("Please enter a note path.");
+			new Notice(t("notice.enterNotePath"));
 			return;
 		}
 
 		const content = await this.buildContent();
 		if (!content.trim()) {
-			new Notice("Nothing to export.");
+			new Notice(t("notice.nothingToExport"));
 			return;
 		}
 
 		const normalizedPath = path.endsWith(".md") ? path : `${path}.md`;
 
 		if (this.app.vault.getFileByPath(normalizedPath)) {
-			new Notice(`${normalizedPath} already exists. Choose a different path.`);
+			new Notice(t("notice.pathExists", { path: normalizedPath }));
 			return;
 		}
 
 		try {
 			await ensureParentFolders(this.app, normalizedPath);
 			await this.app.vault.create(normalizedPath, content);
-			new Notice(`Exported to ${normalizedPath}.`);
+			new Notice(t("notice.exportedTo", { path: normalizedPath }));
 			this.close();
 		} catch (err) {
-			new Notice(`Failed to write note: ${err instanceof Error ? err.message : String(err)}`);
+			new Notice(t("notice.failedWriteNote", { error: err instanceof Error ? err.message : String(err) }));
 		}
 	}
 
@@ -261,7 +262,7 @@ export class RecipeExportModal extends BaseModal {
 		const filename = `${this.file.basename}.${ext}`;
 
 		downloadTextFile(filename, content, mimeType);
-		new Notice(`Downloaded ${filename}.`);
+		new Notice(t("notice.downloadedFile", { filename }));
 		this.close();
 	}
 }

@@ -3,6 +3,7 @@
  * note to the vault, handling conflicts and social platform edge cases.
  */
 import { App, Notice } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { ExtractedRecipe } from "../../importer/recipe-extract-types";
 import { fetchHtml } from "../../importer/recipe-fetch";
@@ -40,7 +41,7 @@ export async function submitUrl(url: string): Promise<SubmitUrlResult> {
 		const meta = extractSocialMeta(html);
 		const recipe = extractRecipeFromText(meta.description, meta.title || undefined);
 		if (platform === "tiktok" && meta.description.length < 200) {
-			new Notice("Tiktok captions may be truncated in page metadata — double-check ingredient completeness.");
+			new Notice(t("notice.tiktokTruncated"));
 		}
 		return { kind: "success", recipe, warning: null };
 	}
@@ -63,7 +64,7 @@ export async function submitUrl(url: string): Promise<SubmitUrlResult> {
 export function submitText(text: string, titleOverride: string): ExtractedRecipe | null {
 	const trimmed = text.trim();
 	if (!trimmed) {
-		new Notice("Please paste some recipe text.");
+		new Notice(t("notice.pasteRecipeText"));
 		return null;
 	}
 	return extractRecipeFromText(trimmed, titleOverride.trim() || undefined);
@@ -106,10 +107,10 @@ export async function saveRecipe(
 			} else {
 				await app.vault.create(filePath, content);
 			}
-			new Notice(`Recipe saved: ${filename}`);
+			new Notice(t("notice.recipeSaved", { filename }));
 			onSuccess(filePath);
 		} catch (err) {
-			new Notice(`Failed to save recipe: ${err instanceof Error ? err.message : String(err)}`);
+			new Notice(t("notice.failedSaveRecipe", { error: err instanceof Error ? err.message : String(err) }));
 		}
 	};
 

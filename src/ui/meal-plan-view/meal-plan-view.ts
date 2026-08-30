@@ -3,6 +3,7 @@
  * queue column, re-rendering on every "change" event.
  */
 import { ItemView, Notice, WorkspaceLeaf, setIcon } from "obsidian";
+import { tPlural } from "../../i18n";
 import { MealPlanViewDeps } from "./meal-plan-view-deps";
 import { renderWeekGrid } from "./week-grid";
 import { ConfirmModal } from "../modals/confirm-modal";
@@ -88,8 +89,7 @@ export class MealPlanView extends ItemView {
 					},
 					onConfirm: (removeFromGrocery) => {
 						void this.deps.clearMealPlan(removeFromGrocery).then((count) => {
-							const n = count === 1 ? "entry" : "entries";
-							new Notice(`Cleared ${count} meal plan ${n}.`);
+							new Notice(tPlural("notice.mealPlanCleared.one", "notice.mealPlanCleared.other", count));
 						});
 					},
 				},
