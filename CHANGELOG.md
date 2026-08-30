@@ -1,3 +1,28 @@
+## 0.1.12-es.5 -- Necrocter/obsidian-recipebox fork
+
+Tracks upstream 0.1.12. Fork iteration `es.5`: the meal-plan -> grocery
+auto-add actually runs, and no English text leaks into a translated vault.
+
+### Bug Fixes
+
+* **meal plan:** the "add ingredients to the grocery list on sync" auto-add
+  (`syncMealPlanNote`) only ran when the grocery *view* was opened. It now also
+  runs on plugin load and whenever the meal plan note changes, so a recipe
+  added to the plan reaches the shopping list without opening that view.
+* **notes:** the grocery list and meal plan notes kept a hardcoded
+  `# Grocery List` / `# Meal Plan` H1, overwriting a translated title
+  (`# Lista de compras`) on every write. The H1 now follows the note's own
+  filename.
+* **meal plan:** removing an entry reverted every day heading in the note to
+  English (`## Lunes` -> `## Monday`); adding into an existing section left its
+  heading in whatever language it already had. Every write path now uses the
+  configured language and heals a mismatched heading.
+* **i18n:** the meal plan week grid's day column labels and the dashboard
+  mini-grid's `Mon` / `Tue` abbreviations were fixed in English because they
+  were computed at module load, before the language was resolved.
+
+---
+
 ## 0.1.12-es.4 -- Necrocter/obsidian-recipebox fork
 
 Tracks upstream 0.1.12. Fork iteration `es.4`: default names follow the
