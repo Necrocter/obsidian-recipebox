@@ -1,3 +1,20 @@
+## 0.1.12-es.4 -- Necrocter/obsidian-recipebox fork
+
+Tracks upstream 0.1.12. Fork iteration `es.4`: default names follow the
+chosen plugin language.
+
+### Features
+
+* **i18n:** the built-in default names for every vault artifact a fresh
+  install creates now follow the plugin language. A Spanish vault gets
+  `Despensa.md`, `Plan de comidas.md`, `Lista de la compra.md`, the
+  `Ingredientes` / `Instrucciones` / `Notas` / `Historial de preparaciones`
+  headings, the `ignorar-ingrediente` tag and a `Recetas` recipe folder.
+  `DEFAULT_SETTINGS` stays English; the language default is applied only where
+  the user has not set the field, so existing vaults are unaffected.
+
+---
+
 ## 0.1.12-es.3 -- Necrocter/obsidian-recipebox fork
 
 Tracks upstream 0.1.12. Fork iteration `es.3`: weekday names now follow the
