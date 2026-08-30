@@ -251,7 +251,7 @@ export class RecipeView extends TextFileView {
 			const warning = wrap.createDiv({ cls: "rb-allergen-warning" });
 			const warnIcon = warning.createSpan();
 			setIcon(warnIcon, "alert-triangle");
-			warning.createSpan({ text: `Contains: ${allergenMatches.join(", ")}` });
+			warning.createSpan({ text: t("rview.allergenWarning", { list: allergenMatches.join(", ") }) });
 		}
 
 		const renderLayout = getRecipeLayoutRenderer(layoutId);
