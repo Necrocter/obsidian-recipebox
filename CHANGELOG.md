@@ -1,3 +1,11 @@
+## 0.2.0 -- Necrocter/obsidian-recipebox fork
+
+Version scheme switched to plain semver (no `-es` prerelease suffix) so BRAT
+tracks fork releases reliably. Content is 0.1.13-es.2 as-is; the bump is the
+scheme change plus this note.
+
+---
+
 ## 0.1.13-es.2 -- Necrocter/obsidian-recipebox fork
 
 ### Features
