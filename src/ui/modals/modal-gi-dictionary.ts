@@ -3,6 +3,7 @@
  * validation pass against the pattern compiler.
  */
 import { App } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { compileGiDictionary, DEFAULT_GI_DICTIONARY } from "../../parser/glycemic-dictionary";
 import { debounce } from "../../utils/debounce";
@@ -15,8 +16,8 @@ export class GiDictionaryModal extends BaseModal {
 		private readonly save: () => Promise<void>,
 	) { super(app); }
 
-	getTitle(): string { return "High-GI dictionary"; }
-	getSubtitle(): string { return "One regex pattern per line. Lines starting with # are comments."; }
+	getTitle(): string { return t("modal.giDict.title"); }
+	getSubtitle(): string { return t("modal.giDict.desc"); }
 
 	renderBody(bodyEl: HTMLElement): void {
 		const textarea = bodyEl.createEl("textarea", {
@@ -45,14 +46,14 @@ export class GiDictionaryModal extends BaseModal {
 
 		let resetPending = false;
 		let resetTimer: number | null = null;
-		const resetBtn = bodyEl.createEl("button", { cls: "rb-reset-btn", text: "Reset to defaults" });
+		const resetBtn = bodyEl.createEl("button", { cls: "rb-reset-btn", text: t("common.resetToDefaults") });
 		resetBtn.addEventListener("click", () => {
 			if (!resetPending) {
 				resetPending = true;
-				resetBtn.textContent = "Confirm reset?";
+				resetBtn.textContent = t("common.confirmReset");
 				resetTimer = window.setTimeout(() => {
 					resetPending = false;
-					resetBtn.textContent = "Reset to defaults";
+					resetBtn.textContent = t("common.resetToDefaults");
 				}, 3000);
 			} else {
 				if (resetTimer) window.clearTimeout(resetTimer);

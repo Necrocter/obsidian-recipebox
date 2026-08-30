@@ -3,6 +3,7 @@
  * checklist used by both the add-to-meal-plan and add-to-grocery modals.
  */
 import { App, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { ContributionMap } from "../../types";
 import { stripFrontmatter } from "../../parser/recipe-frontmatter-strip";
@@ -64,7 +65,7 @@ export function renderIngredientChecklist(
 	onToggle: (key: string, checked: boolean) => void,
 ): void {
 	if (items.length === 0) {
-		container.createEl("p", { cls: "rb-modal-empty", text: "No ingredients found in this recipe." });
+		container.createEl("p", { cls: "rb-modal-empty", text: t("modal.ingredientLoader.none") });
 		return;
 	}
 
@@ -72,11 +73,11 @@ export function renderIngredientChecklist(
 
 	const selectAll = controls.createEl("button", { cls: "rb-modal-link-btn" });
 	setIcon(selectAll.createSpan({ cls: "rb-modal-link-btn-icon" }), "check-check");
-	selectAll.createSpan({ text: "Select all" });
+	selectAll.createSpan({ text: t("common.selectAll") });
 
 	const deselectAll = controls.createEl("button", { cls: "rb-modal-link-btn" });
 	setIcon(deselectAll.createSpan({ cls: "rb-modal-link-btn-icon" }), "square");
-	deselectAll.createSpan({ text: "Deselect all" });
+	deselectAll.createSpan({ text: t("common.deselectAll") });
 
 	const list = container.createDiv({ cls: "rb-ingredient-checklist" });
 	const checkboxes: HTMLInputElement[] = [];

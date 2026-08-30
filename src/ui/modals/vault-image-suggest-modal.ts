@@ -3,6 +3,7 @@
  * attaching a photo to a cook history entry.
  */
 import { App, FuzzySuggestModal, TFile } from "obsidian";
+import { t } from "../../i18n";
 
 const IMAGE_EXTS = new Set(["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp", "avif", "heic", "heif"]);
 
@@ -12,7 +13,7 @@ export class VaultImageSuggestModal extends FuzzySuggestModal<TFile> {
 		private readonly onSelect: (file: TFile) => void,
 	) {
 		super(app);
-		this.setPlaceholder("Search for an image in your vault…");
+		this.setPlaceholder(t("modal.vaultImage.searchPlaceholder"));
 	}
 
 	getItems(): TFile[] {

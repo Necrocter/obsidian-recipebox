@@ -9,6 +9,7 @@
  */
 
 import { Modal, setIcon } from "obsidian";
+import { t } from "../../i18n";
 
 export abstract class BaseModal extends Modal {
 	/** Protected so multi-stage modals (e.g. ImportRecipeModal) can update it. */
@@ -71,7 +72,7 @@ export function addFooterButtons(
 		onConfirm: () => void;
 	},
 ): HTMLButtonElement {
-	footerEl.createEl("button", { cls: "rb-modal-cancel-btn", text: opts.cancelLabel ?? "Cancel" })
+	footerEl.createEl("button", { cls: "rb-modal-cancel-btn", text: opts.cancelLabel ?? t("common.cancel") })
 		.addEventListener("click", opts.onCancel);
 	const btn = footerEl.createEl("button", {
 		cls: opts.destructive ? "mod-warning" : "mod-cta",

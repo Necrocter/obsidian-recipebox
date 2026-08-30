@@ -4,6 +4,7 @@
  * also lets the user select ingredients to contribute to the grocery list.
  */
 import { App, setIcon, TFile } from "obsidian";
+import { dayLabel, t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { ContributionMap, GroceryContributionSource } from "../../types";
 import {
@@ -14,8 +15,13 @@ import {
 } from "./ingredient-loader";
 import { BaseModal } from "./modal-shell";
 
+// Day values persist into entry.day and are matched case-insensitively
+// against lowercase day keys elsewhere, so they stay English here; only the
+// visible labels are localised (via dayLabel).
 const WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-export const MEAL_SUGGESTIONS = ["Breakfast", "Lunch", "Dinner", "Snack"];
+export function mealSuggestions(): string[] {
+	return [t("meal.breakfast"), t("meal.lunch"), t("meal.dinner"), t("meal.snack")];
+}
 
 export type MealPlanEntryTarget =
 	| { kind: "recipe"; file: TFile }
@@ -77,9 +83,9 @@ export class AddToMealPlanModal extends BaseModal {
 		return this.entry.kind === "recipe" && !this.editMode;
 	}
 
-	getTitle(): string { return (this.editMode ? "Edit" : "Add to") + " meal plan"; }
+	getTitle(): string { return this.editMode ? t("modal.addToMealPlan.titleEdit") : t("modal.addToMealPlan.titleAdd"); }
 	getSubtitle(): string {
-		return this.entry.kind === "recipe" ? this.entry.file.basename : "Custom meal";
+		return this.entry.kind === "recipe" ? this.entry.file.basename : t("modal.addToMealPlan.customMeal");
 	}
 	getIcon(): string { return "calendar"; }
 	getContentClasses(): string[] { return ["rb-meal-plan-modal"]; }
@@ -90,18 +96,18 @@ export class AddToMealPlanModal extends BaseModal {
 		planSection.createEl("p", {
 			cls: "rb-modal-section-desc",
 			text: this.entry.kind === "recipe"
-				? "The recipe will be scheduled on your meal plan."
-				: "The meal will be added to your plan.",
+				? t("modal.addToMealPlan.recipeSubtitle")
+				: t("modal.addToMealPlan.mealSubtitle"),
 		});
 
 		// Meal name row (custom entries only) — full width, above day/meal
 		if (this.entry.kind === "custom") {
 			const nameRow = planSection.createDiv({ cls: "rb-modal-fields rb-modal-fields--full" });
 			const nameField = nameRow.createDiv({ cls: "rb-modal-field rb-modal-field--grow" });
-			nameField.createEl("label", { cls: "rb-modal-field-label", text: "Meal name" });
+			nameField.createEl("label", { cls: "rb-modal-field-label", text: t("modal.addToMealPlan.mealName") });
 			const nameInput = nameField.createEl("input", {
 				cls: "rb-modal-input",
-				attr: { type: "text", placeholder: "E.g. Grilled cheese" },
+				attr: { type: "text", placeholder: t("modal.addToMealPlan.mealNamePlaceholder") },
 			});
 			nameInput.value = this.customMealName;
 			nameInput.addEventListener("input", () => {
@@ -117,7 +123,7 @@ export class AddToMealPlanModal extends BaseModal {
 			// the add flow once per day.
 			const dayRow = planSection.createDiv({ cls: "rb-modal-fields rb-modal-fields--full" });
 			const dayField = dayRow.createDiv({ cls: "rb-modal-field rb-modal-field--grow" });
-			dayField.createEl("label", { cls: "rb-modal-field-label", text: "Day" });
+			dayField.createEl("label", { cls: "rb-modal-field-label", text: t("modal.addToMealPlan.day") });
 			const dayGroup = dayField.createDiv({ cls: "rb-modal-radio-group rb-modal-radio-group--wrap" });
 
 			// Queue and day placement are mutually exclusive: queue entries have no
@@ -125,7 +131,7 @@ export class AddToMealPlanModal extends BaseModal {
 			// in one action (queue-only already exists as its own mode elsewhere).
 			const queueRow = dayGroup.createEl("label", { cls: "rb-modal-radio-row" });
 			const queueCheck = queueRow.createEl("input", { attr: { type: "checkbox" } });
-			queueRow.createSpan({ text: "Queue" });
+			queueRow.createSpan({ text: t("modal.addToMealPlan.queue") });
 			queueCheck.checked = this.days.length === 0;
 
 			const dayChecks = new Map<string, HTMLInputElement>();
@@ -138,7 +144,7 @@ export class AddToMealPlanModal extends BaseModal {
 				const row = dayGroup.createEl("label", { cls: "rb-modal-radio-row" });
 				const check = row.createEl("input", { attr: { type: "checkbox" } });
 				check.checked = this.days.includes(d);
-				row.createSpan({ text: d });
+				row.createSpan({ text: dayLabel(d) });
 				dayChecks.set(d, check);
 				check.addEventListener("change", () => {
 					if (check.checked) {
@@ -158,24 +164,24 @@ export class AddToMealPlanModal extends BaseModal {
 		if (!this.supportsMultiDay()) {
 			// Day dropdown
 			const dayField = fields.createDiv({ cls: "rb-modal-field" });
-			dayField.createEl("label", { cls: "rb-modal-field-label", text: "Day" });
+			dayField.createEl("label", { cls: "rb-modal-field-label", text: t("modal.addToMealPlan.day") });
 			const daySelect = dayField.createEl("select", { cls: "rb-modal-select" });
-			daySelect.createEl("option", { attr: { value: "" }, text: "Queue" });
-			for (const d of WEEKDAYS) daySelect.createEl("option", { attr: { value: d }, text: d });
+			daySelect.createEl("option", { attr: { value: "" }, text: t("modal.addToMealPlan.queue") });
+			for (const d of WEEKDAYS) daySelect.createEl("option", { attr: { value: d }, text: dayLabel(d) });
 			if (this.prefill?.day) daySelect.value = this.prefill.day;
 			daySelect.addEventListener("change", () => { this.days = daySelect.value ? [daySelect.value] : []; });
 		}
 
 		// Meal type input
 		const mealField = fields.createDiv({ cls: "rb-modal-field" });
-		mealField.createEl("label", { cls: "rb-modal-field-label", text: "Meal" });
+		mealField.createEl("label", { cls: "rb-modal-field-label", text: t("modal.addToMealPlan.meal") });
 		const datalistId = "rb-meal-datalist";
 		const mealInput = mealField.createEl("input", {
 			cls: "rb-modal-input",
-			attr: { type: "text", list: datalistId, placeholder: "E.g. Dinner" },
+			attr: { type: "text", list: datalistId, placeholder: t("modal.addToMealPlan.mealPlaceholder") },
 		});
 		const datalist = mealField.createEl("datalist", { attr: { id: datalistId } });
-		for (const m of MEAL_SUGGESTIONS) datalist.createEl("option", { attr: { value: m } });
+		for (const m of mealSuggestions()) datalist.createEl("option", { attr: { value: m } });
 		if (this.prefill?.meal) mealInput.value = this.prefill.meal;
 		mealInput.addEventListener("input", () => { this.meal = mealInput.value.trim() || undefined; });
 
@@ -185,7 +191,7 @@ export class AddToMealPlanModal extends BaseModal {
 		const leftoversLabel = leftoversField.createEl("label", { cls: "rb-modal-field-label rb-modal-field-label--checkbox" });
 		const leftoversCheck = leftoversLabel.createEl("input", { attr: { type: "checkbox" } });
 		leftoversCheck.checked = this.isLeftovers;
-		leftoversLabel.createSpan({ text: "Mark as leftovers" });
+		leftoversLabel.createSpan({ text: t("modal.addToMealPlan.markLeftovers") });
 		leftoversCheck.addEventListener("change", () => { this.isLeftovers = leftoversCheck.checked; });
 
 		// Same prefill-truthiness bug as editMode: any prefill (including a day-only
@@ -202,8 +208,8 @@ export class AddToMealPlanModal extends BaseModal {
 
 		const groceryHeader = grocerySection.createDiv({ cls: "rb-modal-section-header rb-modal-section-header-toggle" });
 		setIcon(groceryHeader.createSpan({ cls: "rb-modal-section-icon rb-icon-green" }), "shopping-cart");
-		groceryHeader.createSpan({ cls: "rb-modal-section-heading", text: "Grocery ingredients" });
-		groceryHeader.createSpan({ cls: "rb-modal-section-hint", text: "Expand to add ingredients to your grocery list" });
+		groceryHeader.createSpan({ cls: "rb-modal-section-heading", text: t("modal.addToMealPlan.groceryIngredients") });
+		groceryHeader.createSpan({ cls: "rb-modal-section-hint", text: t("modal.addToMealPlan.groceryExpandHint") });
 		const chevron = groceryHeader.createSpan({ cls: "rb-modal-section-chevron" });
 		setIcon(chevron, "chevron-right");
 
@@ -211,7 +217,7 @@ export class AddToMealPlanModal extends BaseModal {
 		const counter = groceryBody.createEl("p", { cls: "rb-modal-selection-counter" });
 		groceryBody.createEl("p", {
 			cls: "rb-modal-section-desc",
-			text: "Checked ingredients will be added to your grocery list.",
+			text: t("modal.addToMealPlan.groceryChecklistNote"),
 		});
 		const checklistEl = groceryBody.createDiv({ cls: "rb-checklist-container" });
 
@@ -229,7 +235,7 @@ export class AddToMealPlanModal extends BaseModal {
 		const updateCounter = (): void => {
 			const total = this.ingredients.length;
 			const selected = this.selectedKeys.size;
-			counter.textContent = `${selected} of ${total} selected`;
+			counter.textContent = t("modal.addToMealPlan.selectedCount", { selected, total });
 		};
 
 		renderIngredientChecklist(checklistEl, this.ingredients, this.selectedKeys, (key, checked) => {
@@ -243,9 +249,9 @@ export class AddToMealPlanModal extends BaseModal {
 	}
 
 	private confirmLabel(): string {
-		if (this.editMode) return "Update";
-		if (this.days.length > 1) return `Add to ${this.days.length} days`;
-		return "Add to plan";
+		if (this.editMode) return t("modal.addToMealPlan.update");
+		if (this.days.length > 1) return t("modal.addToMealPlan.addToNDays", { count: this.days.length });
+		return t("modal.addToMealPlan.addToPlan");
 	}
 
 	private updateConfirmLabel(): void {
@@ -253,13 +259,13 @@ export class AddToMealPlanModal extends BaseModal {
 	}
 
 	renderFooter(footerEl: HTMLElement): void {
-		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: "Cancel" })
+		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: t("common.cancel") })
 			.addEventListener("click", () => this.close());
 
 		this.confirmBtn = footerEl.createEl("button", { cls: "mod-cta", text: this.confirmLabel() });
 		this.confirmBtn.addEventListener("click", () => { void (async () => {
 			this.confirmBtn.disabled = true;
-			this.confirmBtn.textContent = this.editMode ? "Updating…" : "Adding…";
+			this.confirmBtn.textContent = this.editMode ? t("modal.addToMealPlan.updating") : t("modal.addToMealPlan.adding");
 			if (this.days.length > 1 && this.entry.kind === "recipe" && this.multiDayDeps) {
 				await this.confirmMultiDay(this.entry.file, this.multiDayDeps);
 			} else {

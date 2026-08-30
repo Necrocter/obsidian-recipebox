@@ -2,6 +2,7 @@
  * Modal for the meal suggester: mode picker and auto-run results with thumbnails.
  * Suggestions run automatically on open and whenever the mode changes.
  */
+import { t } from "../../i18n";
 import { App, setIcon, TFile } from "obsidian";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { MealPlanEntry } from "../../types";
@@ -45,7 +46,7 @@ export class SuggestMealModal extends BaseModal {
 		this.activeModeId = active?.id ?? "";
 	}
 
-	getTitle(): string { return "Meal Suggester"; }
+	getTitle(): string { return t("modal.suggest.title"); }
 	getIcon(): string { return "wand-sparkles"; }
 	getContentClasses(): string[] { return ["rb-suggest-modal"]; }
 
@@ -60,7 +61,7 @@ export class SuggestMealModal extends BaseModal {
 	private renderModeRow(bodyEl: HTMLElement): void {
 		const settings = this.deps.getSettings();
 		const row = bodyEl.createDiv({ cls: "rb-modal-field rb-suggest-strategy-row" });
-		row.createEl("label", { cls: "rb-modal-field-label", text: "Mode" });
+		row.createEl("label", { cls: "rb-modal-field-label", text: t("modal.suggest.mode") });
 
 		const controls = row.createDiv({ cls: "rb-suggest-controls-row" });
 
@@ -79,7 +80,7 @@ export class SuggestMealModal extends BaseModal {
 		// Edit button
 		const editBtn = controls.createEl("button", { cls: "rb-suggest-icon-btn" });
 		setIcon(editBtn.createSpan(), "pencil");
-		editBtn.setAttribute("aria-label", "Edit mode");
+		editBtn.setAttribute("aria-label", t("modal.suggest.editMode"));
 		editBtn.addEventListener("click", () => {
 			const mode = this.currentMode();
 			if (!mode) return;
@@ -114,7 +115,7 @@ export class SuggestMealModal extends BaseModal {
 		// Duplicate button
 		const dupBtn = controls.createEl("button", { cls: "rb-suggest-icon-btn" });
 		setIcon(dupBtn.createSpan(), "copy");
-		dupBtn.setAttribute("aria-label", "Duplicate as new mode");
+		dupBtn.setAttribute("aria-label", t("modal.suggest.duplicateAsNew"));
 		dupBtn.addEventListener("click", () => {
 			const mode = this.currentMode();
 			if (!mode) return;
@@ -158,7 +159,7 @@ export class SuggestMealModal extends BaseModal {
 		this.updateAddBtn();
 
 		if (!mode) {
-			this.resultsEl.createEl("p", { cls: "rb-suggest-hint", text: "No mode selected." });
+			this.resultsEl.createEl("p", { cls: "rb-suggest-hint", text: t("modal.suggest.noModeSelected") });
 			return;
 		}
 
@@ -166,7 +167,7 @@ export class SuggestMealModal extends BaseModal {
 		const results = suggestRecipes(this.app, settings, mode, this.deps.getDiscovery(), this.maxResults);
 
 		if (results.length === 0) {
-			this.resultsEl.createEl("p", { cls: "rb-suggest-hint", text: "No recipes matched the current filters." });
+			this.resultsEl.createEl("p", { cls: "rb-suggest-hint", text: t("modal.suggest.noMatches") });
 			return;
 		}
 
@@ -219,14 +220,14 @@ export class SuggestMealModal extends BaseModal {
 
 		if (totalCount === 0) {
 			this.scheduleBtn.addClass("rb-hidden");
-			this.scheduleBtn.textContent = "Schedule recipes";
+			this.scheduleBtn.textContent = t("modal.schedule.scheduleRecipes");
 			return;
 		}
 
 		this.scheduleBtn.removeClass("rb-hidden");
 		this.scheduleBtn.textContent = selectedCount > 0
-			? `Schedule selected (${selectedCount})`
-			: `Schedule all (${totalCount})`;
+			? t("modal.suggest.scheduleSelected", { count: selectedCount })
+			: t("modal.suggest.scheduleAll", { count: totalCount });
 	}
 
 	private openScheduleModal(): void {
@@ -241,11 +242,11 @@ export class SuggestMealModal extends BaseModal {
 	renderFooter(footerEl: HTMLElement): void {
 		const refreshBtn = footerEl.createEl("button", { cls: "rb-suggest-icon-btn" });
 		setIcon(refreshBtn.createSpan(), "refresh-cw");
-		refreshBtn.setAttribute("aria-label", "Refresh suggestions");
+		refreshBtn.setAttribute("aria-label", t("modal.suggest.refresh"));
 		refreshBtn.addEventListener("click", () => this.runSuggestion());
 
 		const maxResultsSelect = footerEl.createEl("select", { cls: "rb-modal-select rb-suggest-max-results-select" });
-		maxResultsSelect.setAttribute("aria-label", "Number of suggestions");
+		maxResultsSelect.setAttribute("aria-label", t("modal.suggest.numSuggestions"));
 		for (const n of MAX_RESULTS_OPTIONS) {
 			maxResultsSelect.createEl("option", { attr: { value: String(n) }, text: String(n) });
 		}
@@ -257,10 +258,10 @@ export class SuggestMealModal extends BaseModal {
 
 		footerEl.createDiv({ cls: "rb-modal-footer-spacer" });
 
-		const closeBtn = footerEl.createEl("button", { text: "Close" });
+		const closeBtn = footerEl.createEl("button", { text: t("common.close") });
 		closeBtn.addEventListener("click", () => this.close());
 
-		this.scheduleBtn = footerEl.createEl("button", { cls: "rb-suggest-add-btn mod-cta", text: "Schedule recipes" });
+		this.scheduleBtn = footerEl.createEl("button", { cls: "rb-suggest-add-btn mod-cta", text: t("modal.schedule.scheduleRecipes") });
 		this.scheduleBtn.addEventListener("click", () => this.openScheduleModal());
 		this.updateAddBtn();
 	}
