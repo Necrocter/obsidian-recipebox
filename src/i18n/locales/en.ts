@@ -29,6 +29,8 @@ export const en = {
 	"command.suggestMeal": "Suggest a meal",
 	"command.openDashboard": "Open recipe dashboard",
 	"command.pantryMatch": "What can I cook?",
+	"command.pantryAdd": "Add to pantry",
+	"command.pantrySync": "Sync pantry from grocery list",
 
 	// ── Notices (transient toasts) ─────────────────────────────────────────
 	"notice.mealPlanCleared.one": "Cleared 1 meal plan entry.",
@@ -68,6 +70,12 @@ export const en = {
 	"notice.itemsAdded.other": "{count} items added",
 	"notice.itemsRemoved.one": "1 item removed",
 	"notice.itemsRemoved.other": "{count} items removed",
+	"notice.pantryAdded.one": "1 item added to the pantry.",
+	"notice.pantryAdded.other": "{count} items added to the pantry.",
+	"notice.pantrySynced.one": "1 checked item moved into the pantry.",
+	"notice.pantrySynced.other": "{count} checked items moved into the pantry.",
+	"notice.pantryNoChecked": "No checked items on the grocery list.",
+	"notice.pantryNothingToAdd": "Nothing new -- the pantry already has all of those.",
 
 	// ── Common / reused words ─────────────────────────────────────────────
 	"common.remove": "Remove",
@@ -740,6 +748,9 @@ export const en = {
 	"modal.pantry.bucket.missing23Empty": "No recipes are two or three ingredients away.",
 	"modal.pantry.noListNote": "{count} recipes skipped: no \"{prop}\" list in their frontmatter.",
 	"modal.pantry.addMissing": "Add missing to grocery list",
+	"modal.pantryAdd.title": "Add to pantry",
+	"modal.pantryAdd.hint": "One ingredient per line, or comma-separated. They are appended to the pantry note as items you have.",
+	"modal.pantryAdd.placeholder": "eggs, milk\ncilantro",
 
 	// ── Suggester mode editor + filter operators ──────────────────────
 	"modal.strategy.name": "Name",

@@ -5,7 +5,7 @@
 import { Notice, TFile } from "obsidian";
 import { tPlural } from "../i18n";
 import RecipeBoxPlugin from "../main";
-import { openPantryMatchModal } from "./open-pantry-match";
+import { openPantryMatchModal } from "./pantry-actions";
 import { suppressAutoOpenOnce } from "./recipe-file-detection";
 import { GroceryView, GROCERY_VIEW_TYPE } from "../ui/grocery-view";
 import { RecipeView, RECIPE_VIEW_TYPE } from "../ui/recipe-view/recipe-view";

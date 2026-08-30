@@ -1,35 +1,13 @@
 /**
- * Pure matching logic for the "what can I cook?" pantry feature: turn a
- * free-form pantry note into a set of ingredient names, and compare a recipe's
- * declared ingredient list against it. No Obsidian imports so it stays unit
- * testable.
+ * Recipe/pantry matching for the "what can I cook?" feature. Pantry parsing
+ * lives in pantry-note.ts; this file just compares a recipe's declared
+ * ingredient list against the pantry set. No Obsidian imports.
  */
-import { normaliseName, stripListMarkers } from "./ingredient-clean";
+import { normaliseName } from "./ingredient-clean";
+import { pantrySet } from "./pantry-note";
 
-const LIST_ITEM_RE = /^(?:[-*+]\s|\d+\.\s)/;
-const TRAILING_PAREN_RE = /\s*\([^)]*\)\s*$/;
-const TRAILING_TAGS_RE = /(?:\s+#[\w/-]+)+\s*$/;
-
-/**
- * Parse a pantry note body into a set of normalised ingredient names. Only
- * bullet / numbered / checkbox list items count; headings, quotes and prose
- * are ignored so the note can carry section headers and comments. A trailing
- * "(note)" or "#tag" on an item is stripped before normalising.
- */
-export function parsePantryNote(text: string): Set<string> {
-	const out = new Set<string>();
-	for (const rawLine of text.split("\n")) {
-		const line = rawLine.trim();
-		if (!line || line.startsWith("#") || line.startsWith(">")) continue;
-		if (!LIST_ITEM_RE.test(line)) continue;
-		const item = stripListMarkers(line)
-			.replace(TRAILING_TAGS_RE, "")
-			.replace(TRAILING_PAREN_RE, "");
-		const name = normaliseName(item);
-		if (name) out.add(name);
-	}
-	return out;
-}
+/** @deprecated import `pantrySet` from ./pantry-note instead. */
+export const parsePantryNote = pantrySet;
 
 export interface RecipeMatch {
 	/** Recipe ingredient strings (verbatim) that the pantry covers. */

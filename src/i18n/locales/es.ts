@@ -29,6 +29,8 @@ export const es: Record<TranslationKey, string> = {
 	"command.suggestMeal": "Sugerir una comida",
 	"command.openDashboard": "Abrir el panel de recetas",
 	"command.pantryMatch": "¿Qué puedo cocinar?",
+	"command.pantryAdd": "Añadir a la despensa",
+	"command.pantrySync": "Sincronizar la despensa desde la lista de la compra",
 
 	// ── Avisos (mensajes temporales) ──────────────────────────────────────
 	"notice.mealPlanCleared.one": "Se ha borrado 1 entrada del plan de comidas.",
@@ -68,6 +70,12 @@ export const es: Record<TranslationKey, string> = {
 	"notice.itemsAdded.other": "{count} artículos añadidos",
 	"notice.itemsRemoved.one": "1 artículo eliminado",
 	"notice.itemsRemoved.other": "{count} artículos eliminados",
+	"notice.pantryAdded.one": "1 ingrediente añadido a la despensa.",
+	"notice.pantryAdded.other": "{count} ingredientes añadidos a la despensa.",
+	"notice.pantrySynced.one": "1 artículo marcado pasó a la despensa.",
+	"notice.pantrySynced.other": "{count} artículos marcados pasaron a la despensa.",
+	"notice.pantryNoChecked": "No hay artículos marcados en la lista de la compra.",
+	"notice.pantryNothingToAdd": "Nada nuevo: la despensa ya tiene todo eso.",
 
 	// ── Palabras comunes / reutilizadas ──────────────────────────────────
 	"common.remove": "Quitar",
@@ -735,6 +743,9 @@ export const es: Record<TranslationKey, string> = {
 	"modal.pantry.bucket.missing23Empty": "Ninguna receta está a dos o tres ingredientes de distancia.",
 	"modal.pantry.noListNote": "{count} recetas omitidas: no tienen una lista \"{prop}\" en su frontmatter.",
 	"modal.pantry.addMissing": "Añadir lo que falta a la lista de la compra",
+	"modal.pantryAdd.title": "Añadir a la despensa",
+	"modal.pantryAdd.hint": "Un ingrediente por línea, o separados por comas. Se añaden a la nota de despensa como cosas que tienes.",
+	"modal.pantryAdd.placeholder": "huevos, leche\ncilantro",
 
 	// ── Editor de modos del sugeridor + operadores de filtro ─────────
 	"modal.strategy.name": "Nombre",
