@@ -73,39 +73,46 @@ export const UNIT_SYNONYMS: Record<string, string> = {
 	// filler words
 	unit: "", units: "", whole: "", each: "",
 
-	// ── Spanish spellings, mapped onto the same canonical forms ─────────────
-	// Kept alongside the English keys rather than locale-switched so a vault
-	// mixing English and Spanish recipes parses either.
+	// ── Spanish spellings ─────────────────────────────────────────────────
+	// Kept alongside the English keys (not locale-switched) so a vault mixing
+	// English and Spanish recipes parses either. Crucially, Spanish units
+	// canonicalise to a Spanish singular form, NOT the English abbreviation:
+	// the parsed unit is shown verbatim in the recipe view, so mapping
+	// "cucharadas" to "tbsp" would silently switch the displayed word to
+	// English. Plurals still collapse (so grocery-list dedup works), just
+	// within Spanish. Metric units (g/kg/ml/l) stay as their language-neutral
+	// abbreviations because those are identical in Spanish.
 	// teaspoon
-	cucharadita: "tsp", cucharaditas: "tsp", cdta: "tsp", cdtas: "tsp", cdita: "tsp",
+	cucharadita: "cucharadita", cucharaditas: "cucharadita",
+	cdta: "cucharadita", cdtas: "cucharadita", cdita: "cucharadita", cta: "cucharadita",
 	// tablespoon
-	cucharada: "tbsp", cucharadas: "tbsp", cda: "tbsp", cdas: "tbsp",
+	cucharada: "cucharada", cucharadas: "cucharada", cda: "cucharada", cdas: "cucharada",
 	// cup
-	taza: "cup", tazas: "cup",
+	taza: "taza", tazas: "taza",
 	// milliliter / liter
 	mililitro: "ml", mililitros: "ml", litro: "l", litros: "l",
 	// gram / kilogram
 	gramo: "g", gramos: "g", kilo: "kg", kilos: "kg", kilogramo: "kg", kilogramos: "kg",
 	// ounce / pound
-	onza: "oz", onzas: "oz", libra: "lb", libras: "lb",
-	// piece / unit
-	pieza: "piece", piezas: "piece", unidad: "piece", unidades: "piece",
+	onza: "onza", onzas: "onza", libra: "libra", libras: "libra",
+	// piece / unit  ("unidad" is a filler like English "unit"; "pieza" is kept)
+	pieza: "pieza", piezas: "pieza", unidad: "", unidades: "",
 	// can / jar / bag / box / bottle / pack
-	lata: "can", latas: "can",
-	bote: "jar", botes: "jar", tarro: "jar", tarros: "jar", frasco: "jar", frascos: "jar",
-	bolsa: "bag", bolsas: "bag",
-	caja: "box", cajas: "box",
-	botella: "bottle", botellas: "bottle",
-	paquete: "pack", paquetes: "pack", sobre: "pack", sobres: "pack",
+	lata: "lata", latas: "lata",
+	bote: "bote", botes: "bote", tarro: "bote", tarros: "bote", frasco: "bote", frascos: "bote",
+	bolsa: "bolsa", bolsas: "bolsa",
+	caja: "caja", cajas: "caja",
+	botella: "botella", botellas: "botella",
+	paquete: "paquete", paquetes: "paquete", sobre: "paquete", sobres: "paquete",
 	// bunch / head / clove / slice / sprig / stalk / loaf
-	manojo: "bunch", manojos: "bunch",
-	cabeza: "head", cabezas: "head",
-	diente: "clove", dientes: "clove",
-	rodaja: "slice", rodajas: "slice", rebanada: "slice", rebanadas: "slice",
-	loncha: "slice", lonchas: "slice",
-	ramita: "sprig", ramitas: "sprig", rama: "sprig", ramas: "sprig",
-	tallo: "stalk", tallos: "stalk",
-	barra: "loaf", barras: "loaf",
-	// pinch / dash
-	pizca: "pinch", pizcas: "pinch",
+	manojo: "manojo", manojos: "manojo",
+	cabeza: "cabeza", cabezas: "cabeza",
+	diente: "diente", dientes: "diente",
+	rodaja: "rodaja", rodajas: "rodaja", rebanada: "rebanada", rebanadas: "rebanada",
+	loncha: "loncha", lonchas: "loncha",
+	ramita: "ramita", ramitas: "ramita", rama: "ramita", ramas: "ramita",
+	tallo: "tallo", tallos: "tallo",
+	barra: "barra", barras: "barra",
+	// pinch
+	pizca: "pizca", pizcas: "pizca",
 };

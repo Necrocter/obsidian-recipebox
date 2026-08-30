@@ -84,8 +84,14 @@ export function stripMarkdownEmphasis(text: string): string {
 		.trim();
 }
 
+/**
+ * Drops a leading partitive word left over after the quantity/unit is
+ * consumed, so "2 cups of flour" and "2 tazas de harina" both yield just the
+ * ingredient name. Only a *leading* match is removed, so mid-name words are
+ * safe ("cream of tartar", "diente de ajo" once "diente" is the unit).
+ */
 export function stripOf(text: string): string {
-	return text.replace(/^of\s+/i, "");
+	return text.replace(/^(?:of|de)\s+/i, "");
 }
 
 export function normaliseName(name: string): string {
