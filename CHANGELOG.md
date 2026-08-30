@@ -1,68 +1,31 @@
-## 0.2.1 -- Necrocter/obsidian-recipebox fork
+## 0.1.12-es.2 -- Necrocter/obsidian-recipebox fork
+
+Tracks upstream 0.1.12 (in-progress upstream; latest upstream stable is 0.1.11).
+Fork iteration `es.2` folds in everything after the initial Spanish work.
+
+### Features
+
+* **settings:** the recipe **source** frontmatter key is configurable
+  (`sourceProperty`, default `source`; `source` / `url` / `sourceUrl` /
+  `source_url` still tried as fallbacks), so a non-English vault can use
+  `fuente`. Drives the recipe-view banner, the mobile Info tab and the shared
+  page; the "Source" labels are localised.
+* **pantry:** "What can I cook?" -- a command and dashboard button that read a
+  **pantry note** (`pantryNotePath`, default `Pantry.md`; one ingredient per
+  list item, any language) and group every recipe by how many ingredients you
+  are missing: **Ready to cook** / **Missing 1** / **Missing 2-3**. Favourites
+  sort first, then the simplest recipes. Click a recipe to open it, or the cart
+  button to push its missing items to the grocery list.
+* **pantry:** the pantry note is a living checklist -- `- [ ] item` (explicitly
+  unchecked) counts as out of stock; `- [x] item` and a plain `- item` count
+  as had. New commands **"Add to pantry"** and **"Sync pantry from grocery
+  list"**. New setting `ingredientsListProperty` (default `ingredients`,
+  `ingredientes` as fallback).
 
 ### Bug Fixes
 
-* **pantry:** an auto-created pantry note now takes its `# heading` from the
-  note's own filename (`Despensa.md` -> `# Despensa`) instead of a hardcoded
-  `# Pantry`. Cosmetic -- the matcher ignores headings.
-
----
-
-## 0.2.0 -- Necrocter/obsidian-recipebox fork
-
-Version scheme switched to plain semver (no `-es` prerelease suffix) so BRAT
-tracks fork releases reliably. Content is 0.1.13-es.2 as-is; the bump is the
-scheme change plus this note.
-
----
-
-## 0.1.13-es.2 -- Necrocter/obsidian-recipebox fork
-
-### Features
-
-* **pantry:** the pantry note is now a living checklist. `- [ ] item`
-  (explicitly unchecked) counts as *out of stock*; `- [x] item` and a plain
-  `- item` count as had -- so you tick / untick instead of add / delete.
-* **pantry:** **"Add to pantry"** command -- type ingredients (comma- or
-  newline-separated), appended to the pantry note as had items.
-* **pantry:** **"Sync pantry from grocery list"** command -- every checked-off
-  grocery item is ticked / added in the pantry, closing the shopping loop.
-
-### Changes
-
-* **pantry:** the `pantryNotePath` and `ingredientsListProperty` defaults are
-  now the language-neutral `Pantry.md` / `ingredients` (the feature always
-  worked in any language; only the defaults were Spanish). `ingredientes` is
-  still tried as a fallback for the ingredient list.
-
----
-
-## 0.1.13-es.1 -- Necrocter/obsidian-recipebox fork
-
-### Features
-
-* **pantry:** "What can I cook?" -- a new command and dashboard button that
-  reads a **pantry note** (`pantryNotePath`, default `Pantry.md`; one
-  ingredient per list item, in any language) and groups every recipe by how
-  many of its ingredient-list frontmatter entries you are missing:
-  **Ready to cook** / **Missing 1** / **Missing 2-3**. Click a recipe to open
-  it, or the cart button to push its missing items to the grocery list.
-  Favourites sort first, then the simplest recipes. New settings: pantry note
-  path (Notes) and the ingredient-list frontmatter key
-  (`ingredientsListProperty`, default `ingredients`, Property names).
-
----
-
-## 0.1.12-es.2 — Necrocter/obsidian-recipebox fork
-
-### Features
-
-* **settings:** the recipe **source** frontmatter key is now configurable
-  (`sourceProperty`, default `source`), so a non-English vault can use
-  `fuente`. `source` / `url` / `sourceUrl` / `source_url` are still checked as
-  fallbacks. Lives in **Settings → Property names → Recipe source**, and now
-  drives the recipe-view banner, the mobile Info tab and the shared page. The
-  "Source" / "Source:" labels are also localised.
+* **pantry:** an auto-created pantry note takes its `# heading` from the note's
+  own filename (`Despensa.md` -> `# Despensa`) instead of a hardcoded string.
 
 ---
 
