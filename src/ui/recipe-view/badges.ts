@@ -3,6 +3,7 @@
  * badge formulas, formatting values, and supporting separator/newline badge types.
  */
 import { App, getAllTags, setIcon, TFile } from "obsidian";
+import { getLocaleTag } from "../../i18n";
 import { CustomBadge, BadgeType } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { stripWikilink } from "../../utils/wikilink-strip";
@@ -21,7 +22,7 @@ function normalizeValue(raw: unknown, valueType: string): string | null {
 	const str = String(raw);
 	if (DATE_RE.test(str.trim())) {
 		const d = new Date(str.trim() + "T00:00:00");
-		return isNaN(d.getTime()) ? str : d.toLocaleDateString(undefined, { dateStyle: "medium" });
+		return isNaN(d.getTime()) ? str : d.toLocaleDateString(getLocaleTag(), { dateStyle: "medium" });
 	}
 	return stripWikilink(str);
 }

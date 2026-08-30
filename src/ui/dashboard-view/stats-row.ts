@@ -4,7 +4,7 @@
  * stat cards beside it. See dashboard-spec.md sections 3, 11.2-11.4, 13.2.
  */
 import { Menu, TFile } from "obsidian";
-import { t } from "../../i18n";
+import { t, tPlural, getLocaleTag } from "../../i18n";
 import { RecipeBoxSettings, DashboardActivityRangeWeeks } from "../../settings/settings-types";
 import { DashboardStats, CookingActivityResult, CookingActivityBucket, ActivityGranularity } from "./dashboard-stats";
 import { renderBarChart, BarChartBar } from "./chart-bars";
@@ -42,18 +42,21 @@ function renderRecentlyMadeFallback(hero: HTMLElement, stats: DashboardStats, ac
 	}
 }
 
+// Date labels follow the plugin's language (getLocaleTag()), not the OS
+// locale -- passing undefined here rendered weekday/month names in the
+// system language even when the plugin was set to Spanish.
 function formatAxisLabel(bucketStart: string, granularity: ActivityGranularity): string {
 	const d = new Date(bucketStart + "T00:00:00");
 	if (isNaN(d.getTime())) return bucketStart;
-	if (granularity === "day") return d.toLocaleDateString(undefined, { weekday: "short" });
-	return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+	if (granularity === "day") return d.toLocaleDateString(getLocaleTag(), { weekday: "short" });
+	return d.toLocaleDateString(getLocaleTag(), { month: "short", day: "numeric" });
 }
 
 function formatHoverLabel(bucket: CookingActivityBucket, granularity: ActivityGranularity): string {
 	const d = new Date(bucket.bucketStart + "T00:00:00");
-	const dateStr = isNaN(d.getTime()) ? bucket.bucketStart : d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-	const prefix = granularity === "week" ? `Week of ${dateStr}` : dateStr;
-	return `${prefix}: ${bucket.count} cooked`;
+	const dateStr = isNaN(d.getTime()) ? bucket.bucketStart : d.toLocaleDateString(getLocaleTag(), { month: "short", day: "numeric" });
+	const prefix = granularity === "week" ? t("dash.activity.weekOf", { date: dateStr }) : dateStr;
+	return `${prefix}: ${tPlural("dash.activity.cooked.one", "dash.activity.cooked.other", bucket.count)}`;
 }
 
 // Reuses the same lightweight-popover pattern as the meal plan mini-grid's

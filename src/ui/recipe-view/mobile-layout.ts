@@ -6,7 +6,7 @@
  * instructions-section.ts, and section-sidebar.ts instead.
  */
 import { App, Component, getAllTags, MarkdownRenderer, Modal, setIcon, TFile } from "obsidian";
-import { t } from "../../i18n";
+import { t, getLocaleTag } from "../../i18n";
 import { CustomBadge, IngredientGroup, InstructionGroup } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { GroceryItem } from "../../types";
@@ -67,7 +67,7 @@ const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 function formatDateValue(raw: string): string {
 	if (DATE_RE.test(raw.trim())) {
 		const d = new Date(raw.trim() + "T00:00:00");
-		if (!isNaN(d.getTime())) return d.toLocaleDateString(undefined, { dateStyle: "medium" });
+		if (!isNaN(d.getTime())) return d.toLocaleDateString(getLocaleTag(), { dateStyle: "medium" });
 	}
 	return raw;
 }
