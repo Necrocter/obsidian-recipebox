@@ -3,6 +3,7 @@
  * entry lines, extracting recipe wikilinks, day headings, and meal-type suffixes.
  */
 import { deslugifyMealType } from "../../utils/text-case";
+import { canonicalDay } from "../../i18n";
 
 export interface MealPlanLine {
 	kind: "entry" | "raw";
@@ -65,7 +66,12 @@ export function parseMealPlanNote(body: string, fieldName = "meal"): MealPlanSec
 		if (raw.startsWith("## ")) {
 			sections.push(current);
 			const heading = raw.slice(3).trim();
-			current = { header: heading.toLowerCase() === "unscheduled" ? "Meal Plan Queue" : heading, lines: [] };
+			// The note heading may be written in the user's language ("## Lunes");
+			// canonicalise it so section.header / line.day are always the English
+			// key the rest of the plugin sorts and matches on. Non-weekday
+			// headings (queue sentinel, custom labels) pass through untouched.
+			const header = heading.toLowerCase() === "unscheduled" ? "Meal Plan Queue" : canonicalDay(heading);
+			current = { header, lines: [] };
 			continue;
 		}
 

@@ -101,3 +101,29 @@ export function dayLabel(day: string): string {
 	const key = WEEKDAY_KEYS[day.trim().toLowerCase()];
 	return key ? t(key) : day;
 }
+
+// Every localised full weekday name (across all shipped locales) mapped back
+// to its canonical English key. Built once. Used to read day-section headings
+// out of the meal plan note -- the note may say "## Lunes" but state, sorting
+// and the week grid all key off "Monday".
+const CANONICAL_DAY_BY_LOCALISED: Record<string, string> = (() => {
+	const out: Record<string, string> = {};
+	for (const [canonical, key] of Object.entries(WEEKDAY_KEYS)) {
+		const english = canonical.charAt(0).toUpperCase() + canonical.slice(1);
+		out[canonical] = english; // "monday" -> "Monday"
+		for (const dict of Object.values(DICTIONARIES)) {
+			out[dict[key].trim().toLowerCase()] = english;
+		}
+	}
+	return out;
+})();
+
+/**
+ * Inverse of dayLabel(): given a weekday name in any shipped language and any
+ * case ("Lunes", "lunes", "Monday"), return the canonical English key
+ * ("Monday"). Anything not a recognised weekday (a custom label, a queue
+ * sentinel) is returned unchanged.
+ */
+export function canonicalDay(day: string): string {
+	return CANONICAL_DAY_BY_LOCALISED[day.trim().toLowerCase()] ?? day;
+}
