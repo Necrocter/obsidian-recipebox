@@ -3,6 +3,7 @@
  * and the collapsible header-badge list.
  */
 import { App, Platform, setIcon, Setting } from "obsidian";
+import { t } from "../../i18n";
 import { CustomBadge } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { DEFAULT_SETTINGS } from "../../settings/settings-defaults";
@@ -18,25 +19,25 @@ export function renderSectionRecipeView(
 	app: App,
 	getDiscovery?: () => DiscoveryResult | null,
 ): void {
-	new Setting(container).setName("Recipe view").setHeading();
+	new Setting(container).setName(t("set.recipeView.title")).setHeading();
 
 	new Setting(container)
-		.setName("Auto-open recipe view")
-		.setDesc("Automatically switch to recipe view when opening a recipe note.")
-		.addToggle((t) =>
-			t.setValue(settings.autoOpenRecipeView).onChange(async (v) => {
+		.setName(t("set.rv.autoOpen.name"))
+		.setDesc(t("set.rv.autoOpen.desc"))
+		.addToggle((c) =>
+			c.setValue(settings.autoOpenRecipeView).onChange(async (v) => {
 				settings.autoOpenRecipeView = v;
 				await save();
 			})
 		);
 
 	new Setting(container)
-		.setName("Desktop recipe layout")
-		.setDesc("Choose the layout style for the desktop recipe view. Mobile view is not affected by this setting. In two-column mode, you can drag the center divider to resize columns.")
+		.setName(t("set.rv.layout.name"))
+		.setDesc(t("set.rv.layout.desc"))
 		.addDropdown((d) =>
 			d
-				.addOption("two-column", "Two column")
-				.addOption("classic", "Classic single column")
+				.addOption("two-column", t("set.rv.layout.twoColumn"))
+				.addOption("classic", t("set.rv.layout.classic"))
 				.setValue(settings.desktopRecipeLayout)
 				.onChange(async (value) => {
 					settings.desktopRecipeLayout = value === "classic" ? "classic" : "two-column";
@@ -46,10 +47,10 @@ export function renderSectionRecipeView(
 		);
 
 	new Setting(container)
-		.setName("Reset two-column split")
-		.setDesc("Restore the default 50/50 split for the resizable two-column layout.")
+		.setName(t("set.rv.resetSplit.name"))
+		.setDesc(t("set.rv.resetSplit.desc"))
 		.addButton((b) =>
-			b.setButtonText("Reset")
+			b.setButtonText(t("common.reset"))
 				.setDisabled(settings.desktopTwoColumnSplitRatio === DEFAULT_SETTINGS.desktopTwoColumnSplitRatio)
 				.onClick(() => {
 					settings.desktopTwoColumnSplitRatio = DEFAULT_SETTINGS.desktopTwoColumnSplitRatio;
@@ -58,10 +59,10 @@ export function renderSectionRecipeView(
 		);
 
 	new Setting(container)
-		.setName("Show recipe source")
-		.setDesc("Show the recipe's source frontmatter, as a link when it is a web address. Appears in the banner on desktop and in the info tab on mobile.")
-		.addToggle((t) =>
-			t.setValue(settings.showRecipeSource).onChange(async (v) => {
+		.setName(t("set.rv.showSource.name"))
+		.setDesc(t("set.rv.showSource.desc"))
+		.addToggle((c) =>
+			c.setValue(settings.showRecipeSource).onChange(async (v) => {
 				settings.showRecipeSource = v;
 				await save();
 				rerender();
@@ -69,9 +70,9 @@ export function renderSectionRecipeView(
 		);
 
 	new Setting(container)
-		.setName("Show tags in header")
-		.addToggle((t) =>
-			t.setValue(settings.showTagsInHeader).onChange(async (v) => {
+		.setName(t("set.rv.showTags.name"))
+		.addToggle((c) =>
+			c.setValue(settings.showTagsInHeader).onChange(async (v) => {
 				settings.showTagsInHeader = v;
 				await save();
 				rerender();
@@ -80,48 +81,48 @@ export function renderSectionRecipeView(
 
 	if (settings.showTagsInHeader) {
 		new Setting(container)
-			.setName("Prefix tags with #")
-			.addToggle((t) =>
-				t.setValue(settings.prefixTagsWithHash).onChange(async (v) => {
+			.setName(t("set.rv.prefixTags.name"))
+			.addToggle((c) =>
+				c.setValue(settings.prefixTagsWithHash).onChange(async (v) => {
 					settings.prefixTagsWithHash = v;
 					await save();
 				})
 			);
 		new Setting(container)
-			.setName("Show full tag path")
-			.setDesc("When off, only the last segment of a nested tag is shown.")
-			.addToggle((t) =>
-				t.setValue(settings.showFullTagPath).onChange(async (v) => {
+			.setName(t("set.rv.fullTagPath.name"))
+			.setDesc(t("set.rv.fullTagPath.desc"))
+			.addToggle((c) =>
+				c.setValue(settings.showFullTagPath).onChange(async (v) => {
 					settings.showFullTagPath = v;
 					await save();
 				})
 			);
 	}
 	new Setting(container)
-		.setName("Cross off while cooking")
-		.setDesc("Clicking an ingredient or instruction step marks it as done for the current session.")
-		.addToggle((t) =>
-			t.setValue(settings.crossOffWhileCooking).onChange(async (v) => {
+		.setName(t("set.rv.crossOff.name"))
+		.setDesc(t("set.rv.crossOff.desc"))
+		.addToggle((c) =>
+			c.setValue(settings.crossOffWhileCooking).onChange(async (v) => {
 				settings.crossOffWhileCooking = v;
 				await save();
 			})
 		);
 
 	new Setting(container)
-		.setName("Strip duplicate title and hero image from body")
-		.setDesc("Remove a leading h1 from the note body if it matches the note title.\nRemove an inline image from the body if it matches the frontmatter image property.")
-		.addToggle((t) =>
-			t.setValue(settings.cleanNoteBody).onChange(async (v) => {
+		.setName(t("set.rv.cleanBody.name"))
+		.setDesc(t("set.rv.cleanBody.desc"))
+		.addToggle((c) =>
+			c.setValue(settings.cleanNoteBody).onChange(async (v) => {
 				settings.cleanNoteBody = v;
 				await save();
 			})
 		);
 
 	new Setting(container)
-		.setName("Use first image in note when frontmatter image is empty")
-		.setDesc("When enabled, recipe view uses the first image found in the note body if the image frontmatter property is not set.")
-		.addToggle((t) =>
-			t.setValue(settings.useFirstBodyImageWhenFrontmatterEmpty).onChange(async (v) => {
+		.setName(t("set.rv.firstImage.name"))
+		.setDesc(t("set.rv.firstImage.desc"))
+		.addToggle((c) =>
+			c.setValue(settings.useFirstBodyImageWhenFrontmatterEmpty).onChange(async (v) => {
 				settings.useFirstBodyImageWhenFrontmatterEmpty = v;
 				await save();
 				rerender();
@@ -129,10 +130,10 @@ export function renderSectionRecipeView(
 		);
 
 	new Setting(container)
-		.setName("Default recipe image")
-		.setDesc("Shown in recipe view and gallery when a recipe has no frontmatter or body image. Accepts a vault path, wikilink, or URL -- same format as the image frontmatter property. Leave blank to disable. Never used on public shares.")
-		.addText((t) =>
-			t.setPlaceholder("e.g. Attachments/default-recipe.png")
+		.setName(t("set.rv.defaultImage.name"))
+		.setDesc(t("set.rv.defaultImage.desc"))
+		.addText((c) =>
+			c.setPlaceholder(t("set.rv.defaultImage.placeholder"))
 				.setValue(settings.defaultRecipeImage)
 				.onChange(async (v) => {
 					settings.defaultRecipeImage = v;
@@ -146,22 +147,22 @@ export function renderSectionRecipeView(
 
 	// ── Inline badge list ────────────────────────────────────────────────────
 	const badgeSettings = new Setting(container)
-		.setName("Header badges")
-		.setDesc("Frontmatter properties to surface as badges in the recipe view header. Click a row to edit, drag to reorder.");
+		.setName(t("set.rv.badges.name"))
+		.setDesc(t("set.rv.badges.desc"));
 
 	badgeSettings.settingEl.addClass("rb-badge-stack");
 
-	badgeSettings.settingEl.createDiv({ cls: "rb-settings-warning-text", text: "Note: if you change frontmatter properties, you will need to update any existing badges using that property." });
+	badgeSettings.settingEl.createDiv({ cls: "rb-settings-warning-text", text: t("set.rv.badges.warning") });
 
 	const listEl = badgeSettings.settingEl.createDiv({ cls: "rb-badge-list" });
 	renderBadgeList(listEl, settings, save, app, getDiscovery);
 }
 
 function badgePrimary(badge: CustomBadge): string {
-	if (badge.type === "newline") return "↵ New line";
-	if (badge.type === "separator") return `${badge.property || "|"}  separator`;
-	if (badge.formula) return badge.label || "Formula";
-	return badge.property || "(no property)";
+	if (badge.type === "newline") return t("set.rv.badge.newline");
+	if (badge.type === "separator") return t("set.rv.badge.separator", { sep: badge.property || "|" });
+	if (badge.formula) return badge.label || t("set.rv.badge.formula");
+	return badge.property || t("set.rv.badge.noProperty");
 }
 
 function badgeSecondary(badge: CustomBadge): string | null {
@@ -214,7 +215,7 @@ function renderBadgeList(
 
 		// Delete button — available for all badges
 		const del = row.createEl("button", { cls: "rb-badge-delete clickable-icon" });
-		del.setAttribute("aria-label", "Remove badge");
+		del.setAttribute("aria-label", t("set.rv.badges.removeBadge"));
 		setIcon(del, "trash-2");
 		del.addEventListener("click", (e) => {
 			e.stopPropagation();
@@ -288,7 +289,7 @@ function renderBadgeList(
 	// Footer actions
 	const footer = listEl.createDiv({ cls: "rb-badge-footer" });
 
-	footer.createEl("button", { text: "+ add badge" }).addEventListener("click", () => {
+	footer.createEl("button", { text: t("set.rv.badges.addBadge") }).addEventListener("click", () => {
 		const blank: CustomBadge = {
 			type: "badge", property: "", label: "",
 			color: "default", valueType: "auto", splitArray: false,
@@ -300,14 +301,14 @@ function renderBadgeList(
 		}, true, getDiscovery, () => settings).open();
 	});
 
-	footer.createEl("button", { text: "+ separator" }).addEventListener("click", () => {
+	footer.createEl("button", { text: t("set.rv.badges.addSeparator") }).addEventListener("click", () => {
 		new SeparatorEditModal(app, null, (badge) => {
 			settings.headerBadges.push(badge);
 			void save().then(() => renderBadgeList(listEl, settings, save, app, getDiscovery));
 		}).open();
 	});
 
-	footer.createEl("button", { text: "+ new line" }).addEventListener("click", () => {
+	footer.createEl("button", { text: t("set.rv.badges.addNewline") }).addEventListener("click", () => {
 		settings.headerBadges.push({
 			type: "newline", property: "", label: "",
 			color: "default", valueType: "auto", splitArray: false,
@@ -318,12 +319,12 @@ function renderBadgeList(
 
 	let resetPending = false;
 	let resetTimer: number | null = null;
-	const resetBtn = footer.createEl("button", { text: "Reset to defaults" });
+	const resetBtn = footer.createEl("button", { text: t("set.rv.badges.reset") });
 	resetBtn.addEventListener("click", () => {
 		if (!resetPending) {
 			resetPending = true;
-			resetBtn.textContent = "Confirm reset?";
-			resetTimer = window.setTimeout(() => { resetPending = false; resetBtn.textContent = "Reset to defaults"; }, 3000);
+			resetBtn.textContent = t("set.rv.badges.confirmReset");
+			resetTimer = window.setTimeout(() => { resetPending = false; resetBtn.textContent = t("set.rv.badges.reset"); }, 3000);
 		} else {
 			if (resetTimer) window.clearTimeout(resetTimer);
 			settings.headerBadges = structuredClone(DEFAULT_SETTINGS.headerBadges);
