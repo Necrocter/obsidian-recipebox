@@ -71,7 +71,11 @@ export default class RecipeBoxPlugin extends Plugin {
 		);
 
 		this.app.workspace.onLayoutReady(() => {
-			void this.manager.refresh();
+			// syncFromMealPlanNote() runs the meal-plan note -> grocery list
+			// auto-add and then refreshes; a plain refresh() only rebuilds the
+			// grocery list from its own note and would leave a hand-added meal
+			// plan entry stranded until the grocery view happened to be opened.
+			void this.manager.syncFromMealPlanNote();
 			// Populate the discovery cache so the mode editor field picker has real fields.
 			void this.discoveryCache.refresh(this.app, this.settings);
 			// The earlier sync() call above runs before the workspace layout (and
