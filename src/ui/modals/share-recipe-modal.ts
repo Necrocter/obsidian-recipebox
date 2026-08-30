@@ -7,6 +7,7 @@
  * one -- see unshare-recipe.ts / share-recipe.ts -- never updates in place.
  */
 import { App, Notice, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { BaseModal } from "./modal-shell";
 import { getShareData, ShareData } from "../../sharing/share-frontmatter";
@@ -40,7 +41,7 @@ function formatExpiry(iso: string): string {
 
 function copyToClipboard(text: string): void {
 	void navigator.clipboard.writeText(text);
-	new Notice("Link copied to clipboard.");
+	new Notice(t("notice.linkCopied"));
 }
 
 export class ShareRecipeModal extends BaseModal {
@@ -231,7 +232,7 @@ export class ShareRecipeModal extends BaseModal {
 			this.renderCurrentView();
 			this.renderCurrentFooter();
 		} catch (err) {
-			new Notice(`Failed to share recipe: ${err instanceof Error ? err.message : String(err)}`);
+			new Notice(t("notice.failedShare", { error: err instanceof Error ? err.message : String(err) }));
 			this.submitBtn.disabled = false;
 		}
 	}
@@ -240,10 +241,10 @@ export class ShareRecipeModal extends BaseModal {
 		btn.disabled = true;
 		try {
 			await unshareRecipe(this.app, this.file, this.settings, this.saveSettings);
-			new Notice("Recipe unshared.");
+			new Notice(t("notice.recipeUnshared"));
 			this.close();
 		} catch (err) {
-			new Notice(`Failed to unshare recipe: ${err instanceof Error ? err.message : String(err)}`);
+			new Notice(t("notice.failedUnshare", { error: err instanceof Error ? err.message : String(err) }));
 			btn.disabled = false;
 		}
 	}

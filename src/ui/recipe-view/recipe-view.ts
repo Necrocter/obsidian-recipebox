@@ -3,6 +3,7 @@
  * structured cooking card with ingredients, instructions, metadata, and timers.
  */
 import { EventRef, Menu, Notice, setIcon, TextFileView, TFile, WorkspaceLeaf } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeViewDeps } from "./recipe-view-deps";
 import { stripFrontmatter } from "../../parser/recipe-frontmatter-strip";
 import { stripRedundantBodyContent } from "../../parser/recipe-body-clean";
@@ -168,17 +169,17 @@ export class RecipeView extends TextFileView {
 		this.cookModeActive = !this.cookModeActive;
 		if (this.cookModeActive) {
 			await this.requestWakeLock();
-			new Notice("Cook mode on · screen will stay awake");
+			new Notice(t("notice.cookModeOn"));
 		} else {
 			this.releaseWakeLock();
-			new Notice("Cook mode off");
+			new Notice(t("notice.cookModeOff"));
 		}
 		this.updateCookModeButton();
 	}
 
 	private async requestWakeLock(): Promise<void> {
 		if (!("wakeLock" in navigator)) {
-			new Notice("Screen wake lock is not supported on this device.");
+			new Notice(t("notice.wakeLockUnsupported"));
 			return;
 		}
 		try {
@@ -189,7 +190,7 @@ export class RecipeView extends TextFileView {
 				this.updateCookModeButton();
 			});
 		} catch {
-			new Notice("Could not activate screen wake lock.");
+			new Notice(t("notice.wakeLockFailed"));
 			this.cookModeActive = false;
 		}
 	}

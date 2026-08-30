@@ -3,6 +3,7 @@
  * grouped Markdown format, with a live preview and copy-to-clipboard action.
  */
 import { App, Notice, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { GroceryItem } from "../../types";
 import { ExportFormat, EXPORT_FORMAT_LABELS } from "../../grocery/export-format";
 import { exportGroceryList } from "../../grocery/export-render";
@@ -96,20 +97,20 @@ export class ExportModal extends BaseModal {
 	private async appendToNote(rawPath: string): Promise<void> {
 		const path = rawPath.trim();
 		if (!path) {
-			new Notice("Please enter a note path.");
+			new Notice(t("notice.enterNotePath"));
 			return;
 		}
 
 		const content = this.previewEl.value;
 		if (!content.trim()) {
-			new Notice("Nothing to export — the list is empty with the current options.");
+			new Notice(t("notice.nothingToExportList"));
 			return;
 		}
 
 		const normalizedPath = path.endsWith(".md") ? path : `${path}.md`;
 
 		if (!normalizedPath.endsWith(".md")) {
-			new Notice("Target must be a Markdown file.");
+			new Notice(t("notice.targetMustBeMarkdown"));
 			return;
 		}
 
@@ -118,7 +119,7 @@ export class ExportModal extends BaseModal {
 
 			if (!existing) {
 				await this.app.vault.create(normalizedPath, content);
-				new Notice(`Exported to ${normalizedPath}.`);
+				new Notice(t("notice.exportedTo", { path: normalizedPath }));
 				this.close();
 				return;
 			}
@@ -126,10 +127,10 @@ export class ExportModal extends BaseModal {
 			const currentContent = await this.app.vault.read(existing);
 			const separator = currentContent.endsWith("\n\n") ? "" : currentContent.endsWith("\n") ? "\n" : "\n\n";
 			await this.app.vault.modify(existing, currentContent + separator + content);
-			new Notice(`Appended to ${normalizedPath}.`);
+			new Notice(t("notice.appendedTo", { path: normalizedPath }));
 			this.close();
 		} catch (err) {
-			new Notice(`Failed to write note: ${err instanceof Error ? err.message : String(err)}`);
+			new Notice(t("notice.failedWriteNote", { error: err instanceof Error ? err.message : String(err) }));
 		}
 	}
 }

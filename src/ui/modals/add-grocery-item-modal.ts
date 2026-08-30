@@ -6,6 +6,7 @@
  * the whole value is stored verbatim as the unit with quantity: null.
  */
 import { App, Notice } from "obsidian";
+import { t } from "../../i18n";
 import { GroceryItemEntry } from "../../types";
 import { parseLeadingQuantity } from "../../parser/quantity-parse";
 import { BaseModal } from "./modal-shell";
@@ -80,7 +81,7 @@ export class AddGroceryItemModal extends BaseModal {
 	private async submit(): Promise<void> {
 		const name = this.nameInput.value.trim();
 		if (!name) {
-			new Notice("Name is required.");
+			new Notice(t("notice.nameRequired"));
 			return;
 		}
 

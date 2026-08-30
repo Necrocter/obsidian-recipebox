@@ -3,6 +3,7 @@
  * interval, triggers audio on completion, and supports drag via timer-drag.ts.
  */
 import { Notice, setIcon } from "obsidian";
+import { t } from "../../i18n";
 import { formatTime, parseTimeInput } from "./time-format";
 import { playCompletionSound } from "./timer-audio";
 import { getTray, registerTimer, unregisterTimer } from "./timer-tray";
@@ -164,7 +165,7 @@ export class TimerWidget {
 		this.updateDisplay();
 		this.el.addClass("is-finished");
 		playCompletionSound();
-		new Notice(`Timer done: ${this.label}`);
+		new Notice(t("notice.timerDone", { label: this.label }));
 	}
 
 	private updateDisplay(): void {
