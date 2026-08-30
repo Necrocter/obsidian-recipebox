@@ -1,3 +1,18 @@
+## 0.1.12-es.7 -- Necrocter/obsidian-recipebox fork
+
+Tracks upstream 0.1.12. Fork iteration `es.7`.
+
+### Bug Fixes
+
+* **grocery:** the meal-plan -> grocery auto-add only worked for recipes with a
+  `## Ingredientes` heading in the body. Recipes that keep their ingredients in
+  the frontmatter `ingredientes:` list, or under sub-headings, added nothing to
+  the shopping list. Auto-add now falls back to the configured frontmatter list
+  property (wikilinks stripped, ignore tag still honoured) when the body has no
+  ingredients section.
+
+---
+
 ## 0.1.12-es.6 -- Necrocter/obsidian-recipebox fork
 
 Tracks upstream 0.1.12. Fork iteration `es.6`: grocery categories.
