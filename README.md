@@ -19,6 +19,20 @@ Recipe Box treats recipes the same way Obsidian treats everything else: as notes
 
 </span>
 
+---
+
+> ### 🌐 This fork: Spanish (Español) support
+>
+> This is a translated fork of [AdamArcane/obsidian-recipebox](https://github.com/AdamArcane/obsidian-recipebox).
+> It adds a full `t()`-based i18n layer with English and Spanish catalogues,
+> a **Settings → Language** control (`Automatic` follows Obsidian's own UI
+> language, or pin `English` / `Español`), and Spanish-aware recipe parsing:
+> the importer, step timers, servings and ingredient-unit detection all
+> recognise Spanish recipes (`Ingredientes`, `Preparación`, `Tiempo de
+> cocción`, `Para 4 personas`, `2 cucharadas`, `10 a 15 minutos`, …) as well
+> as English ones. The `#ignore-ingredient` tag is now a configurable
+> setting too. Everything else tracks upstream.
+
 
 <img width="800"  alt="device-mockup" src="https://github.com/user-attachments/assets/f71bde46-511a-41e9-9a60-3bde915a4748" />
 

@@ -285,6 +285,10 @@ export const es: Record<TranslationKey, string> = {
 	"set.shop.overrides.name": "Anulaciones de categoría",
 	"set.shop.overrides.desc": "Asigna fragmentos de texto de ingredientes a categorías concretas.",
 	"set.shop.overrides.button": "Editar anulaciones…",
+	"set.gd.title": "Visualización de la lista de la compra",
+	"set.gd.groupingMode": "Modo de agrupación",
+	"set.gd.reorderHint": "Arrastra o usa los botones para reordenar.",
+	"set.gd.addOverride": "+ añadir anulación",
 
 	"set.suggester.title": "Sugeridor de comidas",
 	"set.suggester.desc": "Lista de modos y editor de reglas de sugerencia de comidas.",
