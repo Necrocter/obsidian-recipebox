@@ -9,14 +9,21 @@
 // or "10 to 15 minutes" isn't partially consumed by the plain-minutes branch first.
 // Groups: (1,2) hour range · (3,4) min range · (5,6) sec range
 //         (7,8) hours+opt-minutes · (9) plain minutes · (10) plain seconds
-const SEP = String.raw`\s*(?:[-–]|\bto\b)\s*`;
+const SEP = String.raw`\s*(?:[-–]|\bto\b|\ba\b)\s*`;
+
+// Unit tokens accept English and Spanish spellings plus the usual
+// abbreviations ("1 h 30 min", "1 hora 30 minutos", "10-15 min").
+const HOUR = String.raw`(?:hours?|horas?|hrs?|hr)`;
+const MIN = String.raw`(?:min(?:ute)?s?|minutos?|mins?)`;
+const SEC = String.raw`(?:sec(?:ond)?s?|segundos?|segs?)`;
+
 export const DURATION_RE = new RegExp(
-	String.raw`\b(\d+(?:\.\d+)?)${SEP}(\d+(?:\.\d+)?)\s*hours?\b` +
-	String.raw`|\b(\d+(?:\.\d+)?)${SEP}(\d+(?:\.\d+)?)\s*min(?:utes?)?\b` +
-	String.raw`|\b(\d+(?:\.\d+)?)${SEP}(\d+(?:\.\d+)?)\s*sec(?:onds?)?\b` +
-	String.raw`|\b(\d+(?:\.\d+)?)\s*hours?\b(?:\s*(\d+(?:\.\d+)?)\s*min(?:utes?)?\b)?` +
-	String.raw`|\b(\d+(?:\.\d+)?)\s*min(?:utes?)?\b` +
-	String.raw`|\b(\d+(?:\.\d+)?)\s*sec(?:onds?)?\b`,
+	String.raw`\b(\d+(?:\.\d+)?)${SEP}(\d+(?:\.\d+)?)\s*${HOUR}\b` +
+	String.raw`|\b(\d+(?:\.\d+)?)${SEP}(\d+(?:\.\d+)?)\s*${MIN}\b` +
+	String.raw`|\b(\d+(?:\.\d+)?)${SEP}(\d+(?:\.\d+)?)\s*${SEC}\b` +
+	String.raw`|\b(\d+(?:\.\d+)?)\s*${HOUR}\b(?:\s*(\d+(?:\.\d+)?)\s*${MIN}\b)?` +
+	String.raw`|\b(\d+(?:\.\d+)?)\s*${MIN}\b` +
+	String.raw`|\b(\d+(?:\.\d+)?)\s*${SEC}\b`,
 	"gi",
 );
 

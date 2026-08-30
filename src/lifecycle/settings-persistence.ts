@@ -229,6 +229,7 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 	}
 
 	const merged: RecipeBoxSettings = {
+		language: oneOf<RecipeBoxSettings["language"]>(r.language, ["auto", "en", "es"], d.language),
 		recipeFolders: strArr(r.recipeFolders, d.recipeFolders),
 		openGalleryOnFolderClick: bool(r.openGalleryOnFolderClick, d.openGalleryOnFolderClick),
 		openGalleryOnFolderClickSubfolders: bool(r.openGalleryOnFolderClickSubfolders, d.openGalleryOnFolderClickSubfolders),
@@ -237,6 +238,7 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 		ingredientsHeading: str(r.ingredientsHeading, d.ingredientsHeading),
 		instructionsHeading: str(r.instructionsHeading, d.instructionsHeading),
 		notesHeading: str(r.notesHeading, d.notesHeading),
+		ignoreIngredientTag: str(r.ignoreIngredientTag, d.ignoreIngredientTag),
 
 		groupingMode: oneOf<GroupingMode>(r.groupingMode, ["category", "recipe", "source", "none"], d.groupingMode),
 		categorySource: oneOf<CategorySource>(r.categorySource, ["dictionary", "tag", "tag-then-dictionary"], d.categorySource),

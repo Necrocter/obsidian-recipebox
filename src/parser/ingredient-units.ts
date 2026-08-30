@@ -72,4 +72,40 @@ export const UNIT_SYNONYMS: Record<string, string> = {
 	dozen: "dozen", dozens: "dozen",
 	// filler words
 	unit: "", units: "", whole: "", each: "",
+
+	// ── Spanish spellings, mapped onto the same canonical forms ─────────────
+	// Kept alongside the English keys rather than locale-switched so a vault
+	// mixing English and Spanish recipes parses either.
+	// teaspoon
+	cucharadita: "tsp", cucharaditas: "tsp", cdta: "tsp", cdtas: "tsp", cdita: "tsp",
+	// tablespoon
+	cucharada: "tbsp", cucharadas: "tbsp", cda: "tbsp", cdas: "tbsp",
+	// cup
+	taza: "cup", tazas: "cup",
+	// milliliter / liter
+	mililitro: "ml", mililitros: "ml", litro: "l", litros: "l",
+	// gram / kilogram
+	gramo: "g", gramos: "g", kilo: "kg", kilos: "kg", kilogramo: "kg", kilogramos: "kg",
+	// ounce / pound
+	onza: "oz", onzas: "oz", libra: "lb", libras: "lb",
+	// piece / unit
+	pieza: "piece", piezas: "piece", unidad: "piece", unidades: "piece",
+	// can / jar / bag / box / bottle / pack
+	lata: "can", latas: "can",
+	bote: "jar", botes: "jar", tarro: "jar", tarros: "jar", frasco: "jar", frascos: "jar",
+	bolsa: "bag", bolsas: "bag",
+	caja: "box", cajas: "box",
+	botella: "bottle", botellas: "bottle",
+	paquete: "pack", paquetes: "pack", sobre: "pack", sobres: "pack",
+	// bunch / head / clove / slice / sprig / stalk / loaf
+	manojo: "bunch", manojos: "bunch",
+	cabeza: "head", cabezas: "head",
+	diente: "clove", dientes: "clove",
+	rodaja: "slice", rodajas: "slice", rebanada: "slice", rebanadas: "slice",
+	loncha: "slice", lonchas: "slice",
+	ramita: "sprig", ramitas: "sprig", rama: "sprig", ramas: "sprig",
+	tallo: "stalk", tallos: "stalk",
+	barra: "loaf", barras: "loaf",
+	// pinch / dash
+	pizca: "pinch", pizcas: "pinch",
 };

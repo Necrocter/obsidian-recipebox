@@ -15,6 +15,11 @@ const UNORDERED_MARKER_RE = /^[-*+•]\s+/;
 
 // --- Loose metadata extraction ---
 
+// Unit token accepts English and Spanish spellings. "hora(s)" and the "h"/"hs"
+// abbreviations all contain an "h", so the hour test below still works; the
+// minute spellings ("min", "minuto(s)") deliberately do not.
+const TIME_UNIT_RE = "min(?:uto)?s?|mins?|hr?s?|hours?|horas?|hs?";
+
 function timeToMinutes(value: string, unit: string): number | null {
 	const n = Number(value);
 	if (!isFinite(n) || n <= 0) return null;
@@ -22,8 +27,11 @@ function timeToMinutes(value: string, unit: string): number | null {
 }
 
 function extractLooseTime(text: string, label: string): number | null {
+	// label is wrapped in a non-capturing group because the bilingual labels
+	// passed in below contain top-level "|" alternations; without grouping the
+	// "[^\d]{0,20}(\d+)" suffix would only bind to the last alternative.
 	const re = new RegExp(
-		`${label}[^\\d]{0,20}(\\d+(?:\\.\\d+)?)\\s*(min(?:utes?)?|hr?s?|hours?)`,
+		`(?:${label})[^\\d]{0,20}(\\d+(?:\\.\\d+)?)\\s*(${TIME_UNIT_RE})`,
 		"i",
 	);
 	const m = re.exec(text);
@@ -129,13 +137,18 @@ export function extractRecipeFromText(rawText: string, titleOverride?: string): 
 		}
 	}
 
-	// Loose metadata from full text
+	// Loose metadata from full text. Servings needs two passes: English and the
+	// "keyword N" Spanish forms put the keyword first ("serves 4", "rinde 4"),
+	// but the common Spanish forms put the number first ("4 raciones", "para 4
+	// personas"), so a second number-first pattern backs up the first.
 	const servingsMatch =
-		/(?:serves?|yield|servings?|makes?)[^\d]{0,15}(\d+)/i.exec(cleaned);
+		/(?:serves?|yield|servings?|makes?|rinde|sirve\s+para)[^\d]{0,15}(\d+)/i.exec(cleaned) ??
+		/(?:para|rinde|sirve)\s+(?:unas?\s+)?(\d+)\s*(?:raciones?|porciones?|comensales|personas)/i.exec(cleaned) ??
+		/(\d+)\s*(?:raciones?|porciones?|comensales)/i.exec(cleaned);
 	const servings = servingsMatch ? servingsMatch[1] : null;
-	const prepTime = extractLooseTime(cleaned, "prep(?:\\s+time)?");
-	const cookTime = extractLooseTime(cleaned, "cook(?:ing)?(?:\\s+time)?");
-	const totalTime = extractLooseTime(cleaned, "total(?:\\s+time)?");
+	const prepTime = extractLooseTime(cleaned, "prep(?:aration)?(?:\\s+time)?|(?:tiempo\\s+de\\s+)?preparaci[oó]n");
+	const cookTime = extractLooseTime(cleaned, "cook(?:ing)?(?:\\s+time)?|(?:tiempo\\s+de\\s+)?cocci[oó]n|(?:tiempo\\s+de\\s+)?cocinado");
+	const totalTime = extractLooseTime(cleaned, "total(?:\\s+time)?|tiempo\\s+total");
 	const calories = extractLooseNumber(cleaned, "calories?|cal(?:ories?)?\\b");
 	const protein = extractLooseNumber(cleaned, "protein");
 	const fat = extractLooseNumber(cleaned, "fat");
