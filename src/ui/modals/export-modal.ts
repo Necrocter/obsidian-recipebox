@@ -25,14 +25,14 @@ export class ExportModal extends BaseModal {
 		super(app);
 	}
 
-	getTitle(): string { return "Export grocery list"; }
+	getTitle(): string { return t("gv.exportList"); }
 	getContentClasses(): string[] { return ["rb-export-modal"]; }
 
 	renderBody(bodyEl: HTMLElement): void {
 		const opts = bodyEl.createDiv({ cls: "rb-modal-fields" });
 
 		const fmtField = opts.createDiv({ cls: "rb-modal-field" });
-		fmtField.createEl("label", { text: "Format" });
+		fmtField.createEl("label", { text: t("modal.export.format") });
 		const fmtSelect = fmtField.createEl("select", { cls: "rb-modal-select" });
 		for (const [value, label] of Object.entries(EXPORT_FORMAT_LABELS) as [ExportFormat, string][]) {
 			const opt = fmtSelect.createEl("option", { value, text: label });
@@ -46,7 +46,7 @@ export class ExportModal extends BaseModal {
 		const checkedField = opts.createDiv({ cls: "rb-modal-field rb-modal-field-row" });
 		const checkedBox = checkedField.createEl("input", { type: "checkbox" });
 		checkedBox.checked = true;
-		checkedField.createEl("label", { text: "Include checked items" });
+		checkedField.createEl("label", { text: t("modal.groceryExport.includeChecked") });
 		checkedBox.addEventListener("change", () => {
 			this.includeChecked = checkedBox.checked;
 			this.refreshPreview();
@@ -54,7 +54,7 @@ export class ExportModal extends BaseModal {
 
 		bodyEl.createEl("p", {
 			cls: "rb-modal-section-desc",
-			text: "Select all text below, then use your system's copy shortcut (Ctrl+C / ⌘C).",
+			text: t("modal.export.copyHint"),
 		});
 
 		this.previewEl = bodyEl.createEl("textarea", {
@@ -66,7 +66,7 @@ export class ExportModal extends BaseModal {
 		bodyEl.createEl("hr", { cls: "rb-modal-divider" });
 
 		const appendSection = bodyEl.createDiv({ cls: "rb-modal-section" });
-		appendSection.createDiv({ cls: "rb-modal-section-heading", text: "Append to note" });
+		appendSection.createDiv({ cls: "rb-modal-section-heading", text: t("modal.groceryExport.appendToNote") });
 
 		const appendField = appendSection.createDiv({ cls: "rb-modal-field" });
 		const defaultPath = this.settings.exportFolder
@@ -75,7 +75,7 @@ export class ExportModal extends BaseModal {
 		this.appendInput = appendField.createEl("input", {
 			cls: "rb-modal-input",
 			type: "text",
-			placeholder: "Vault-relative path, e.g. Notes/Grocery Export",
+			placeholder: t("modal.groceryExport.pathPlaceholder"),
 			value: defaultPath,
 		});
 		new NotePathSuggest(this.app, this.appendInput);
@@ -83,9 +83,9 @@ export class ExportModal extends BaseModal {
 
 	renderFooter(footerEl: HTMLElement): void {
 		// Cancel first, then primary action (spec section 55)
-		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: "Close" })
+		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: t("common.close") })
 			.addEventListener("click", () => this.close());
-		footerEl.createEl("button", { cls: "mod-cta", text: "Append to note" })
+		footerEl.createEl("button", { cls: "mod-cta", text: t("modal.groceryExport.appendToNote") })
 			.addEventListener("click", () => { void this.appendToNote(this.appendInput.value); });
 	}
 

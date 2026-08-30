@@ -5,6 +5,7 @@
  * Built-in modes show a "Reset to default" button that restores shipped defaults.
  */
 import { App, Platform, setIcon } from "obsidian";
+import { t } from "../../i18n";
 import type { SuggesterMode, ScoringRule, ScoringDirection } from "../../suggester/strategy-types";
 import { DiscoveryResult } from "../../discovery/discovery-cache";
 import { FieldFilter, OPERATORS, FilterableType } from "../../discovery/filter-types";
@@ -32,15 +33,15 @@ function directionPhrase(
 	type: FilterableType | null,
 	direction: "favor-high" | "favor-low" | "favor-none",
 ): string {
-	const label = field || "field";
-	if (direction === "favor-none") return `No ${label}`;
+	const label = field || t("filter.fieldFallback");
+	if (direction === "favor-none") return t("filter.dir.none", { label });
 	if (type === "boolean") {
-		return direction === "favor-high" ? `Has ${label}` : `Doesn't have ${label}`;
+		return direction === "favor-high" ? t("filter.dir.has", { label }) : t("filter.dir.hasNot", { label });
 	}
 	if (type === "date") {
-		return direction === "favor-high" ? `More recent ${label}` : `Less recent ${label}`;
+		return direction === "favor-high" ? t("filter.dir.moreRecent", { label }) : t("filter.dir.lessRecent", { label });
 	}
-	return direction === "favor-high" ? `More ${label}` : `Less ${label}`;
+	return direction === "favor-high" ? t("filter.dir.more", { label }) : t("filter.dir.less", { label });
 }
 
 function cloneMode(s: SuggesterMode): SuggesterMode {
@@ -63,7 +64,7 @@ export class ModeEditorModal extends BaseModal {
 		this.draft = cloneMode(mode);
 	}
 
-	getTitle(): string { return "Edit mode"; }
+	getTitle(): string { return t("modal.suggest.editMode"); }
 	getIcon(): string { return "sliders-horizontal"; }
 	getContentClasses(): string[] { return ["rb-strategy-editor-modal"]; }
 
@@ -78,7 +79,7 @@ export class ModeEditorModal extends BaseModal {
 
 	private renderNameRow(bodyEl: HTMLElement): void {
 		const row = bodyEl.createDiv({ cls: "rb-modal-field" });
-		row.createEl("label", { cls: "rb-modal-field-label", text: "Name" });
+		row.createEl("label", { cls: "rb-modal-field-label", text: t("modal.strategy.name") });
 		const input = row.createEl("input", {
 			cls: "rb-modal-input",
 			attr: { type: "text", value: this.draft.name },
@@ -91,7 +92,7 @@ export class ModeEditorModal extends BaseModal {
 		const checkbox = row.createEl("input", { attr: { type: "checkbox", id: "rb-strategy-default" } });
 		checkbox.checked = this.draft.isDefault;
 		checkbox.addEventListener("change", () => { this.draft.isDefault = checkbox.checked; });
-		row.createEl("label", { attr: { for: "rb-strategy-default" }, text: "Use as default mode" });
+		row.createEl("label", { attr: { for: "rb-strategy-default" }, text: t("modal.strategy.useAsDefault") });
 	}
 
 	// ── Filters ──────────────────────────────────────────────────────────────────
@@ -99,15 +100,15 @@ export class ModeEditorModal extends BaseModal {
 	private renderFiltersSection(bodyEl: HTMLElement): void {
 		const section = bodyEl.createDiv({ cls: "rb-modal-section" });
 		const header = section.createDiv({ cls: "rb-modal-section-header" });
-		header.createSpan({ cls: "rb-modal-section-heading", text: "Filters" });
-		header.createSpan({ cls: "rb-modal-section-hint", text: "Narrow the recipe pool before scoring" });
+		header.createSpan({ cls: "rb-modal-section-heading", text: t("modal.strategy.filters") });
+		header.createSpan({ cls: "rb-modal-section-hint", text: t("modal.strategy.filtersHint") });
 
 		const listEl = section.createDiv({ cls: "rb-rule-list" });
 		for (const filter of this.draft.filters) {
 			this.renderFilterRow(listEl, filter);
 		}
 
-		section.createEl("button", { cls: "rb-add-rule-btn", text: "+ add filter" })
+		section.createEl("button", { cls: "rb-add-rule-btn", text: t("modal.strategy.addFilter") })
 			.addEventListener("click", () => {
 				const f: FieldFilter = { field: "", operator: "eq", value: "" };
 				this.draft.filters.push(f);
@@ -149,7 +150,7 @@ export class ModeEditorModal extends BaseModal {
 				if (ownerType) type = ownerType;
 			}
 			for (const op of OPERATORS[type] ?? []) {
-				opSel.createEl("option", { attr: { value: op.id }, text: op.label });
+				opSel.createEl("option", { attr: { value: op.id }, text: t(op.labelKey) });
 			}
 			opSel.value = filter.operator || OPERATORS[type][0]?.id || "";
 			filter.operator = opSel.value;
@@ -213,7 +214,7 @@ export class ModeEditorModal extends BaseModal {
 		if (op === "one-of") {
 			const input = wrap.createEl("input", {
 				cls: "rb-modal-input",
-				attr: { type: "text", placeholder: "Comma-separated values" },
+				attr: { type: "text", placeholder: t("modal.strategy.commaSeparated") },
 			});
 			if (Array.isArray(filter.value)) input.value = (filter.value as string[]).join(", ");
 			input.addEventListener("input", () => {
@@ -236,12 +237,12 @@ export class ModeEditorModal extends BaseModal {
 	private renderRulesSection(bodyEl: HTMLElement): void {
 		const section = bodyEl.createDiv({ cls: "rb-modal-section" });
 		const header = section.createDiv({ cls: "rb-modal-section-header" });
-		header.createSpan({ cls: "rb-modal-section-heading", text: "Scoring rules" });
+		header.createSpan({ cls: "rb-modal-section-heading", text: t("modal.strategy.scoringRules") });
 		header.createSpan({
 			cls: "rb-modal-section-hint",
 			text: Platform.isMobile
-				? "Use arrows to reorder — top rule matters most"
-				: "Drag to reorder — top rule matters most",
+				? t("modal.strategy.reorderArrows")
+				: t("modal.strategy.reorderDrag"),
 		});
 
 		const listEl = section.createDiv({ cls: "rb-rule-list" });
@@ -253,7 +254,7 @@ export class ModeEditorModal extends BaseModal {
 		};
 		renderAll();
 
-		section.createEl("button", { cls: "rb-add-rule-btn", text: "+ add rule" })
+		section.createEl("button", { cls: "rb-add-rule-btn", text: t("modal.strategy.addRule") })
 			.addEventListener("click", () => {
 				const rule: ScoringRule = { field: "", direction: "favor-high" };
 				this.draft.rules.push(rule);
@@ -293,7 +294,7 @@ export class ModeEditorModal extends BaseModal {
 
 		// "Prefer" select — two options, auto-phrased from field name + type
 		const preferWrap = row.createDiv({ cls: "rb-rule-prefer-wrap" });
-		preferWrap.createSpan({ cls: "rb-rule-label", text: "Prefer" });
+		preferWrap.createSpan({ cls: "rb-rule-label", text: t("modal.strategy.prefer") });
 		const preferSel = preferWrap.createEl("select", { cls: "rb-select" });
 
 		const rebuildPreferOptions = (): void => {
@@ -384,10 +385,10 @@ export class ModeEditorModal extends BaseModal {
 			deleteBtn.addEventListener("click", () => {
 				if (!deletePending) {
 					deletePending = true;
-					deleteBtn.textContent = "Confirm delete?";
+					deleteBtn.textContent = t("modal.strategy.confirmDelete");
 					deleteTimer = window.setTimeout(() => {
 						deletePending = false;
-						deleteBtn.textContent = "Delete mode";
+						deleteBtn.textContent = t("modal.strategy.deleteMode");
 					}, 3000);
 				} else {
 					if (deleteTimer) window.clearTimeout(deleteTimer);
@@ -405,10 +406,10 @@ export class ModeEditorModal extends BaseModal {
 			resetBtn.addEventListener("click", () => {
 				if (!resetPending) {
 					resetPending = true;
-					resetBtn.textContent = "Confirm reset?";
+					resetBtn.textContent = t("common.confirmReset");
 					resetTimer = window.setTimeout(() => {
 						resetPending = false;
-						resetBtn.textContent = "Reset to default";
+						resetBtn.textContent = t("modal.strategy.resetToDefault");
 					}, 3000);
 				} else {
 					if (resetTimer) window.clearTimeout(resetTimer);
@@ -424,7 +425,7 @@ export class ModeEditorModal extends BaseModal {
 		}
 
 		addFooterButtons(footerEl, {
-			confirmLabel: "Save",
+			confirmLabel: t("common.save"),
 			onCancel: () => this.close(),
 			onConfirm: () => {
 				void this.deps.onSave(this.draft).then(() => this.close());
