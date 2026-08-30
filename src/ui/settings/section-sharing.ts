@@ -6,6 +6,7 @@
  * Worker deployment.
  */
 import { Setting } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 
 export function renderSectionSharing(
@@ -15,10 +16,10 @@ export function renderSectionSharing(
 	_rerender: () => void,
 ): void {
 	new Setting(container)
-		.setName("Share server URL")
-		.setDesc("The server that hosts shared recipe links. Only change this if you're self-hosting the recipe sharing worker.")
-		.addText((t) =>
-			t.setValue(settings.shareServerUrl).onChange(async (v) => {
+		.setName(t("set.sharing.serverUrl.name"))
+		.setDesc(t("set.sharing.serverUrl.desc"))
+		.addText((c) =>
+			c.setValue(settings.shareServerUrl).onChange(async (v) => {
 				settings.shareServerUrl = v.trim() || settings.shareServerUrl;
 				await save();
 			})

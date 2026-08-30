@@ -3,6 +3,7 @@
  * behavior, and the recipe type value used to identify recipe files.
  */
 import { App, setIcon, Setting, TFolder } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { FolderSuggest } from "../components/folder-suggest";
 import { DEFAULT_SETTINGS } from "../../settings/settings-defaults";
@@ -16,16 +17,16 @@ export function renderSectionLibrary(
 	rerender: () => void,
 	app: App
 ): void {
-	new Setting(container).setName("Recipe library").setHeading();
+	new Setting(container).setName(t("set.library.title")).setHeading();
 
 	// The folder list is appended directly inside this card so it stays one visual unit.
 	const folderDesc = createFragment();
-	folderDesc.appendText("Folders the plugin scans for recipe notes. ");
-	folderDesc.createEl("strong", { text: "At least one is required" });
-	folderDesc.appendText("; add \"/\" to scan the entire vault instead of a specific folder.");
+	folderDesc.appendText(t("set.library.folders.descPre"));
+	folderDesc.createEl("strong", { text: t("set.library.folders.descStrong") });
+	folderDesc.appendText(t("set.library.folders.descPost"));
 
 	const folderSetting = new Setting(container)
-		.setName("Recipe folders")
+		.setName(t("set.library.folders.name"))
 		.setDesc(folderDesc);
 	folderSetting.settingEl.addClass("rb-settings-folder-setting");
 
@@ -36,10 +37,10 @@ export function renderSectionLibrary(
 
 		settings.recipeFolders.forEach((folder, i) => {
 			const row = folderList.createDiv({ cls: "rb-settings-folder-row" });
-			row.createSpan({ cls: "rb-settings-folder-label", text: folder === "/" ? "/ (entire vault)" : folder });
+			row.createSpan({ cls: "rb-settings-folder-label", text: folder === "/" ? t("set.library.folders.entireVault") : folder });
 			const del = row.createEl("button", {
 				cls: "rb-settings-folder-delete clickable-icon",
-				attr: { title: "Remove" },
+				attr: { title: t("common.remove") },
 			});
 			setIcon(del, "trash-2");
 			del.addEventListener("click", () => {
@@ -59,7 +60,7 @@ export function renderSectionLibrary(
 		const addRow = folderList.createDiv({ cls: "rb-settings-folder-add-row" });
 		const input = addRow.createEl("input", {
 			cls: "rb-settings-folder-input",
-			attr: { type: "text", placeholder: "Add a folder..." },
+			attr: { type: "text", placeholder: t("set.library.folders.addPlaceholder") },
 		});
 		new FolderSuggest(app, input);
 
@@ -100,39 +101,39 @@ export function renderSectionLibrary(
 		setIcon(icon, "alert-triangle");
 		warningEl.createSpan({
 			cls: "rb-settings-warning-text",
-			text: "Scanning the entire vault (\"/\") with no recipe type value set means every note in your vault will be treated as a recipe. Set a recipe type value below to narrow this, or replace \"/\" with a specific folder.",
+			text: t("set.library.wholeVaultWarning"),
 		});
 	}
 	updateWarning();
 
 	new Setting(container)
-		.setName("Recipe type value")
-		.setDesc("Notes whose recipe type property matches this value are treated as recipes. When recipe folders are also set, both must match.")
-		.addText((t) =>
-			t.setValue(settings.recipeType).onChange(async (v) => {
+		.setName(t("set.library.typeValue.name"))
+		.setDesc(t("set.library.typeValue.desc"))
+		.addText((tc) =>
+			tc.setValue(settings.recipeType).onChange(async (v) => {
 				settings.recipeType = v;
 				await save();
 				updateWarning();
 			})
 		);
-	
-	
+
+
 	new Setting(container)
-		.setName("Enable dashboard")
-		.setDesc("Show the recipe box dashboard ribbon icon. If disabled, individual ribbon icons will not be shown.")
-		.addToggle((t) =>
-			t.setValue(settings.enableDashboard).onChange(async (v) => {
+		.setName(t("set.library.dashboard.name"))
+		.setDesc(t("set.library.dashboard.desc"))
+		.addToggle((tc) =>
+			tc.setValue(settings.enableDashboard).onChange(async (v) => {
 				settings.enableDashboard = v;
 				await save();
 				rerender();
 			})
 		);
-		
+
 	new Setting(container)
-		.setName("Open gallery when clicking a recipe folder")
-		.setDesc("Clicking a recipe folder in the file explorer opens the recipe gallery filtered to that folder, instead of expanding it.")
-		.addToggle((t) =>
-			t.setValue(settings.openGalleryOnFolderClick).onChange(async (v) => {
+		.setName(t("set.library.folderClick.name"))
+		.setDesc(t("set.library.folderClick.desc"))
+		.addToggle((tc) =>
+			tc.setValue(settings.openGalleryOnFolderClick).onChange(async (v) => {
 				settings.openGalleryOnFolderClick = v;
 				await save();
 				rerender();
@@ -141,10 +142,10 @@ export function renderSectionLibrary(
 
 	if (settings.openGalleryOnFolderClick) {
 		new Setting(container)
-			.setName("Also apply to subfolders")
-			.setDesc("Clicking a subfolder inside a recipe folder opens the gallery filtered to that subfolder specifically.")
-			.addToggle((t) =>
-				t.setValue(settings.openGalleryOnFolderClickSubfolders).onChange(async (v) => {
+			.setName(t("set.library.subfolders.name"))
+			.setDesc(t("set.library.subfolders.desc"))
+			.addToggle((tc) =>
+				tc.setValue(settings.openGalleryOnFolderClickSubfolders).onChange(async (v) => {
 					settings.openGalleryOnFolderClickSubfolders = v;
 					await save();
 				})
