@@ -10,6 +10,7 @@ import { GroceryManager } from "./grocery/manager";
 import { DiscoveryCache } from "./discovery/discovery-cache";
 import { mergeSettings } from "./lifecycle/settings-persistence";
 import { resolveNotePath } from "./utils/vault-notes";
+import { noteTitleFromPath } from "./utils/note-title";
 import { registerViews } from "./lifecycle/register-views";
 import { registerVaultWatchers } from "./lifecycle/register-vault-watchers";
 import { registerAutoOpen, registerContextMenu, suppressAutoOpenOnce } from "./lifecycle/recipe-file-detection";
@@ -70,7 +71,11 @@ export default class RecipeBoxPlugin extends Plugin {
 		);
 
 		this.app.workspace.onLayoutReady(() => {
-			void this.manager.refresh();
+			// syncFromMealPlanNote() runs the meal-plan note -> grocery list
+			// auto-add and then refreshes; a plain refresh() only rebuilds the
+			// grocery list from its own note and would leave a hand-added meal
+			// plan entry stranded until the grocery view happened to be opened.
+			void this.manager.syncFromMealPlanNote();
 			// Populate the discovery cache so the mode editor field picker has real fields.
 			void this.discoveryCache.refresh(this.app, this.settings);
 			// The earlier sync() call above runs before the workspace layout (and
@@ -199,7 +204,7 @@ export default class RecipeBoxPlugin extends Plugin {
 	async navigateToGroceryCategory(category: string): Promise<void> {
 		const path = resolveNotePath(this.settings.groceryListPath);
 		let file = this.app.vault.getFileByPath(path);
-		if (!file) file = await this.app.vault.create(path, "# Grocery List\n");
+		if (!file) file = await this.app.vault.create(path, `# ${noteTitleFromPath(path)}\n`);
 		const leaf = this.app.workspace.getLeaf("tab");
 		await leaf.openFile(file);
 		window.setTimeout(() => scrollToHeading(leaf.view.containerEl, category), 50);

@@ -6,6 +6,8 @@ import { App } from "obsidian";
 import { MealPlanEntry } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { readNoteOrEmpty, writeNote, resolveNotePath } from "../../utils/vault-notes";
+import { noteTitleFromPath, isH1Line } from "../../utils/note-title";
+import { dayLabel } from "../../i18n";
 import { parseMealPlanNote } from "./parse";
 import { insertMealPlanEntryIntoText } from "./render";
 
@@ -26,7 +28,7 @@ export async function insertMealPlanEntry(app: App, entry: MealPlanEntry, settin
 		settings.state.mealPlan = settings.state.mealPlan.filter((e) => e.id === entry.id);
 	}
 
-	const text = await readNoteOrEmpty(app, path) || "# Meal Plan\n";
+	const text = await readNoteOrEmpty(app, path) || `# ${noteTitleFromPath(settings.mealPlanPath)}\n`;
 	await writeNote(app, path, insertMealPlanEntryIntoText(text, entry, name, settings));
 }
 
@@ -60,10 +62,15 @@ export async function removeMealPlanEntry(
 		}
 	}
 
-	const lines: string[] = [];
+	// Rebuild with a filename-derived H1 and language-correct day headings, so
+	// removing an entry does not revert the note to "# Meal Plan" / "## Monday".
+	const lines: string[] = [`# ${noteTitleFromPath(settings.mealPlanPath)}`, ""];
 	for (const section of sections) {
-		if (section.header) lines.push(`## ${section.header}`);
-		for (const l of section.lines) lines.push(l.raw);
+		if (section.header) lines.push(`## ${dayLabel(section.header)}`);
+		for (const l of section.lines) {
+			if (l.kind === "raw" && isH1Line(l.raw)) continue; // replaced above
+			lines.push(l.raw);
+		}
 	}
 	await writeNote(app, path, lines.join("\n").trimEnd());
 }

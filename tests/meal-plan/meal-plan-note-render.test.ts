@@ -121,9 +121,24 @@ describe("writeMealPlanNote", () => {
 		expect(result).not.toContain("## Monday");
 	});
 
-	it("always starts with the '# Meal Plan' title", () => {
-		const result = writeMealPlanNote([], [], (p) => p, DEFAULT_SETTINGS);
-		expect(result.startsWith("# Meal Plan")).toBe(true);
+	it("starts with an H1 taken from the configured meal plan filename", () => {
+		expect(writeMealPlanNote([], [], (p) => p, DEFAULT_SETTINGS).startsWith("# Meal Plan")).toBe(true);
+
+		const es = { ...DEFAULT_SETTINGS, mealPlanPath: "Cocina/Plan de comida.md" };
+		const entries = [entry({ recipePath: "Pasta.md", day: "Monday" })];
+		const result = writeMealPlanNote([], entries, (p) => p.replace(".md", ""), es);
+		expect(result.startsWith("# Plan de comida")).toBe(true);
+		expect(result).not.toContain("# Meal Plan");
+	});
+
+	it("does not keep a stale '# Meal Plan' line when the filename title differs", () => {
+		const es = { ...DEFAULT_SETTINGS, mealPlanPath: "Plan de comida.md" };
+		const sections: MealPlanSection[] = [
+			{ header: undefined, lines: [{ kind: "raw", wikilink: "", day: undefined, mealType: undefined, checked: false, raw: "# Meal Plan" }] },
+		];
+		const result = writeMealPlanNote(sections, [entry({ recipePath: "Pasta.md", day: "Monday" })], (p) => p.replace(".md", ""), es);
+		expect(result.match(/^# /gm)?.length).toBe(1);
+		expect(result.startsWith("# Plan de comida")).toBe(true);
 	});
 });
 
@@ -159,5 +174,15 @@ describe("localised day headings", () => {
 		setActiveLanguage("es");
 		expect(dayRank("Lunes")).toBe(dayRank("Monday"));
 		expect(dayRank("Lunes")).toBeLessThan(dayRank("Martes"));
+	});
+
+	it("insertMealPlanEntryIntoText relabels a stale '## Monday' section to the active language", () => {
+		setActiveLanguage("es");
+		const noteText = "# Plan de comida\n\n## Monday\n- [ ] [[Pasta]]\n";
+		const e = entry({ recipePath: "Salad.md", day: "Monday" });
+		const result = insertMealPlanEntryIntoText(noteText, e, "Salad", DEFAULT_SETTINGS);
+		expect(result).toContain("## Lunes");
+		expect(result).not.toContain("## Monday");
+		expect(result.match(/^## /gm)?.length).toBe(1);
 	});
 });
