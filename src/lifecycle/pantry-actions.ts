@@ -20,7 +20,12 @@ import { ContributionMap } from "../types";
 async function loadPantry(plugin: RecipeBoxPlugin): Promise<{ file: TFile; text: string }> {
 	const path = resolveNotePath(plugin.settings.pantryNotePath);
 	let file = plugin.app.vault.getFileByPath(path);
-	if (!file) file = await plugin.app.vault.create(path, "# Pantry\n\n");
+	if (!file) {
+		// Heading follows the note's own name so it fits whatever language /
+		// path the user configured; the matcher ignores headings anyway.
+		const heading = (path.split("/").pop() ?? "Pantry").replace(/\.md$/i, "");
+		file = await plugin.app.vault.create(path, `# ${heading}\n\n`);
+	}
 	return { file, text: await plugin.app.vault.read(file) };
 }
 
