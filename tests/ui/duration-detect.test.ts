@@ -47,7 +47,29 @@ describe("DURATION_RE / matchToSeconds", () => {
 		expect(matchToSeconds(m, "max")).toBe(900);
 	});
 
+	it("parses plain Spanish minutes", () => {
+		const m = firstMatch("Hornear durante 10 minutos")!;
+		expect(matchToSeconds(m, "max")).toBe(600);
+	});
+
+	it("parses Spanish hours with optional minutes", () => {
+		const m = firstMatch("Asar 1 hora 30 minutos")!;
+		expect(matchToSeconds(m, "max")).toBe(5400);
+	});
+
+	it("resolves a Spanish 'a'-worded minute range", () => {
+		const m = firstMatch("Cocinar 10 a 15 minutos")!;
+		expect(matchToSeconds(m, "max")).toBe(900);
+		expect(matchToSeconds(m, "min")).toBe(600);
+	});
+
+	it("parses the 'min' abbreviation in Spanish context", () => {
+		const m = firstMatch("Reposar 5 min")!;
+		expect(matchToSeconds(m, "max")).toBe(300);
+	});
+
 	it("does not match text with no duration", () => {
 		expect(firstMatch("Season with salt and pepper")).toBeNull();
+		expect(firstMatch("Sazona con sal y pimienta")).toBeNull();
 	});
 });

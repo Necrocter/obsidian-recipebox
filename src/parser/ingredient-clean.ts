@@ -113,8 +113,15 @@ export function ingredientKey(name: string, unit: string): string {
 	return `${normaliseName(unwrapLinks(name))}|${unit.toLowerCase()}`;
 }
 
-export function hasIgnoreTag(tags: string[]): boolean {
-	return tags.some(
-		(t) => t.toLowerCase().replace(/[-_]/g, "") === "ignoreingredient"
-	);
+/**
+ * True when a parsed ingredient line carries the "exclude from grocery list"
+ * tag. `configuredTag` is the user-configurable tag name (settings:
+ * ignoreIngredientTag); the built-in English "ignore-ingredient" is always
+ * accepted too, so changing the setting never silently breaks recipes that
+ * used the original tag.
+ */
+export function hasIgnoreTag(tags: string[], configuredTag: string): boolean {
+	const canonical = (s: string): string => s.toLowerCase().replace(/[-_/]/g, "");
+	const accepted = new Set(["ignoreingredient", canonical(configuredTag)]);
+	return tags.some((t) => accepted.has(canonical(t)));
 }

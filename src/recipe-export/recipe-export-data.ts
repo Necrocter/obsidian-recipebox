@@ -102,7 +102,7 @@ export async function buildRecipeExportData(
 		for (const line of group.lines) {
 			const parsed = parseIngredientLine(line);
 			if (!parsed || !parsed.name) continue;
-			if (hasIgnoreTag(parsed.tags)) continue;
+			if (hasIgnoreTag(parsed.tags, settings.ignoreIngredientTag)) continue;
 			parsedIngredients.push({
 				...parsed,
 				quantity: parsed.quantity !== null ? parsed.quantity * multiplier : null,

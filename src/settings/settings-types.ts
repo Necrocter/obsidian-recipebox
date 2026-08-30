@@ -12,6 +12,7 @@ import {
 	CustomBadge,
 } from "../types";
 import type { SuggesterMode } from "../suggester/strategy-types";
+import type { AppLanguage } from "../i18n";
 
 export type NutritionDisplay = "per-serving" | "total";
 export type MealTypeNotation = "tag" | "dataview" | "text";
@@ -46,6 +47,10 @@ export interface GallerySavedState {
 }
 
 export interface RecipeBoxSettings {
+	// Interface language. "auto" follows Obsidian's own display language;
+	// "en"/"es" pin the plugin regardless of the app setting.
+	language: AppLanguage;
+
 	// Recipe location & structure
 	recipeFolders: string[];
 	// Folder-note style navigation: clicking a recipe folder in the file
@@ -58,6 +63,10 @@ export interface RecipeBoxSettings {
 	ingredientsHeading: string;
 	instructionsHeading: string;
 	notesHeading: string;
+	// Tag on an ingredient line that excludes it from grocery lists and
+	// exports. Configurable so non-English vaults can use a localised tag;
+	// the built-in "ignore-ingredient" is always recognised as well.
+	ignoreIngredientTag: string;
 	enableDashboard: boolean;
 
 	// Grocery list display

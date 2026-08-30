@@ -56,7 +56,7 @@ export async function renderIngredientsSection(
 
 		for (const raw of group.lines) {
 			const parsed = parseIngredientLine(raw);
-			if (!parsed || !parsed.name || hasIgnoreTag(parsed.tags)) continue;
+			if (!parsed || !parsed.name || hasIgnoreTag(parsed.tags, settings.ignoreIngredientTag)) continue;
 
 			const scaled = parsed.quantity !== null ? parsed.quantity * multiplier : null;
 			const key = ingredientKey(parsed.name, parsed.unit);

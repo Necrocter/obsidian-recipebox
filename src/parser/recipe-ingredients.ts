@@ -54,7 +54,7 @@ export async function parseRecipeFile(
 	for (const line of rawLines) {
 		const parsed = parseIngredientLine(line);
 		if (!parsed || !parsed.name) continue;
-		if (hasIgnoreTag(parsed.tags)) continue;
+		if (hasIgnoreTag(parsed.tags, settings.ignoreIngredientTag)) continue;
 		results.push({
 			...parsed,
 			quantity: parsed.quantity !== null ? parsed.quantity * multiplier : null,
