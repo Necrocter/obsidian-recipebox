@@ -118,7 +118,7 @@ export class RecipeExportModal extends BaseModal {
 		if (this.currentMultiplier !== 1) {
 			const multiplierField = opts.createDiv({ cls: "rb-modal-field rb-modal-field-row" });
 			const multiplierBox = multiplierField.createEl("input", { type: "checkbox" });
-			multiplierField.createEl("label", { text: `Export at current multiplier (${this.currentMultiplier}x)` });
+			multiplierField.createEl("label", { text: t("modal.export.atMultiplier", { mult: this.currentMultiplier }) });
 			multiplierBox.addEventListener("change", () => {
 				this.options.applyCurrentMultiplier = multiplierBox.checked;
 				void this.refreshPreview();

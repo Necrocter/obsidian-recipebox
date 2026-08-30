@@ -485,6 +485,7 @@ export const es: Record<TranslationKey, string> = {
 	"rview.markCooked": "Marcar como cocinada",
 	"rview.resizeColumns": "Cambiar el tamaño de las columnas de la receta",
 	"rview.highGi": "IG alto",
+	"rview.allergenWarning": "Contiene: {list}",
 	"rview.cookMode.on": "Modo cocina: activado",
 	"rview.cookMode.off": "Modo cocina: desactivado",
 	"rview.menu.cookHistory": "Historial de preparaciones",
@@ -768,6 +769,7 @@ export const es: Record<TranslationKey, string> = {
 
 	// ── Ventanas de exportación (receta + compra) ──────────────────
 	"modal.export.format": "Formato",
+	"modal.export.atMultiplier": "Exportar con el multiplicador actual ({mult}x)",
 	"modal.export.includeHistory": "Incluir el historial de preparaciones y otras secciones",
 	"modal.export.includeImages": "Incluir imágenes",
 	"modal.export.imagesNote": "El empaquetado de imágenes aún no está implementado; las imágenes locales se omiten con una marca en lugar de incrustarse.",

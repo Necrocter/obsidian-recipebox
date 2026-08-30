@@ -485,6 +485,7 @@ export const en = {
 	"rview.markCooked": "Mark as cooked",
 	"rview.resizeColumns": "Resize recipe columns",
 	"rview.highGi": "High GI",
+	"rview.allergenWarning": "Contains: {list}",
 	"rview.cookMode.on": "Cook mode: on",
 	"rview.cookMode.off": "Cook mode: off",
 	"rview.menu.cookHistory": "Cook history",
@@ -768,6 +769,7 @@ export const en = {
 
 	// ── Export modals (recipe + grocery) ────────────────────────────
 	"modal.export.format": "Format",
+	"modal.export.atMultiplier": "Export at current multiplier ({mult}x)",
 	"modal.export.includeHistory": "Include cook history and other sections",
 	"modal.export.includeImages": "Include images",
 	"modal.export.imagesNote": "Image bundling isn't implemented yet, local images are omitted with a marker instead of embedded.",
