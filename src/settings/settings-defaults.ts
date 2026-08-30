@@ -43,7 +43,7 @@ export const DEFAULT_SETTINGS: RecipeBoxSettings = {
 	ingredientsHeading: "Ingredients",
 	instructionsHeading: "Instructions",
 	notesHeading: "Notes",
-	pantryNotePath: "Despensa.md",
+	pantryNotePath: "Pantry.md",
 	ignoreIngredientTag: "ignore-ingredient",
 	enableDashboard: true,
 
@@ -86,7 +86,7 @@ export const DEFAULT_SETTINGS: RecipeBoxSettings = {
 
 	imageProperty: "image",
 	sourceProperty: "source",
-	ingredientsListProperty: "ingredientes",
+	ingredientsListProperty: "ingredients",
 	ratingProperty: "rating",
 	caloriesProperty: "calories",
 	proteinProperty: "protein",
