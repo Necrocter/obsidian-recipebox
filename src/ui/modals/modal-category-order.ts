@@ -6,6 +6,7 @@ import { App } from "obsidian";
 import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { DEFAULT_SETTINGS } from "../../settings/settings-defaults";
+import { categoryLabel } from "../../grocery/category-labels";
 import { BaseModal } from "./modal-shell";
 
 export class CategoryOrderModal extends BaseModal {
@@ -29,7 +30,7 @@ export class CategoryOrderModal extends BaseModal {
 		list.empty();
 		this.settings.manualCategoryOrder.forEach((cat, i) => {
 			const row = list.createDiv("rb-list-row");
-			row.createSpan({ text: cat });
+			row.createSpan({ text: categoryLabel(cat) });
 			const up = row.createEl("button", { text: "↑" });
 			const down = row.createEl("button", { text: "↓" });
 			up.disabled = i === 0;

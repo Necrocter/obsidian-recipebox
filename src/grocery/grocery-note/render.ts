@@ -5,6 +5,7 @@
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { formatQuantity } from "../../parser/quantity-format";
 import { noteTitleFromPath } from "../../utils/note-title";
+import { categoryLabel } from "../category-labels";
 import { GrocerySection } from "./parse";
 
 export function renderGroceryLine(name: string, unit: string, quantity: number | null, checked: boolean): string {
@@ -32,7 +33,7 @@ export function renderGrocerySections(sections: GrocerySection[], settings: Reci
 	for (const section of sorted) {
 		const content = section.lines.filter((l) => l.raw.trim());
 		if (content.length === 0) continue;
-		lines.push(`## ${section.category}`);
+		lines.push(`## ${categoryLabel(section.category)}`);
 		lines.push(...content.map((l) => l.raw));
 		lines.push("");
 	}
