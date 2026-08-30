@@ -66,9 +66,10 @@ export interface RecipeBoxSettings {
 	// Note listing kitchen stock, for the "what can I cook?" matcher. Path only;
 	// the matcher feature itself is a separate concern.
 	pantryNotePath: string;
-	// Tag on an ingredient line that excludes it from grocery lists and
-	// exports. Configurable so non-English vaults can use a localised tag;
-	// the built-in "ignore-ingredient" is always recognised as well.
+	// Trailing tag on an ingredient line: the ingredient stays visible in the
+	// recipe view but is left out of automatic grocery-list additions (and
+	// export/share). Configurable so non-English vaults can use a localised
+	// tag; the built-in "ignore-ingredient" is always recognised as well.
 	ignoreIngredientTag: string;
 	enableDashboard: boolean;
 
