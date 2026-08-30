@@ -71,3 +71,23 @@ export function tPlural(
 ): string {
 	return t(count === 1 ? one : other, { count, ...vars });
 }
+
+const WEEKDAY_KEYS: Record<string, TranslationKey> = {
+	monday: "day.monday",
+	tuesday: "day.tuesday",
+	wednesday: "day.wednesday",
+	thursday: "day.thursday",
+	friday: "day.friday",
+	saturday: "day.saturday",
+	sunday: "day.sunday",
+};
+
+/**
+ * Localise a weekday given by name in any case ("Monday", "monday"). Values
+ * that are not a recognised weekday (a custom label, a sentinel) are returned
+ * unchanged, so callers can pass raw `entry.day` strings safely.
+ */
+export function dayLabel(day: string): string {
+	const key = WEEKDAY_KEYS[day.trim().toLowerCase()];
+	return key ? t(key) : day;
+}

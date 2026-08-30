@@ -3,6 +3,7 @@
  * category override, and remove actions.
  */
 import { Menu } from "obsidian";
+import { t } from "../../i18n";
 import { GroceryItemEntry } from "../../types";
 import { LongPressPosition } from "./long-press";
 import { GroceryViewDeps } from "./grocery-view-deps";
@@ -15,18 +16,18 @@ export function openGroceryItemContextMenu(
 	const menu = new Menu();
 
 	menu.addItem((menuItem) => {
-		menuItem.setTitle("Edit item…").setIcon("pencil");
+		menuItem.setTitle(t("gv.ctx.editItem")).setIcon("pencil");
 		menuItem.onClick(() => deps.openAddGroceryItemModal(item));
 	});
 
 	menu.addItem((menuItem) => {
-		menuItem.setTitle("Move to category…").setIcon("folder");
+		menuItem.setTitle(t("gv.ctx.moveToCategory")).setIcon("folder");
 		menuItem.onClick(() => {
 			const sub = new Menu();
 			const categories = deps.getKnownCategories();
 
 			sub.addItem((autoItem) => {
-				autoItem.setTitle("Auto-detect").setChecked(!item.categoryOverride);
+				autoItem.setTitle(t("gv.ctx.autoDetect")).setChecked(!item.categoryOverride);
 				autoItem.onClick(() =>
 					void deps.updateGroceryItem(item.id, { categoryOverride: null })
 				);
@@ -44,7 +45,7 @@ export function openGroceryItemContextMenu(
 			sub.addSeparator();
 
 			sub.addItem((newCatItem) => {
-				newCatItem.setTitle("New category…").setIcon("plus");
+				newCatItem.setTitle(t("gv.ctx.newCategory")).setIcon("plus");
 				newCatItem.onClick(() => deps.openAddGroceryItemModal(item));
 			});
 
@@ -55,7 +56,7 @@ export function openGroceryItemContextMenu(
 	menu.addSeparator();
 
 	menu.addItem((removeItem) => {
-		removeItem.setTitle("Remove").setIcon("trash-2").setWarning(true);
+		removeItem.setTitle(t("common.remove")).setIcon("trash-2").setWarning(true);
 		removeItem.onClick(() => void deps.removeGroceryItem(item.id));
 	});
 

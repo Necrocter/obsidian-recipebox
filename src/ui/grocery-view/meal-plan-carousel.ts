@@ -3,6 +3,7 @@
  * planned recipes grouped by day so users can navigate to them quickly.
  */
 import { App, TFile } from "obsidian";
+import { dayLabel, t } from "../../i18n";
 import { MealPlanEntry } from "../../types";
 import { GroceryViewDeps } from "./grocery-view-deps";
 import { findValue } from "../../parser/frontmatter-lookup";
@@ -81,11 +82,11 @@ function renderRecipeCard(
 	info.createDiv({ cls: "rb-gv-carousel-name", text: recipeName(entry.recipePath) });
 	if (day !== "Queue" || entry.meal) {
 		const meta: string[] = [];
-		if (day !== "Queue") meta.push(day);
+		if (day !== "Queue") meta.push(dayLabel(day));
 		if (entry.meal) meta.push(entry.meal);
 		info.createDiv({ cls: "rb-gv-carousel-day", text: meta.join(" · ") });
 	} else {
-		info.createDiv({ cls: "rb-gv-carousel-day rb-gv-carousel-day--unscheduled", text: "Queue" });
+		info.createDiv({ cls: "rb-gv-carousel-day rb-gv-carousel-day--unscheduled", text: t("mpv.queue") });
 	}
 
 	card.addEventListener("click", () => deps.openFile(entry.recipePath, false));
@@ -100,12 +101,12 @@ export function renderMealPlanCarousel(
 	const section = container.createDiv({ cls: "rb-gv-carousel-section" });
 
 	const header = section.createDiv({ cls: "rb-gv-carousel-header" });
-	header.createSpan({ cls: "rb-label-caps rb-gv-carousel-title", text: "Meal plan" });
-	const link = header.createEl("a", { cls: "rb-gv-summary-link", text: "View →" });
+	header.createSpan({ cls: "rb-label-caps rb-gv-carousel-title", text: t("mpv.title") });
+	const link = header.createEl("a", { cls: "rb-gv-summary-link", text: t("gv.carousel.view") });
 	link.addEventListener("click", () => deps.openMealPlanView());
 
 	if (mealPlan.length === 0) {
-		section.createDiv({ cls: "rb-gv-carousel-empty", text: "No meals planned yet." });
+		section.createDiv({ cls: "rb-gv-carousel-empty", text: t("gv.carousel.empty") });
 		return;
 	}
 
@@ -114,7 +115,7 @@ export function renderMealPlanCarousel(
 
 	for (const group of groups) {
 		const groupEl = track.createDiv({ cls: "rb-gv-carousel-group" });
-		groupEl.createDiv({ cls: "rb-label-caps rb-gv-carousel-group-label", text: group.day });
+		groupEl.createDiv({ cls: "rb-label-caps rb-gv-carousel-group-label", text: group.day === "Queue" ? t("mpv.queue") : dayLabel(group.day) });
 		const cards = groupEl.createDiv({ cls: "rb-gv-carousel-cards" });
 		for (const entry of group.entries) {
 			renderRecipeCard(cards, entry, group.day, app, deps);

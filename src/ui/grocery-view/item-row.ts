@@ -3,6 +3,7 @@
  * attribution, and a long-press / right-click context menu for manually-added items.
  */
 import { setIcon } from "obsidian";
+import { t } from "../../i18n";
 import { GroceryItem, GroceryItemEntry, GroupingMode } from "../../types";
 import { toTitleCase } from "../../utils/text-case";
 import { GroceryViewDeps } from "./grocery-view-deps";
@@ -81,7 +82,7 @@ export function renderItemRow(
 
 	const removeBtn = row.createDiv({ cls: "rb-gv-item-remove" });
 	setIcon(removeBtn, "x");
-	removeBtn.setAttribute("aria-label", "Remove item");
+	removeBtn.setAttribute("aria-label", t("gv.removeItem"));
 	removeBtn.addEventListener("click", (e) => {
 		e.stopPropagation();
 		if (entry) {
