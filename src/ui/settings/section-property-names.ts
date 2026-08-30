@@ -57,6 +57,16 @@ function renderBody(
 			c.inputEl.addEventListener("blur", () => rerender());
 		});
 
+	new Setting(body)
+		.setName(t("set.pn.source.name"))
+		.setDesc(t("set.pn.source.desc"))
+		.addText((c) =>
+			c.setValue(settings.sourceProperty).onChange(async (v) => {
+				settings.sourceProperty = v.trim() || "source";
+				await save();
+			})
+		);
+
 	if (settings.cookHistoryEnabled) {
 		new Setting(body)
 			.setName(t("set.pn.lastMade.name"))

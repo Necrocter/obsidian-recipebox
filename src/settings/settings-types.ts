@@ -116,6 +116,9 @@ export interface RecipeBoxSettings {
 
 	// Nutrition property names
 	imageProperty: string;
+	// Frontmatter key holding the recipe source (URL / cookbook / person).
+	// "source", "url", "sourceUrl", "source_url" are always tried as fallbacks.
+	sourceProperty: string;
 	ratingProperty: string;
 	caloriesProperty: string;
 	proteinProperty: string;
