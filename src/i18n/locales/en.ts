@@ -201,7 +201,7 @@ export const en = {
 	"set.notes.notesHeading.name": "Notes heading",
 	"set.notes.notesHeading.desc": "Heading that marks the optional notes section in a recipe note.",
 	"set.notes.ignoreTag.name": "Ignore-ingredient tag",
-	"set.notes.ignoreTag.desc": "Tag on an ingredient line that keeps it out of grocery lists and exports. The built-in \"ignore-ingredient\" is always recognised too.",
+	"set.notes.ignoreTag.desc": "Trailing tag on an ingredient line. The ingredient still shows in the recipe, but is left out of automatic grocery-list additions. The built-in \"ignore-ingredient\" is always recognised too.",
 
 	"set.recipeView.title": "Recipe view",
 	"set.recipeView.desc": "Recipe view toggles and the header-badge editor.",
