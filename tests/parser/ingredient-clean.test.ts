@@ -151,6 +151,13 @@ describe("hasIgnoreTag", () => {
 		expect(hasIgnoreTag(["pantry"], DEFAULT)).toBe(false);
 		expect(hasIgnoreTag([], DEFAULT)).toBe(false);
 	});
+
+	it("works per-tag (used by the recipe view to hide only the control chip)", () => {
+		// The recipe view now renders ignore-tagged ingredients, calling this
+		// with a single-element array to decide which chip to suppress.
+		expect(hasIgnoreTag(["produce"], DEFAULT)).toBe(false);
+		expect(hasIgnoreTag(["ignore-ingredient"], DEFAULT)).toBe(true);
+	});
 });
 
 describe("inline links", () => {
