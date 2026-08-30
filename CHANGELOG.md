@@ -1,3 +1,28 @@
+## 0.1.12-es.6 -- Necrocter/obsidian-recipebox fork
+
+Tracks upstream 0.1.12. Fork iteration `es.6`: grocery categories.
+
+### Features
+
+* **i18n:** grocery list categories are shown in the chosen language
+  (`## Verduras y frutas` instead of `## Snack` / `## Produce`) in the grocery
+  note, the grocery view, the export, the "move to category" menu and the
+  category modals. Categories stay keyed in English internally, and a note
+  heading is canonicalised on read so a list written under one language still
+  round-trips under another.
+* **grocery:** the automatic categoriser now recognises Spanish (incl.
+  Mexican-Spanish) ingredient names across every category.
+
+### Bug Fixes
+
+* **grocery:** "chile chipotle" was categorised as **Snack** because the
+  English keyword "chip" is a substring of "chipotle". Spanish keywords plus
+  longest-match now put it in **Produce**.
+* **i18n:** the dashboard's "View/edit meal plan" button was hardcoded in
+  English.
+
+---
+
 ## 0.1.12-es.5 -- Necrocter/obsidian-recipebox fork
 
 Tracks upstream 0.1.12. Fork iteration `es.5`: the meal-plan -> grocery

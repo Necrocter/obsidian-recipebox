@@ -1,6 +1,6 @@
 {
 	"name": "recipe-box",
-	"version": "0.1.12-es.5",
+	"version": "0.1.12-es.6",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {
