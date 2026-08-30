@@ -59,8 +59,11 @@ describe("renderGrocerySections", () => {
 		expect(result).toContain("## Produce");
 	});
 
-	it("always starts with the '# Grocery List' title", () => {
+	it("starts with an H1 taken from the configured grocery note filename", () => {
 		const result = renderGrocerySections([], DEFAULT_SETTINGS);
 		expect(result.startsWith("# Grocery List")).toBe(true);
+
+		const es = { ...DEFAULT_SETTINGS, groceryListPath: "Cocina/Lista de compras.md" };
+		expect(renderGrocerySections([], es).startsWith("# Lista de compras")).toBe(true);
 	});
 });
