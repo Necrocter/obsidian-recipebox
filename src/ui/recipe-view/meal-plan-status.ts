@@ -3,6 +3,7 @@
  * a recipe is scheduled, on which day, and offering a context menu for edits.
  */
 import { App, setIcon, TFile } from "obsidian";
+import { dayLabel, t } from "../../i18n";
 import { MealPlanEntry } from "../../types";
 import { RecipeViewDeps } from "./recipe-view-deps";
 import { openMealPlanEntryMenu } from "../modals/meal-plan-entry-menu";
@@ -10,18 +11,18 @@ import { MealPlanMultiEntryMenu } from "../modals/meal-plan-multientry-menu";
 
 export function resolveStatusText(entries: MealPlanEntry[]): string {
 	if (entries.length === 0) return "";
-	if (entries.length === 2) return "Scheduled twice this week";
-	if (entries.length > 2) return `Scheduled ${entries.length} times this week`;
+	if (entries.length === 2) return t("mpStatus.twice");
+	if (entries.length > 2) return t("mpStatus.nTimes", { count: entries.length });
 
 	const entry = entries[0];
 	let statusText = "";
 
-	if (entry.day && entry.meal) statusText = `${entry.meal} on ${entry.day}`;
-	if (entry.day && !entry.meal) statusText = `Scheduled for ${entry.day}`;
-	if (!entry.day && entry.meal) statusText = `${entry.meal}, in queue`;
-	if (!entry.day && !entry.meal) statusText = "In queue";
-	
-	if (entry.isLeftovers) statusText += " as leftovers";
+	if (entry.day && entry.meal) statusText = t("mpStatus.mealOnDay", { meal: entry.meal, day: dayLabel(entry.day) });
+	if (entry.day && !entry.meal) statusText = t("mpStatus.scheduledFor", { day: dayLabel(entry.day) });
+	if (!entry.day && entry.meal) statusText = t("mpStatus.mealInQueue", { meal: entry.meal });
+	if (!entry.day && !entry.meal) statusText = t("mpStatus.inQueue");
+
+	if (entry.isLeftovers) statusText += t("mpStatus.asLeftoversSuffix");
 
 	return statusText;
 }

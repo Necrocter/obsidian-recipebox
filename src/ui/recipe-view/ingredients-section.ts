@@ -5,6 +5,7 @@
  * that wikilinks, bold, and other inline formatting work naturally.
  */
 import { App, Component, MarkdownRenderer, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { IngredientGroup } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { GroceryItem } from "../../types";
@@ -37,7 +38,7 @@ export async function renderIngredientsSection(
 	header.createSpan({ cls: "rb-section-title", text: settings.ingredientsHeading });
 	const addBtn = header.createEl("button", {
 		cls: "rb-grocery-add-btn",
-		attr: { "aria-label": "Add to grocery list" },
+		attr: { "aria-label": t("gallery.card.addToGrocery") },
 	});
 	setIcon(addBtn, "shopping-cart");
 	addBtn.addEventListener("click", onOpenGroceryModal);
@@ -95,13 +96,13 @@ export async function renderIngredientsSection(
 			}
 
 			if (settings.showHighGIWarnings && isHighGi(parsed.name, giPatterns)) {
-				row.createSpan({ cls: "rb-high-gi-badge", text: "High GI" });
+				row.createSpan({ cls: "rb-high-gi-badge", text: t("rview.highGi") });
 			}
 
 			if (inGrocery) {
 				const removeBtn = row.createEl("button", {
 					cls: "rb-grocery-remove-btn",
-					attr: { "aria-label": "Remove from grocery list" },
+					attr: { "aria-label": t("rview.removeFromGrocery") },
 				});
 				const iconDefault = removeBtn.createSpan({ cls: "rb-grocery-icon-default" });
 				setIcon(iconDefault, "list-check");

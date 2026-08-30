@@ -3,6 +3,7 @@
  * cells, source link, and action buttons (favorite, mark cooked, meal plan).
  */
 import { App, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { RECIPE_FRONTMATTER } from "../../settings/frontmatter-keys";
 import { RecipeViewDeps } from "./recipe-view-deps";
@@ -70,7 +71,7 @@ function renderNutritionCell(
 	const grid = cell.createDiv({ cls: "rb-nutrition-grid" });
 	for (const field of NUTRITION_FIELDS) {
 		const value = resolveNutritionDisplay(fm, field, settings, servings, multiplier);
-		grid.createSpan({ cls: "rb-nutrition-label", text: field.label });
+		grid.createSpan({ cls: "rb-nutrition-label", text: t(field.labelKey) });
 		grid.createSpan({ cls: "rb-nutrition-value", text: value });
 	}
 }

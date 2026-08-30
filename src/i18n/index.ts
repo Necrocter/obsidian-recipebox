@@ -12,6 +12,8 @@ import { getLanguage } from "obsidian";
 import { en, type TranslationKey } from "./locales/en";
 import { es } from "./locales/es";
 
+export type { TranslationKey } from "./locales/en";
+
 export type AppLanguage = "auto" | "en" | "es";
 export const SUPPORTED_LANGUAGES: readonly AppLanguage[] = ["auto", "en", "es"];
 

@@ -68,16 +68,16 @@ export class TimerWidget {
 		const controls = this.el.createDiv({ cls: "rb-timer-controls" });
 		this.playBtn = this.makeIconBtn(controls, "play", "Start", () => this.togglePlay(), "rb-timer-btn rb-timer-btn--play");
 
-		this.makeIconBtn(controls, "rotate-ccw", "Reset", () => this.reset());
+		this.makeIconBtn(controls, "rotate-ccw", t("common.reset"), () => this.reset());
 
-		const compactBtn = this.makeIconBtn(controls, this.compact ? "expand" : "minimize-2", "Toggle compact", () => {
+		const compactBtn = this.makeIconBtn(controls, this.compact ? "expand" : "minimize-2", t("rview.timer.toggleCompact"), () => {
 			this.compact = !this.compact;
 			this.el.toggleClass("is-compact", this.compact);
 			setIcon(compactBtn.children[0] as HTMLElement, this.compact ? "expand" : "minimize-2");
-			compactBtn.setAttribute("aria-label", this.compact ? "Expand" : "Compact");
+			compactBtn.setAttribute("aria-label", this.compact ? t("rview.timer.expand") : t("rview.timer.compact"));
 		});
 
-		this.makeIconBtn(controls, "x", "Close", () => this.close());
+		this.makeIconBtn(controls, "x", t("common.close"), () => this.close());
 
 		const detachDrag = makeDraggable(this.el, handle);
 		this.cleanups.push(detachDrag);
@@ -141,7 +141,7 @@ export class TimerWidget {
 			if (this.remaining <= 0) this.finish();
 		}, 1000);
 		setIcon(this.playBtn.children[0] as HTMLElement, "pause");
-		this.playBtn.setAttribute("aria-label", "Pause");
+		this.playBtn.setAttribute("aria-label", t("rview.timer.pause"));
 	}
 
 	pause(): void {
@@ -149,7 +149,7 @@ export class TimerWidget {
 		window.clearInterval(this.intervalId);
 		this.intervalId = null;
 		setIcon(this.playBtn.children[0] as HTMLElement, "play");
-		this.playBtn.setAttribute("aria-label", "Start");
+		this.playBtn.setAttribute("aria-label", t("rview.timer.start"));
 	}
 
 	private reset(): void {
