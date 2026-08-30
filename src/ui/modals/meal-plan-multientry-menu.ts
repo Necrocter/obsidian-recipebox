@@ -1,4 +1,5 @@
 import { Modal, App, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { MealPlanEntry } from "../../types";
 import { openMealPlanEntryMenu } from "./meal-plan-entry-menu";
 import { resolveStatusText } from "../recipe-view/meal-plan-status";
@@ -15,7 +16,7 @@ export class MealPlanMultiEntryMenu extends Modal {
 	}
 
 	onOpen(): void {
-		this.titleEl.setText("Scheduled multiple times");
+		this.titleEl.setText(t("modal.multiEntry.title"));
 		const { contentEl } = this;
 		const list = contentEl.createDiv({ cls: "rb-mp-entry-list" });
 		for (const entry of this.entries) {

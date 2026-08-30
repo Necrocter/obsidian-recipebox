@@ -5,6 +5,7 @@
  * Extends BaseModal; stage transitions clear and repopulate the shell's body
  * and footer rather than rebuilding the whole modal from scratch.
  */
+import { t } from "../../i18n";
 import { App } from "obsidian";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { ExtractedRecipe } from "../../importer/recipe-extract-types";
@@ -34,7 +35,7 @@ export class ImportRecipeModal extends BaseModal {
 	}
 
 	getTitle(): string {
-		return this.stage === "input" ? "Import recipe" : "Review recipe";
+		return this.stage === "input" ? t("modal.import.titleImport") : t("modal.import.titleReview");
 	}
 	getContentClasses(): string[] { return ["rb-import-modal"]; }
 

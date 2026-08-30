@@ -3,6 +3,7 @@
  * when automatic category sorting is disabled.
  */
 import { App } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { DEFAULT_SETTINGS } from "../../settings/settings-defaults";
 import { BaseModal } from "./modal-shell";
@@ -14,8 +15,8 @@ export class CategoryOrderModal extends BaseModal {
 		private readonly save: () => Promise<void>,
 	) { super(app); }
 
-	getTitle(): string { return "Category order"; }
-	getSubtitle(): string { return "Drag or use buttons to set the display order when auto-sort is off."; }
+	getTitle(): string { return t("modal.categoryOrder.title"); }
+	getSubtitle(): string { return t("modal.categoryOrder.desc"); }
 
 	renderBody(bodyEl: HTMLElement): void {
 		const list = bodyEl.createDiv("rb-order-list");
@@ -48,14 +49,14 @@ export class CategoryOrderModal extends BaseModal {
 
 		let resetPending = false;
 		let resetTimer: number | null = null;
-		const resetBtn = list.createEl("button", { cls: "rb-reset-btn", text: "Reset to defaults" });
+		const resetBtn = list.createEl("button", { cls: "rb-reset-btn", text: t("common.resetToDefaults") });
 		resetBtn.addEventListener("click", () => {
 			if (!resetPending) {
 				resetPending = true;
-				resetBtn.textContent = "Confirm reset?";
+				resetBtn.textContent = t("common.confirmReset");
 				resetTimer = window.setTimeout(() => {
 					resetPending = false;
-					resetBtn.textContent = "Reset to defaults";
+					resetBtn.textContent = t("common.resetToDefaults");
 				}, 3000);
 			} else {
 				if (resetTimer) window.clearTimeout(resetTimer);

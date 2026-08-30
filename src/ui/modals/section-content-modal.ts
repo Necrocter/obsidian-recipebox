@@ -3,6 +3,7 @@
  * Used by recipe view section buttons so extra content opens on demand.
  */
 import { MarkdownRenderer } from "obsidian";
+import { t } from "../../i18n";
 import { App } from "obsidian";
 import { Component } from "obsidian";
 import { BaseModal } from "./modal-shell";
@@ -34,11 +35,11 @@ export class SectionContentModal extends BaseModal {
     renderFooter(footerEl: HTMLElement): void {
 
         if (this.onEditSection) {
-            footerEl.createEl("button", { text: "Edit section" }).addEventListener("click", () => {
+            footerEl.createEl("button", { text: t("modal.sectionContent.title") }).addEventListener("click", () => {
                 this.close();
                 this.onEditSection?.(this.sectionHeading);
             });
         }
-        footerEl.createEl("button", { cls: "mod-cta", text: "Close" }).addEventListener("click", () => this.close());
+        footerEl.createEl("button", { cls: "mod-cta", text: t("common.close") }).addEventListener("click", () => this.close());
     }
 }
