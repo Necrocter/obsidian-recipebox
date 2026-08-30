@@ -43,6 +43,7 @@ export const DEFAULT_SETTINGS: RecipeBoxSettings = {
 	ingredientsHeading: "Ingredients",
 	instructionsHeading: "Instructions",
 	notesHeading: "Notes",
+	pantryNotePath: "Pantry.md",
 	ignoreIngredientTag: "ignore-ingredient",
 	enableDashboard: true,
 

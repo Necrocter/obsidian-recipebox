@@ -203,6 +203,17 @@ export const es: Record<TranslationKey, string> = {
 	"set.notes.ignoreTag.name": "Etiqueta para ignorar ingredientes",
 	"set.notes.ignoreTag.desc": "Etiqueta en una línea de ingrediente que la mantiene fuera de la lista de la compra y de las exportaciones. La etiqueta integrada \"ignore-ingredient\" también se reconoce siempre.",
 
+	"default.mealPlanPath": "Plan de comidas.md",
+	"default.groceryListPath": "Lista de la compra.md",
+	"default.pantryNotePath": "Despensa.md",
+	"default.ingredientsHeading": "Ingredientes",
+	"default.instructionsHeading": "Instrucciones",
+	"default.notesHeading": "Notas",
+	"default.cookHistoryHeading": "Historial de preparaciones",
+	"default.ignoreIngredientTag": "ignorar-ingrediente",
+	"default.recipeFolder": "Recetas",
+	"default.exportFolder": "Exportaciones de recetas",
+
 	"set.recipeView.title": "Vista de receta",
 	"set.recipeView.desc": "Opciones de la vista de receta y editor de insignias del encabezado.",
 	"set.recipeView.row": "Ajustes de la vista de receta",
