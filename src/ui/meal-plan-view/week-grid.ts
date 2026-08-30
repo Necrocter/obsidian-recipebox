@@ -3,7 +3,7 @@
  * the meal plan view, wiring drag-drop, recipe picker, and meal type popover.
  */
 import { App, setIcon } from "obsidian";
-import { t, canonicalDay } from "../../i18n";
+import { t, canonicalDay, dayLabel } from "../../i18n";
 import { MealPlanEntry } from "../../types";
 import { MealPlanViewDeps } from "./meal-plan-view-deps";
 import { renderRecipeCard } from "./recipe-card";
@@ -11,17 +11,16 @@ import { makeDropTarget, makeDraggable } from "./drag-reschedule";
 import { RecipePickerModal } from "../modals/recipe-picker-modal";
 import { showMealTypePopover, PopoverAnchor } from "./meal-type-popover";
 
-const DAY_COLUMNS: Array<{ label: string; dayKey: string }> = [
-	{ label: t("day.monday"),    dayKey: "monday" },
-	{ label: t("day.tuesday"),   dayKey: "tuesday" },
-	{ label: t("day.wednesday"), dayKey: "wednesday" },
-	{ label: t("day.thursday"),  dayKey: "thursday" },
-	{ label: t("day.friday"),    dayKey: "friday" },
-	{ label: t("day.saturday"),  dayKey: "saturday" },
-	{ label: t("day.sunday"),    dayKey: "sunday" },
-];
+const DAY_KEYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] as const;
 
-const KNOWN_DAY_KEYS = new Set(DAY_COLUMNS.map(c => c.dayKey));
+const KNOWN_DAY_KEYS = new Set<string>(DAY_KEYS);
+
+// Built per render, not at module load: the active language is not resolved
+// until after settings load, so a module-level t() call would freeze the
+// column labels in English.
+function dayColumns(): Array<{ label: string; dayKey: string }> {
+	return DAY_KEYS.map((dayKey) => ({ label: dayLabel(dayKey), dayKey }));
+}
 
 function renderCustomMealCard(container: HTMLElement, entry: MealPlanEntry, deps: MealPlanViewDeps): void {
 	const card = container.createDiv({ cls: "rb-mpv-card rb-mpv-card--custom" });
@@ -119,7 +118,7 @@ export function renderWeekGrid(
 
 	// Day columns — wrap naturally to available width
 	const daysRow = grid.createDiv({ cls: "rb-mpv-days-row" });
-	for (const col of DAY_COLUMNS) {
+	for (const col of dayColumns()) {
 		const colEntries = entries.filter(e => e.day?.toLowerCase() === col.dayKey);
 		// Pass the canonical English day ("Monday"), not the localised label,
 		// as the column's day: it becomes the drop-target day and is written

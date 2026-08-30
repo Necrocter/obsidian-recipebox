@@ -22,15 +22,20 @@ export interface MealPlanMiniGridActions {
 	openSuggestMealModal: () => void;
 }
 
-const DAY_COLUMNS: Array<{ label: string; abbrev: string }> = [
-	{ label: "monday", abbrev: t("day.abbr.monday") },
-	{ label: "tuesday", abbrev: t("day.abbr.tuesday") },
-	{ label: "wednesday", abbrev: t("day.abbr.wednesday") },
-	{ label: "thursday", abbrev: t("day.abbr.thursday") },
-	{ label: "friday", abbrev: t("day.abbr.friday") },
-	{ label: "saturday", abbrev: t("day.abbr.saturday") },
-	{ label: "sunday", abbrev: t("day.abbr.sunday") },
-];
+// Built per render, not at module load: the active language is not resolved
+// until after settings load, so a module-level t() call would freeze these
+// abbreviations in English ("Mon", "Tue", ...).
+function dayColumns(): Array<{ label: string; abbrev: string }> {
+	return [
+		{ label: "monday", abbrev: t("day.abbr.monday") },
+		{ label: "tuesday", abbrev: t("day.abbr.tuesday") },
+		{ label: "wednesday", abbrev: t("day.abbr.wednesday") },
+		{ label: "thursday", abbrev: t("day.abbr.thursday") },
+		{ label: "friday", abbrev: t("day.abbr.friday") },
+		{ label: "saturday", abbrev: t("day.abbr.saturday") },
+		{ label: "sunday", abbrev: t("day.abbr.sunday") },
+	];
+}
 
 const MAX_VISIBLE_ENTRIES = 3;
 
@@ -103,7 +108,7 @@ export function renderMealPlanMiniGrid(
 	const defaultImageValue = defaultRecipeImageValue(settings);
 	const defaultSrc = defaultImageValue ? resolveImagePath(app, defaultImageValue) : null;
 
-	for (const col of DAY_COLUMNS) {
+	for (const col of dayColumns()) {
 		const dayEntries = entries.filter((e) => e.day?.toLowerCase() === col.label.toLowerCase());
 		const colEl = grid.createDiv({ cls: "rb-dashboard-mpg-col" });
 		colEl.createDiv({ cls: "rb-dashboard-mpg-day", text: col.abbrev });
