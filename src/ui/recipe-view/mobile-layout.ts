@@ -23,8 +23,8 @@ import { renderIngredientsSection } from "./ingredients-section";
 import { renderInstructionsSection } from "./instructions-section";
 import { findOrOpenLeaf } from "../../utils/open-leaf";
 import { RECIPE_VIEW_TYPE } from "./recipe-view";
-import { fmStr } from "./frontmatter-read-helpers";
 import { describeSourceLink } from "./source-link-display";
+import { findSourceUrl } from "../../sharing/find-source-url";
 import { NUTRITION_FIELDS, resolveNutritionDisplay } from "./nutrition-fields";
 import { RECIPE_FRONTMATTER } from "../../settings/frontmatter-keys";
 import { getRecipeMetaAliases } from "../../parser/recipe-meta-aliases";
@@ -529,11 +529,11 @@ export async function renderMobileLayout(
 	// (a cookbook title, a bare domain) threw and took the whole Info tab render
 	// with it -- leaving the tab bar wired to nothing.
 	const source = settings.showRecipeSource
-		? describeSourceLink(fmStr(fm, ["source", "url", "sourceUrl", "source_url"]))
+		? describeSourceLink(findSourceUrl(fm, settings.sourceProperty))
 		: null;
 	if (source) {
 		const urlRow = panelInfo.createDiv({ cls: "rb-info-url" });
-		urlRow.createSpan({ cls: "rb-info-url-label", text: "Source: " });
+		urlRow.createSpan({ cls: "rb-info-url-label", text: t("rview.sourceLabel") });
 		if (source.href) {
 			urlRow.createEl("a", { href: source.href, text: source.label, attr: { target: "_blank", rel: "noopener" } });
 		} else {
