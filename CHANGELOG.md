@@ -1,3 +1,30 @@
+## 0.1.12-es.3 -- Necrocter/obsidian-recipebox fork
+
+Tracks upstream 0.1.12. Fork iteration `es.3`: weekday names now follow the
+chosen plugin language everywhere.
+
+### Features
+
+* **i18n:** the meal plan note writes its day section headings in the
+  configured language (`## Lunes` instead of `## Monday`). Plugin state,
+  sorting and the week grid still use the canonical English key internally; a
+  new `canonicalDay()` maps a heading in any shipped language back to it on
+  read, so existing `## Monday` notes keep working.
+
+### Bug Fixes
+
+* **i18n:** the dashboard cooking-activity chart formatted its axis and tooltip
+  dates with the operating-system locale, so weekday/month names ("Mon",
+  "Tue") stayed in the OS language even with the plugin set to Spanish. It now
+  uses the plugin locale, and its "Week of ..." / "... cooked" strings are
+  translated. Same OS-locale fix applied to the gallery card, recipe badge and
+  mobile layout date strings.
+* **meal plan:** dragging a recipe onto a day column in a non-English UI wrote
+  the localised day name into plugin state instead of the canonical key,
+  detaching the entry from that day.
+
+---
+
 ## 0.1.12-es.2 -- Necrocter/obsidian-recipebox fork
 
 Tracks upstream 0.1.12 (in-progress upstream; latest upstream stable is 0.1.11).
