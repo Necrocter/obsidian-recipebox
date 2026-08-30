@@ -101,8 +101,15 @@ describe("stripOf", () => {
 		expect(stripOf("Of Sugar")).toBe("Sugar");
 	});
 
-	it("leaves text without a leading 'of' unchanged", () => {
+	it("strips a leading Spanish 'de'", () => {
+		expect(stripOf("de azúcar")).toBe("azúcar");
+		expect(stripOf("De Harina")).toBe("Harina");
+	});
+
+	it("leaves text without a leading partitive unchanged", () => {
 		expect(stripOf("sugar")).toBe("sugar");
+		expect(stripOf("cream of tartar")).toBe("cream of tartar");
+		expect(stripOf("diente de ajo")).toBe("diente de ajo");
 	});
 });
 
