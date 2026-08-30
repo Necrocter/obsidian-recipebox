@@ -3,6 +3,7 @@
  * custom Markdown template path.
  */
 import { App, Setting } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { NotePathSuggest } from "../components/note-path-suggest";
 import { FolderSuggest } from "../components/folder-suggest";
@@ -15,24 +16,24 @@ export function renderSectionImporter(
 	app: App
 ): void {
 	new Setting(container)
-		.setName("Recipe template note path")
-		.setDesc("Path to a note used as a template when importing. Leave empty to use the built-in default.")
-		.addText((t) => {
-			t.setValue(settings.importerTemplatePath).onChange(async (v) => {
+		.setName(t("set.importer.templatePath.name"))
+		.setDesc(t("set.importer.templatePath.desc"))
+		.addText((c) => {
+			c.setValue(settings.importerTemplatePath).onChange(async (v) => {
 				settings.importerTemplatePath = v.trim();
 				await save();
 			});
-			new NotePathSuggest(app, t.inputEl);
+			new NotePathSuggest(app, c.inputEl);
 		});
 
 	new Setting(container)
-		.setName("Default import folder")
-		.setDesc("Where imported recipes are saved. Leave empty to use the first configured recipe folder.")
-		.addText((t) => {
-			t.setValue(settings.importerDefaultFolder).onChange(async (v) => {
+		.setName(t("set.importer.defaultFolder.name"))
+		.setDesc(t("set.importer.defaultFolder.desc"))
+		.addText((c) => {
+			c.setValue(settings.importerDefaultFolder).onChange(async (v) => {
 				settings.importerDefaultFolder = v.trim();
 				await save();
 			});
-			new FolderSuggest(app, t.inputEl);
+			new FolderSuggest(app, c.inputEl);
 		});
 }
