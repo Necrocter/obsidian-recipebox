@@ -3,20 +3,22 @@
  * and resolves their display values with per-serving or total scaling.
  */
 import { RecipeBoxSettings } from "../../settings/settings-types";
+import type { TranslationKey } from "../../i18n";
 import { fmNutrient } from "./frontmatter-read-helpers";
 
 export interface NutritionFieldDef {
 	label: string;
+	labelKey: TranslationKey;
 	unit: string;
 	settingsKey: keyof RecipeBoxSettings;
 	aliases: string[];
 }
 
 export const NUTRITION_FIELDS: NutritionFieldDef[] = [
-	{ label: "Calories", unit: "", settingsKey: "caloriesProperty", aliases: ["calories", "kcal", "cal"] },
-	{ label: "Protein", unit: "g", settingsKey: "proteinProperty", aliases: ["protein"] },
-	{ label: "Fat", unit: "g", settingsKey: "fatProperty", aliases: ["fat", "total fat"] },
-	{ label: "Carbs", unit: "g", settingsKey: "carbsProperty", aliases: ["carbs", "carbohydrates", "carbohydrate"] },
+	{ label: "Calories", labelKey: "set.pn.calories.name", unit: "", settingsKey: "caloriesProperty", aliases: ["calories", "kcal", "cal"] },
+	{ label: "Protein", labelKey: "set.pn.protein.name", unit: "g", settingsKey: "proteinProperty", aliases: ["protein"] },
+	{ label: "Fat", labelKey: "set.pn.fat.name", unit: "g", settingsKey: "fatProperty", aliases: ["fat", "total fat"] },
+	{ label: "Carbs", labelKey: "set.pn.carbs.name", unit: "g", settingsKey: "carbsProperty", aliases: ["carbs", "carbohydrates", "carbohydrate"] },
 ];
 
 function formatNutritionNumber(n: number): string {

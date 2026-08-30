@@ -34,6 +34,7 @@ export const DEFAULT_CATEGORY_ORDER: string[] = [
 ];
 
 export const DEFAULT_SETTINGS: RecipeBoxSettings = {
+	language: "auto",
 	recipeFolders: ["Recipes"],
 	openGalleryOnFolderClick: false,
 	openGalleryOnFolderClickSubfolders: false,
@@ -42,6 +43,7 @@ export const DEFAULT_SETTINGS: RecipeBoxSettings = {
 	ingredientsHeading: "Ingredients",
 	instructionsHeading: "Instructions",
 	notesHeading: "Notes",
+	ignoreIngredientTag: "ignore-ingredient",
 	enableDashboard: true,
 
 

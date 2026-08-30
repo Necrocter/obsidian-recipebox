@@ -13,6 +13,13 @@ describe("consumeUnit", () => {
 	it("returns an empty unit when the leading token isn't a known unit", () => {
 		expect(consumeUnit("large eggs")).toEqual({ unit: "", remaining: "large eggs" });
 	});
+
+	it("canonicalizes Spanish units to a Spanish form, not the English abbreviation", () => {
+		expect(consumeUnit("cucharadas de aceite")).toEqual({ unit: "cucharada", remaining: "de aceite" });
+		expect(consumeUnit("cdta de sal")).toEqual({ unit: "cucharadita", remaining: "de sal" });
+		expect(consumeUnit("tazas de harina")).toEqual({ unit: "taza", remaining: "de harina" });
+		expect(consumeUnit("dientes de ajo")).toEqual({ unit: "diente", remaining: "de ajo" });
+	});
 });
 
 describe("parseIngredientLine", () => {
@@ -35,6 +42,17 @@ describe("parseIngredientLine", () => {
 			note: "sifted",
 			tags: ["pantry"],
 			raw: "- 1 1/2 cups flour (sifted) #pantry",
+		});
+	});
+
+	it("parses a Spanish ingredient line, keeping the unit in Spanish", () => {
+		expect(parseIngredientLine("- 2 cucharadas de aceite de oliva")).toEqual({
+			quantity: 2,
+			unit: "cucharada",
+			name: "aceite de oliva",
+			note: null,
+			tags: [],
+			raw: "- 2 cucharadas de aceite de oliva",
 		});
 	});
 

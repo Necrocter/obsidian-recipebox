@@ -15,15 +15,18 @@ import { DiscoveryResult } from "../../discovery/discovery-cache";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { buildFieldPickerBtn, buildPickerFieldList } from "../components/field-picker";
 import { propertyToLabel } from "../../utils/property-label";
+import { t } from "../../i18n";
 
-const COLOR_OPTIONS: Record<BadgeColor, string> = {
-	default: "Default",
-	green: "Green",
-	blue: "Blue",
-	purple: "Purple",
-	yellow: "Yellow",
-	red: "Red",
-};
+function colorOptions(): Record<BadgeColor, string> {
+	return {
+		default: t("badge.color.default"),
+		green: t("badge.color.green"),
+		blue: t("badge.color.blue"),
+		purple: t("badge.color.purple"),
+		yellow: t("badge.color.yellow"),
+		red: t("badge.color.red"),
+	};
+}
 
 export class BadgeEditModal extends BaseModal {
 	private draft: CustomBadge;
@@ -45,7 +48,7 @@ export class BadgeEditModal extends BaseModal {
 	}
 
 	getTitle(): string {
-		return this.isNew ? "Add badge" : `Edit badge: ${this.draft.label || this.draft.property}`;
+		return this.isNew ? t("modal.badge.titleAdd") : t("modal.badge.titleEdit", { name: this.draft.label || this.draft.property });
 	}
 	getContentClasses(): string[] { return ["rb-badge-edit-modal"]; }
 
@@ -76,22 +79,22 @@ export class BadgeEditModal extends BaseModal {
 				this.renderFormulaSection(body);
 			} else {
 				new Setting(body)
-					.setName("Property")
-					.setDesc("Frontmatter key to read from the recipe note.")
-					.addText((t) =>
-						t
+					.setName(t("modal.badge.property"))
+					.setDesc(t("modal.badge.propertyDesc"))
+					.addText((c) =>
+						c
 							.setValue(this.draft.property)
-							.setPlaceholder("E.g. Preptime")
+							.setPlaceholder(t("modal.badge.egProperty"))
 							.onChange((v) => { this.draft.property = v; }),
 					);
 			}
 			this.renderLabelSection(body);
 		} else {
 			new Setting(body)
-				.setName("Use formula")
-				.setDesc("Replace property lookup with a custom JavaScript expression.")
-				.addToggle((t) =>
-					t.setValue(this.useFormula).onChange((v) => {
+				.setName(t("modal.badge.useFormula"))
+				.setDesc(t("modal.badge.useFormulaDesc"))
+				.addToggle((c) =>
+					c.setValue(this.useFormula).onChange((v) => {
 						this.useFormula = v;
 						if (!v) this.draft.formula = undefined;
 						else if (!this.draft.formula) this.draft.formula = "";
@@ -109,9 +112,9 @@ export class BadgeEditModal extends BaseModal {
 	}
 
 	private rebuildButtons(footer: HTMLElement): void {
-		footer.createEl("button", { cls: "rb-shell-cancel-btn", text: "Cancel" })
+		footer.createEl("button", { cls: "rb-shell-cancel-btn", text: t("common.cancel") })
 			.addEventListener("click", () => this.close());
-		footer.createEl("button", { cls: "mod-cta", text: "Save" })
+		footer.createEl("button", { cls: "mod-cta", text: t("common.save") })
 			.addEventListener("click", () => {
 				this.onSave({ ...this.draft });
 				this.close();
@@ -120,9 +123,9 @@ export class BadgeEditModal extends BaseModal {
 
 	private renderFormulaSection(body: HTMLElement): void {
 		new Setting(body)
-			.setName("Formula")
+			.setName(t("modal.badge.formula"))
 			.setDesc(
-				"Simple arithmetic expression using frontmatter properties as variables: + - * /, parentheses, and || as a fallback for missing values (ex: prepTime || 0)."
+				t("modal.badge.formulaDesc")
 			)
 			.addTextArea((t) =>
 				t
@@ -140,8 +143,8 @@ export class BadgeEditModal extends BaseModal {
 		const selectedField = fields.find(f => f.key === this.draft.property);
 
 		const propSetting = new Setting(body)
-			.setName("Property")
-			.setDesc("Frontmatter key to read from the recipe note.");
+			.setName(t("modal.badge.property"))
+			.setDesc(t("modal.badge.propertyDesc"));
 
 		if (fields.length > 0) {
 			propSetting.settingEl.createDiv({ cls: "rb-badge-prop-picker" }, (el) => {
@@ -156,31 +159,31 @@ export class BadgeEditModal extends BaseModal {
 			});
 		} else {
 			// No discovery available -- fall back to text input.
-			propSetting.addText((t) =>
-				t.setValue(this.draft.property).setPlaceholder("E.g. Cuisine")
+			propSetting.addText((c) =>
+				c.setValue(this.draft.property).setPlaceholder(t("modal.badge.egCuisine"))
 					.onChange((v) => { this.draft.property = v; }),
 			);
 		}
 
 		new Setting(body)
-			.setName("Prefix")
-			.setDesc('Text prepended to the value, e.g. "$".')
-			.addText((t) =>
-				t
+			.setName(t("modal.badge.prefix"))
+			.setDesc(t("modal.badge.prefixDesc"))
+			.addText((c) =>
+				c
 					.setValue(this.draft.prefix ?? "")
-					.setPlaceholder("Ex. $")
+					.setPlaceholder(t("modal.badge.egPrefix"))
 					.onChange((v) => {
 						this.draft.prefix = v || undefined;
 					}),
 			);
 
 		new Setting(body)
-			.setName("Suffix")
-			.setDesc('Text appended to the value, e.g. " kcal" or " min".')
-			.addText((t) =>
-				t
+			.setName(t("modal.badge.suffix"))
+			.setDesc(t("modal.badge.suffixDesc"))
+			.addText((c) =>
+				c
 					.setValue(this.draft.suffix ?? "")
-					.setPlaceholder("Ex. Kcal")
+					.setPlaceholder(t("modal.badge.egSuffix"))
 					.onChange((v) => {
 						this.draft.suffix = v || undefined;
 					}),
@@ -191,12 +194,12 @@ export class BadgeEditModal extends BaseModal {
 		const showSplitArray = !selectedField || selectedField.hasArrayValues;
 		if (showSplitArray) {
 			new Setting(body)
-				.setName("Split array")
+				.setName(t("modal.badge.splitArray"))
 				.setDesc(
-					"When the property is a list, show one badge per item instead of a single comma-joined badge.",
+					t("modal.badge.splitArrayDesc"),
 				)
-				.addToggle((t) =>
-					t.setValue(this.draft.splitArray).onChange((v) => {
+				.addToggle((c) =>
+					c.setValue(this.draft.splitArray).onChange((v) => {
 						this.draft.splitArray = v;
 					}),
 				);
@@ -205,10 +208,10 @@ export class BadgeEditModal extends BaseModal {
 
 	private renderLabelSection(body: HTMLElement): void {
 		new Setting(body)
-			.setName("Show label")
-			.setDesc("When off, only the value is shown with no label text.")
-			.addToggle((t) =>
-				t.setValue(!(this.draft.hideLabel ?? false)).onChange((v) => {
+			.setName(t("modal.badge.showLabel"))
+			.setDesc(t("modal.badge.showLabelDesc"))
+			.addToggle((c) =>
+				c.setValue(!(this.draft.hideLabel ?? false)).onChange((v) => {
 					this.draft.hideLabel = !v;
 					this.rerenderAll();
 				}),
@@ -216,12 +219,12 @@ export class BadgeEditModal extends BaseModal {
 
 		if (!this.draft.hideLabel) {
 			new Setting(body)
-				.setName("Label")
-				.setDesc("Display label shown in the badge.")
-				.addText((t) =>
-					t
+				.setName(t("modal.badge.label"))
+				.setDesc(t("modal.badge.labelDesc"))
+				.addText((c) =>
+					c
 						.setValue(this.draft.label)
-						.setPlaceholder("Ex. Cuisine")
+						.setPlaceholder(t("modal.badge.egCuisine"))
 						.onChange((v) => {
 							this.draft.label = v;
 							this.labelManuallyEdited = true;
@@ -230,33 +233,33 @@ export class BadgeEditModal extends BaseModal {
 		}
 
 		new Setting(body)
-			.setName("Icon")
-			.setDesc("Lucide icon name shown inside the badge. Leave blank for no icon.")
-			.addText((t) => {
-				t.setValue(this.draft.icon ?? "")
-					.setPlaceholder("Ex. Tag, globe, bookmark")
+			.setName(t("modal.badge.icon"))
+			.setDesc(t("modal.badge.iconDesc"))
+			.addText((c) => {
+				c.setValue(this.draft.icon ?? "")
+					.setPlaceholder(t("modal.badge.egIcon"))
 					.onChange((v) => {
 						this.draft.icon = v.trim() || undefined;
 					});
 
-				const preview = t.inputEl.parentElement!.createEl("button", {
+				const preview = c.inputEl.parentElement!.createEl("button", {
 					cls: "rb-badge-icon-preview",
 					attr: { type: "button" },
 				});
 				const previewIcon = preview.createSpan();
 				if (this.draft.icon) setIcon(previewIcon, this.draft.icon);
 
-				t.inputEl.addEventListener("input", () => {
+				c.inputEl.addEventListener("input", () => {
 					previewIcon.empty();
-					if (t.inputEl.value.trim()) setIcon(previewIcon, t.inputEl.value.trim());
+					if (c.inputEl.value.trim()) setIcon(previewIcon, c.inputEl.value.trim());
 				});
 			});
 
 		new Setting(body)
-			.setName("Color")
+			.setName(t("modal.badge.color"))
 			.addDropdown((dd) =>
 				dd
-					.addOptions(COLOR_OPTIONS)
+					.addOptions(colorOptions())
 					.setValue(this.draft.color)
 					.onChange((v) => {
 						this.draft.color = v as BadgeColor;

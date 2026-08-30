@@ -3,6 +3,7 @@
  * that are not tied to a recipe in the meal plan.
  */
 import { App, Notice } from "obsidian";
+import { t } from "../i18n";
 import { ContributionMap, GroceryItemEntry } from "../types";
 import { RecipeBoxSettings } from "../settings/settings-types";
 import { ingredientKey } from "../parser/ingredient-clean";
@@ -33,7 +34,7 @@ export async function addGroceryItem(
 	await save();
 
 	await addToGroceryNote(app, contrib, settings);
-	new Notice(toTitleCase(item.name) + " added to grocery list.");
+	new Notice(t("notice.itemAddedToGrocery", { name: toTitleCase(item.name) }));
 	return item;
 }
 
@@ -102,5 +103,5 @@ export async function removeFromGroceryByKey(
 	// Removing from the note only — does not clean up meal plan contributions or grocery item records
 	// intentionally: removing from the shopping list shouldn't silently un-plan a meal.
 	await removeFromGroceryNote(app, { [key]: { name: item.name, unit: item.unit, quantity: item.quantity } }, settings);
-	if (!silent) new Notice(toTitleCase(item.name) + " removed from grocery list.");
+	if (!silent) new Notice(t("notice.itemRemovedFromGrocery", { name: toTitleCase(item.name) }));
 }

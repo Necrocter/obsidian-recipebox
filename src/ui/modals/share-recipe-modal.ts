@@ -7,6 +7,7 @@
  * one -- see unshare-recipe.ts / share-recipe.ts -- never updates in place.
  */
 import { App, Notice, TFile } from "obsidian";
+import { getLocaleTag, t, tPlural } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { BaseModal } from "./modal-shell";
 import { getShareData, ShareData } from "../../sharing/share-frontmatter";
@@ -35,12 +36,12 @@ function buildShareUrl(settings: RecipeBoxSettings, slug: string): string {
 
 function formatExpiry(iso: string): string {
 	const date = new Date(iso);
-	return Number.isNaN(date.getTime()) ? iso : date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+	return Number.isNaN(date.getTime()) ? iso : date.toLocaleDateString(getLocaleTag(), { year: "numeric", month: "long", day: "numeric" });
 }
 
 function copyToClipboard(text: string): void {
 	void navigator.clipboard.writeText(text);
-	new Notice("Link copied to clipboard.");
+	new Notice(t("notice.linkCopied"));
 }
 
 export class ShareRecipeModal extends BaseModal {
@@ -70,7 +71,7 @@ export class ShareRecipeModal extends BaseModal {
 		this.view = this.status.kind === "shared" ? "shared" : "form";
 	}
 
-	getTitle(): string { return "Share recipe"; }
+	getTitle(): string { return t("gallery.card.shareRecipe"); }
 
 	renderBody(bodyEl: HTMLElement): void {
 		this.bodyEl = bodyEl;
@@ -105,12 +106,12 @@ export class ShareRecipeModal extends BaseModal {
 		// to reconsider before sharing, not just a generic "link" disclaimer.
 		fields.createEl("p", {
 			cls: "rb-modal-section-desc",
-			text: "Anyone with the link can view this recipe and its photo, if it has one.",
+			text: t("modal.share.disclaimer"),
 		});
 
 		const nameRow = fields.createDiv({ cls: "rb-share-form-row rb-share-form-row--full" });
 		const nameField = nameRow.createDiv({ cls: "rb-modal-field rb-modal-field--grow" });
-		nameField.createEl("label", { text: "Name" });
+		nameField.createEl("label", { text: t("modal.strategy.name") });
 		this.nameInput = nameField.createEl("input", {
 			cls: "rb-modal-input",
 			type: "text",
@@ -120,32 +121,32 @@ export class ShareRecipeModal extends BaseModal {
 		const optionsRow = fields.createDiv({ cls: "rb-share-form-row" });
 
 		const visField = optionsRow.createDiv({ cls: "rb-modal-field rb-share-form-visibility" });
-		visField.createEl("label", { text: "Visibility" });
+		visField.createEl("label", { text: t("modal.share.visibility") });
 		this.visibilitySelect = visField.createEl("select", { cls: "rb-modal-select" });
-		this.visibilitySelect.createEl("option", { value: "anyone", text: "Anyone with the link" });
+		this.visibilitySelect.createEl("option", { value: "anyone", text: t("modal.share.anyoneWithLink") });
 		this.visibilitySelect.createEl("option", {
 			value: "specific-people",
-			text: "Specific people (coming soon)",
+			text: t("modal.share.specificPeople"),
 			attr: { disabled: "true" },
 		});
 
 		const expiresField = optionsRow.createDiv({ cls: "rb-modal-field rb-share-form-expiry" });
-		expiresField.createEl("label", { text: "Expires in" });
+		expiresField.createEl("label", { text: t("modal.share.expiresIn") });
 		this.expiresSelect = expiresField.createEl("select", { cls: "rb-modal-select" });
 		for (const days of EXPIRY_OPTIONS) {
-			const opt = this.expiresSelect.createEl("option", { value: String(days), text: `${days} days` });
+			const opt = this.expiresSelect.createEl("option", { value: String(days), text: t("modal.share.nDays", { count: days }) });
 			if (days === 90) opt.selected = true;
 		}
 
 		const notice = bodyEl.createDiv({ cls: "rb-share-scope-notice" });
 
 		const includedLine = notice.createEl("p");
-		includedLine.createEl("strong", { text: "Included: " });
-		includedLine.appendText("ingredients, instructions, times, nutrition, and the recipe photo.");
+		includedLine.createEl("strong", { text: t("modal.share.includedLabel") });
+		includedLine.appendText(t("modal.share.includedText"));
 
 		const excludedLine = notice.createEl("p");
-		excludedLine.createEl("strong", { text: "Not included: " });
-		excludedLine.appendText("your personal notes, tags, or other vault content.");
+		excludedLine.createEl("strong", { text: t("modal.share.notIncludedLabel") });
+		excludedLine.appendText(t("modal.share.notIncludedText"));
 	
 
 	}
@@ -153,7 +154,7 @@ export class ShareRecipeModal extends BaseModal {
 	private renderFormFooter(footerEl: HTMLElement): void {
 		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: "Cancel" })
 			.addEventListener("click", () => this.close());
-		this.submitBtn = footerEl.createEl("button", { cls: "mod-cta", text: this.isReshare ? "Re-share" : "Create link" });
+		this.submitBtn = footerEl.createEl("button", { cls: "mod-cta", text: this.isReshare ? t("modal.share.reshare") : t("modal.share.createLink") });
 		this.submitBtn.addEventListener("click", () => { void this.handleSubmit(); });
 	}
 
@@ -161,14 +162,14 @@ export class ShareRecipeModal extends BaseModal {
 		const result = this.resultData;
 		if (!result) return;
 		const box = bodyEl.createDiv({ cls: "rb-modal-section" });
-		box.createDiv({ cls: "rb-modal-section-heading", text: "Link ready" });
+		box.createDiv({ cls: "rb-modal-section-heading", text: t("modal.share.linkReady") });
 
 		const linkRow = box.createDiv({ cls: "rb-share-link-row" });
 		linkRow.createEl("input", { cls: "rb-modal-input", type: "text", attr: { readonly: "true" }, value: result.share.url });
-		linkRow.createEl("button", { cls: "rb-modal-link-btn", text: "Copy" })
+		linkRow.createEl("button", { cls: "rb-modal-link-btn", text: t("modal.share.copy") })
 			.addEventListener("click", () => copyToClipboard(result.share.url));
 
-		box.createEl("p", { cls: "rb-modal-section-desc", text: `Expires ${formatExpiry(result.share.expiresAt)}` });
+		box.createEl("p", { cls: "rb-modal-section-desc", text: t("modal.share.expiresOn", { date: formatExpiry(result.share.expiresAt) }) });
 
 		const allWarnings = [
 			...(result.imageOmittedReason ? [result.imageOmittedReason] : []),
@@ -180,7 +181,7 @@ export class ShareRecipeModal extends BaseModal {
 	}
 
 	private renderResultFooter(footerEl: HTMLElement): void {
-		footerEl.createEl("button", { cls: "mod-cta", text: "Done" })
+		footerEl.createEl("button", { cls: "mod-cta", text: t("common.done") })
 			.addEventListener("click", () => this.close());
 	}
 
@@ -190,15 +191,15 @@ export class ShareRecipeModal extends BaseModal {
 		const url = buildShareUrl(this.settings, data.slug);
 
 		const box = bodyEl.createDiv({ cls: "rb-modal-section" });
-		box.createDiv({ cls: "rb-modal-section-heading", text: "Already shared" });
+		box.createDiv({ cls: "rb-modal-section-heading", text: t("modal.share.alreadyShared") });
 
 		const linkRow = box.createDiv({ cls: "rb-share-link-row" });
 		linkRow.createEl("input", { cls: "rb-modal-input", type: "text", attr: { readonly: "true" }, value: url });
-		linkRow.createEl("button", { cls: "rb-modal-link-btn", text: "Copy" })
+		linkRow.createEl("button", { cls: "rb-modal-link-btn", text: t("modal.share.copy") })
 			.addEventListener("click", () => copyToClipboard(url));
 
 		const statusText = this.status.kind === "shared"
-			? `${this.status.daysLeft} day${this.status.daysLeft === 1 ? "" : "s"} left`
+			? tPlural("modal.share.daysLeft.one", "modal.share.daysLeft.other", this.status.daysLeft)
 			: "";
 		box.createEl("p", { cls: "rb-modal-section-desc", text: statusText });
 	}
@@ -206,9 +207,9 @@ export class ShareRecipeModal extends BaseModal {
 	private renderSharedFooter(footerEl: HTMLElement): void {
 		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: "Cancel" })
 			.addEventListener("click", () => this.close());
-		footerEl.createEl("button", { cls: "mod-warning", text: "Unshare" })
+		footerEl.createEl("button", { cls: "mod-warning", text: t("modal.share.unshare") })
 			.addEventListener("click", (e) => { void this.handleUnshare(e.currentTarget as HTMLButtonElement); });
-		footerEl.createEl("button", { cls: "mod-cta", text: "Re-share" })
+		footerEl.createEl("button", { cls: "mod-cta", text: t("modal.share.reshare") })
 			.addEventListener("click", () => {
 				this.isReshare = true;
 				this.view = "form";
@@ -231,7 +232,7 @@ export class ShareRecipeModal extends BaseModal {
 			this.renderCurrentView();
 			this.renderCurrentFooter();
 		} catch (err) {
-			new Notice(`Failed to share recipe: ${err instanceof Error ? err.message : String(err)}`);
+			new Notice(t("notice.failedShare", { error: err instanceof Error ? err.message : String(err) }));
 			this.submitBtn.disabled = false;
 		}
 	}
@@ -240,10 +241,10 @@ export class ShareRecipeModal extends BaseModal {
 		btn.disabled = true;
 		try {
 			await unshareRecipe(this.app, this.file, this.settings, this.saveSettings);
-			new Notice("Recipe unshared.");
+			new Notice(t("notice.recipeUnshared"));
 			this.close();
 		} catch (err) {
-			new Notice(`Failed to unshare recipe: ${err instanceof Error ? err.message : String(err)}`);
+			new Notice(t("notice.failedUnshare", { error: err instanceof Error ? err.message : String(err) }));
 			btn.disabled = false;
 		}
 	}

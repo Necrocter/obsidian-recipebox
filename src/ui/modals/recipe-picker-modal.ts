@@ -4,6 +4,7 @@
  * (when input is non-empty) followed by up to 7 fuzzy-matched recipe rows.
  */
 import { App, TFile, prepareFuzzySearch, setIcon } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { isRecipeFile } from "../../lifecycle/recipe-file-detection";
 import { BaseModal } from "./modal-shell";
@@ -47,14 +48,14 @@ export class RecipePickerModal extends BaseModal {
 		super(app);
 	}
 
-	getTitle(): string { return `Add to ${this.day ?? "Queue"}`; }
+	getTitle(): string { return `Add to ${this.day ?? t("modal.recipePicker.queue")}`; }
 	getIcon(): string { return "calendar-plus"; }
 	getContentClasses(): string[] { return ["rb-recipe-picker-modal"]; }
 
 	renderBody(bodyEl: HTMLElement): void {
 		const input = bodyEl.createEl("input", {
 			cls: "rb-recipe-picker-input",
-			attr: { type: "text", placeholder: "Search recipes or enter a meal name..." },
+			attr: { type: "text", placeholder: t("modal.recipePicker.searchPlaceholder") },
 		});
 
 		this.resultsEl = bodyEl.createDiv({ cls: "rb-recipe-picker-results" });
@@ -75,7 +76,7 @@ export class RecipePickerModal extends BaseModal {
 	}
 
 	renderFooter(footerEl: HTMLElement): void {
-		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: "Cancel" })
+		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: t("common.cancel") })
 			.addEventListener("click", () => this.close());
 	}
 

@@ -4,6 +4,7 @@
  */
 import { Plugin, TFile, WorkspaceLeaf } from "obsidian";
 import { findOrOpenLeaf } from "./utils/open-leaf";
+import { setActiveLanguage, t } from "./i18n";
 import { RecipeBoxSettings } from "./settings/settings-types";
 import { GroceryManager } from "./grocery/manager";
 import { DiscoveryCache } from "./discovery/discovery-cache";
@@ -33,6 +34,7 @@ export default class RecipeBoxPlugin extends Plugin {
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
+		setActiveLanguage(this.settings.language);
 
 		this.manager = new GroceryManager(this.app, {
 			getSettings: () => this.settings,
@@ -115,6 +117,9 @@ export default class RecipeBoxPlugin extends Plugin {
 	}
 
 	async saveSettings(): Promise<void> {
+		// Re-resolve the active locale so a language change in the settings tab
+		// takes effect on the next render without an Obsidian reload.
+		setActiveLanguage(this.settings.language);
 		await this.saveData(this.settings);
 		this.notifyRecipeViews();
 		// Every settings change (including the folder-click toggles) flows
@@ -132,11 +137,11 @@ export default class RecipeBoxPlugin extends Plugin {
 	// entirely: the DOM nodes never leave the ribbon, so there's nothing for
 	// Obsidian to resurrect.
 	private setUpRibbonIcons(): void {
-		this.dashboardRibbonIcon = this.addRibbonIcon("tool-case", "Recipe box dashboard", () => this.activateDashboardView());
+		this.dashboardRibbonIcon = this.addRibbonIcon("tool-case", t("ribbon.dashboard"), () => this.activateDashboardView());
 		this.individualRibbonIcons = [
-			this.addRibbonIcon("shopping-cart", "Open grocery list", () => this.activateGroceryView()),
-			this.addRibbonIcon("calendar", "Open meal plan", () => this.activateMealPlanView()),
-			this.addRibbonIcon("layout-list", "Browse recipes", () => this.activateGalleryView()),
+			this.addRibbonIcon("shopping-cart", t("ribbon.openGrocery"), () => this.activateGroceryView()),
+			this.addRibbonIcon("calendar", t("ribbon.openMealPlan"), () => this.activateMealPlanView()),
+			this.addRibbonIcon("layout-list", t("ribbon.browseRecipes"), () => this.activateGalleryView()),
 		];
 		this.refreshRibbonIcons();
 	}

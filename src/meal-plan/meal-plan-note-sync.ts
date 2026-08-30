@@ -75,7 +75,7 @@ async function parseRecipeContributions(app: App, filePath: string, settings: Re
 		if (!inIngredients) continue;
 
 		const parsed = parseIngredientLine(line);
-		if (!parsed?.name || hasIgnoreTag(parsed.tags)) continue;
+		if (!parsed?.name || hasIgnoreTag(parsed.tags, settings.ignoreIngredientTag)) continue;
 
 		const key = ingredientKey(parsed.name, parsed.unit);
 		if (!contributions[key]) {

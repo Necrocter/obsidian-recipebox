@@ -52,6 +52,41 @@ describe("extractRecipeFromText", () => {
 		expect(extractRecipeFromText(text).totalTime).toBe(90);
 	});
 
+	it("splits Spanish section headings", () => {
+		const text = [
+			"Pollo al horno",
+			"Ingredientes:",
+			"- 2 tazas de pasta",
+			"- 1 taza de nata",
+			"Preparación:",
+			"1. Hervir la pasta.",
+			"2. Añadir la nata.",
+		].join("\n");
+		const recipe = extractRecipeFromText(text);
+		expect(recipe.ingredientGroups).toEqual([
+			{ name: null, items: ["- 2 tazas de pasta", "- 1 taza de nata"] },
+		]);
+		expect(recipe.instructionGroups).toEqual([
+			{ name: null, items: ["Hervir la pasta.", "Añadir la nata."] },
+		]);
+	});
+
+	it("extracts loose Spanish servings and time metadata", () => {
+		const text = "Receta\nPara 4 personas\nTiempo de preparación: 10 minutos\nTiempo de cocción: 20 min\nCalorías: 350";
+		const recipe = extractRecipeFromText(text);
+		expect(recipe.servings).toBe("4");
+		expect(recipe.prepTime).toBe(10);
+		expect(recipe.cookTime).toBe(20);
+	});
+
+	it("reads a number-first Spanish servings line", () => {
+		expect(extractRecipeFromText("Receta\n6 raciones").servings).toBe("6");
+	});
+
+	it("converts a Spanish time given in hours to minutes", () => {
+		expect(extractRecipeFromText("Receta\nTiempo total: 1.5 horas").totalTime).toBe(90);
+	});
+
 	it("decodes HTML entities and strips HTML tags from the input", () => {
 		const text = "Mom&#39;s Recipe\nIngredients:\n- <b>2 cups</b> flour";
 		const recipe = extractRecipeFromText(text);

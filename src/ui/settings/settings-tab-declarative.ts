@@ -4,6 +4,8 @@
  */
 import { App, Setting, SettingDefinitionItem } from "obsidian";
 import RecipeBoxPlugin from "../../main";
+import { t } from "../../i18n";
+import { SUPPORTED_LANGUAGES } from "../../i18n";
 import { renderSectionLibrary } from "./section-library";
 import { renderSectionRecipeView } from "./section-recipe-view";
 import { renderSectionShopping } from "./section-shopping";
@@ -11,33 +13,45 @@ import { renderSectionSuggester } from "./section-suggester";
 import { renderSectionHealthSafety } from "./section-health-safety";
 import { renderSectionPropertyNames } from "./section-property-names";
 
-const MEAL_NOTATION_OPTIONS: Record<string, string> = {
-	tag: "Obsidian tag  (#meal/dinner)",
-	dataview: "Dataview field  ([meal:: Dinner])",
-	text: "Plain text  ((dinner))",
-};
+// Built lazily via getters so the strings resolve in the active locale at the
+// moment the settings tab renders, not at module load.
+function mealNotationOptions(): Record<string, string> {
+	return {
+		tag: t("set.opt.mealNotation.tag"),
+		dataview: t("set.opt.mealNotation.dataview"),
+		text: t("set.opt.mealNotation.text"),
+	};
+}
 
-const TIMER_RANGE_OPTIONS: Record<string, string> = {
-	min: "Min",
-	max: "Max",
-};
+function timerRangeOptions(): Record<string, string> {
+	return { min: t("set.opt.timerRange.min"), max: t("set.opt.timerRange.max") };
+}
 
-const NUTRITION_DISPLAY_OPTIONS: Record<string, string> = {
-	"per-serving": "Per serving",
-	total: "Total",
-};
+function nutritionDisplayOptions(): Record<string, string> {
+	return { "per-serving": t("set.opt.nutritionDisplay.perServing"), total: t("set.opt.nutritionDisplay.total") };
+}
 
-const NUTRITION_SOURCE_OPTIONS: Record<string, string> = {
-	"per-serving": "Per serving",
-	"recipe-total": "Recipe total",
-};
+function nutritionSourceOptions(): Record<string, string> {
+	return { "per-serving": t("set.opt.nutritionSource.perServing"), "recipe-total": t("set.opt.nutritionSource.recipeTotal") };
+}
 
-const EXPORT_FORMAT_OPTIONS: Record<string, string> = {
-	"plain-markdown": "Markdown (plain)",
-	"importable-markdown": "Markdown (importable)",
-	json: "JSON",
-	"json-ld": "JSON-LD",
-};
+function exportFormatOptions(): Record<string, string> {
+	return {
+		"plain-markdown": t("set.opt.exportFormat.plainMarkdown"),
+		"importable-markdown": t("set.opt.exportFormat.importableMarkdown"),
+		json: "JSON",
+		"json-ld": "JSON-LD",
+	};
+}
+
+function languageOptions(): Record<string, string> {
+	const labels: Record<string, string> = {
+		auto: t("set.opt.language.auto"),
+		en: t("set.opt.language.en"),
+		es: t("set.opt.language.es"),
+	};
+	return Object.fromEntries(SUPPORTED_LANGUAGES.map((l) => [l, labels[l]]));
+}
 
 interface DeclarativeSettingsContext {
 	app: App;
@@ -81,11 +95,24 @@ export function buildDeclarativeSettingDefinitions(
 	return [
 		{
 			type: "page",
-			name: "Recipe library",
-			desc: "Recipe folders, recipe type matching, dashboard toggle, and folder-click gallery behavior.",
+			name: t("set.language.title"),
+			desc: t("set.language.desc"),
 			items: [
 				{
-					name: "Recipe library settings",
+					name: t("set.language.field.name"),
+					desc: t("set.language.field.desc"),
+					aliases: ["language", "idioma", "locale", "spanish", "espanol"],
+					control: { type: "dropdown", key: "language", options: languageOptions() },
+				},
+			],
+		},
+		{
+			type: "page",
+			name: t("set.library.title"),
+			desc: t("set.library.desc"),
+			items: [
+				{
+					name: t("set.library.row"),
 					aliases: ["recipe folders", "recipe type", "folder click gallery", "dashboard"],
 					render: (setting) => {
 						renderLegacySectionInDeclarative(ctx, setting, (containerEl, save, rerender) => {
@@ -97,45 +124,51 @@ export function buildDeclarativeSettingDefinitions(
 		},
 		{
 			type: "page",
-			name: "Notes",
-			desc: "Paths and heading names for meal plan, grocery list, and recipe sections.",
+			name: t("set.notes.title"),
+			desc: t("set.notes.desc"),
 			items: [
 				{
-					name: "Meal plan note path",
-					desc: "Path to the note used as your meal plan. Supports {token} date patterns.",
+					name: t("set.notes.mealPlanPath.name"),
+					desc: t("set.notes.mealPlanPath.desc"),
 					aliases: ["meal plan path", "meal plan note", "meal plans"],
 					control: { type: "text", key: "mealPlanPath" },
 				},
 				{
-					name: "Grocery list note path",
-					desc: "Path to the note used as your grocery list. Supports {token} date patterns.",
+					name: t("set.notes.groceryListPath.name"),
+					desc: t("set.notes.groceryListPath.desc"),
 					aliases: ["grocery path", "shopping list note", "groceries"],
 					control: { type: "text", key: "groceryListPath" },
 				},
 				{
-					name: "Ingredients heading",
-					desc: "Heading that marks the ingredients section in a recipe note.",
+					name: t("set.notes.ingredientsHeading.name"),
+					desc: t("set.notes.ingredientsHeading.desc"),
 					control: { type: "text", key: "ingredientsHeading" },
 				},
 				{
-					name: "Instructions heading",
-					desc: "Heading that marks the instructions section in a recipe note.",
+					name: t("set.notes.instructionsHeading.name"),
+					desc: t("set.notes.instructionsHeading.desc"),
 					control: { type: "text", key: "instructionsHeading" },
 				},
 				{
-					name: "Notes heading",
-					desc: "Heading that marks the optional notes section in a recipe note.",
+					name: t("set.notes.notesHeading.name"),
+					desc: t("set.notes.notesHeading.desc"),
 					control: { type: "text", key: "notesHeading" },
+				},
+				{
+					name: t("set.notes.ignoreTag.name"),
+					desc: t("set.notes.ignoreTag.desc"),
+					aliases: ["ignore ingredient", "exclude ingredient", "ignorar ingrediente"],
+					control: { type: "text", key: "ignoreIngredientTag" },
 				},
 			],
 		},
 		{
 			type: "page",
-			name: "Recipe view",
-			desc: "Recipe view toggles and the header-badge editor.",
+			name: t("set.recipeView.title"),
+			desc: t("set.recipeView.desc"),
 			items: [
 				{
-					name: "Recipe view settings",
+					name: t("set.recipeView.row"),
 					aliases: ["badges", "tags", "desktop layout", "default image"],
 					render: (setting) => {
 						renderLegacySectionInDeclarative(ctx, setting, (containerEl, save, rerender) => {
@@ -147,18 +180,18 @@ export function buildDeclarativeSettingDefinitions(
 		},
 		{
 			type: "page",
-			name: "Cooking & tracking",
-			desc: "Cook history tracking and heading behavior.",
+			name: t("set.cooking.title"),
+			desc: t("set.cooking.desc"),
 			items: [
 				{
-					name: "Track cook history",
-					desc: "Record each cook with date, optional notes, and photo; also updates last-made and cooked-count properties.",
+					name: t("set.cooking.track.name"),
+					desc: t("set.cooking.track.desc"),
 					aliases: ["cook history", "tracking"],
 					control: { type: "toggle", key: "cookHistoryEnabled" },
 				},
 				{
-					name: "Cook history heading name",
-					desc: "Heading under which note-body history entries are appended.",
+					name: t("set.cooking.heading.name"),
+					desc: t("set.cooking.heading.desc"),
 					visible: () => ctx.plugin.settings.cookHistoryEnabled,
 					control: { type: "text", key: "cookHistoryHeading" },
 				},
@@ -166,28 +199,28 @@ export function buildDeclarativeSettingDefinitions(
 		},
 		{
 			type: "page",
-			name: "Meal plan",
-			desc: "Meal notation format and grocery auto-add behavior.",
+			name: t("set.mealPlan.title"),
+			desc: t("set.mealPlan.desc"),
 			items: [
 				{
-					name: "Meal type notation",
-					desc: "How meal types are written in your meal plan note.",
-					control: { type: "dropdown", key: "mealTypeNotation", options: MEAL_NOTATION_OPTIONS },
+					name: t("set.mealPlan.notation.name"),
+					desc: t("set.mealPlan.notation.desc"),
+					control: { type: "dropdown", key: "mealTypeNotation", options: mealNotationOptions() },
 				},
 				{
-					name: "Meal type field/tag name",
-					desc: "Tag or field name used in meal entries.",
+					name: t("set.mealPlan.fieldName.name"),
+					desc: t("set.mealPlan.fieldName.desc"),
 					visible: () => ctx.plugin.settings.mealTypeNotation !== "text",
 					control: { type: "text", key: "mealTypeFieldName" },
 				},
 				{
-					name: "Auto-add ingredients on sync",
-					desc: "Automatically add ingredients to grocery list for manually added meal plan entries.",
+					name: t("set.mealPlan.autoAdd.name"),
+					desc: t("set.mealPlan.autoAdd.desc"),
 					control: { type: "toggle", key: "autoAddOnSync" },
 				},
 				{
-					name: "Required tag filter",
-					desc: "Only auto-add ingredients from recipes with this tag. Leave empty for all recipes.",
+					name: t("set.mealPlan.tagFilter.name"),
+					desc: t("set.mealPlan.tagFilter.desc"),
 					visible: () => ctx.plugin.settings.autoAddOnSync,
 					control: { type: "text", key: "autoAddTagFilter" },
 				},
@@ -195,11 +228,11 @@ export function buildDeclarativeSettingDefinitions(
 		},
 		{
 			type: "page",
-			name: "Shopping assistant",
-			desc: "Grouping, category source, category order/overrides, and collapse behavior.",
+			name: t("set.shopping.title"),
+			desc: t("set.shopping.desc"),
 			items: [
 				{
-					name: "Shopping assistant settings",
+					name: t("set.shopping.row"),
 					aliases: ["category order", "category overrides", "grouping", "shopping"],
 					render: (setting) => {
 						renderLegacySectionInDeclarative(ctx, setting, (containerEl, save, rerender) => {
@@ -211,11 +244,11 @@ export function buildDeclarativeSettingDefinitions(
 		},
 		{
 			type: "page",
-			name: "Meal suggester",
-			desc: "Mode list and editor for meal suggestion rules.",
+			name: t("set.suggester.title"),
+			desc: t("set.suggester.desc"),
 			items: [
 				{
-					name: "Meal suggester modes",
+					name: t("set.suggester.row"),
 					aliases: ["suggester", "modes", "filters", "scoring"],
 					render: (setting) => {
 						renderLegacySectionInDeclarative(ctx, setting, (containerEl, save, rerender) => {
@@ -227,56 +260,56 @@ export function buildDeclarativeSettingDefinitions(
 		},
 		{
 			type: "page",
-			name: "Timers",
-			desc: "In-recipe timer behavior.",
+			name: t("set.timers.title"),
+			desc: t("set.timers.desc"),
 			items: [
 				{
-					name: "Enable timers",
-					desc: "Show interactive countdown timers for time-based steps in recipe view.",
+					name: t("set.timers.enable.name"),
+					desc: t("set.timers.enable.desc"),
 					control: { type: "toggle", key: "timersEnabled" },
 				},
 				{
-					name: "Auto-start timer on click",
+					name: t("set.timers.autoStart.name"),
 					visible: () => ctx.plugin.settings.timersEnabled,
 					control: { type: "toggle", key: "timerAutoStart" },
 				},
 				{
-					name: "Default to compact display",
+					name: t("set.timers.compact.name"),
 					visible: () => ctx.plugin.settings.timersEnabled,
 					control: { type: "toggle", key: "timerCompactDisplay" },
 				},
 				{
-					name: "Time range default",
-					desc: "When a step gives a range like 10-15 min, use the min or max value.",
+					name: t("set.timers.rangeDefault.name"),
+					desc: t("set.timers.rangeDefault.desc"),
 					visible: () => ctx.plugin.settings.timersEnabled,
-					control: { type: "dropdown", key: "timerRangeDefault", options: TIMER_RANGE_OPTIONS },
+					control: { type: "dropdown", key: "timerRangeDefault", options: timerRangeOptions() },
 				},
 			],
 		},
 		{
 			type: "page",
-			name: "Nutrition",
-			desc: "Nutrition display and source behavior.",
+			name: t("set.nutrition.title"),
+			desc: t("set.nutrition.desc"),
 			items: [
 				{
-					name: "Display mode",
-					desc: "Show nutrition values per serving or for the whole recipe.",
-					control: { type: "dropdown", key: "nutritionDisplay", options: NUTRITION_DISPLAY_OPTIONS },
+					name: t("set.nutrition.display.name"),
+					desc: t("set.nutrition.display.desc"),
+					control: { type: "dropdown", key: "nutritionDisplay", options: nutritionDisplayOptions() },
 				},
 				{
-					name: "Value source",
-					desc: "How nutrition values are stored in frontmatter.",
-					control: { type: "dropdown", key: "nutritionSource", options: NUTRITION_SOURCE_OPTIONS },
+					name: t("set.nutrition.source.name"),
+					desc: t("set.nutrition.source.desc"),
+					control: { type: "dropdown", key: "nutritionSource", options: nutritionSourceOptions() },
 				},
 			],
 		},
 		{
 			type: "page",
-			name: "Health & safety",
-			desc: "Allergens and safety-warning configuration.",
+			name: t("set.health.title"),
+			desc: t("set.health.desc"),
 			items: [
 				{
-					name: "Health & safety settings",
+					name: t("set.health.row"),
 					aliases: ["allergens", "meat temperature", "high gi", "gi dictionary"],
 					render: (setting) => {
 						renderLegacySectionInDeclarative(ctx, setting, (containerEl, save, rerender) => {
@@ -288,28 +321,28 @@ export function buildDeclarativeSettingDefinitions(
 		},
 		{
 			type: "page",
-			name: "Importer",
-			desc: "Recipe importer template and default folder.",
+			name: t("set.importer.title"),
+			desc: t("set.importer.desc"),
 			items: [
 				{
-					name: "Recipe template note path",
-					desc: "Path to a note used as an import template. Leave empty for built-in default.",
+					name: t("set.importer.templatePath.name"),
+					desc: t("set.importer.templatePath.desc"),
 					control: { type: "text", key: "importerTemplatePath" },
 				},
 				{
-					name: "Default import folder",
-					desc: "Where imported recipes are saved. Leave empty to use the first recipe folder.",
+					name: t("set.importer.defaultFolder.name"),
+					desc: t("set.importer.defaultFolder.desc"),
 					control: { type: "text", key: "importerDefaultFolder" },
 				},
 			],
 		},
 		{
 			type: "page",
-			name: "Property names",
-			desc: "Frontmatter key names used by Recipe Box.",
+			name: t("set.propNames.title"),
+			desc: t("set.propNames.desc"),
 			items: [
 				{
-					name: "Property name mappings",
+					name: t("set.propNames.row"),
 					aliases: ["frontmatter", "property names", "field names"],
 					render: (setting) => {
 						renderLegacySectionInDeclarative(ctx, setting, (containerEl, save, rerender) => {
@@ -321,42 +354,42 @@ export function buildDeclarativeSettingDefinitions(
 		},
 		{
 			type: "page",
-			name: "Default export settings",
-			desc: "Shared export folder and recipe-export defaults.",
+			name: t("set.export.title"),
+			desc: t("set.export.desc"),
 			items: [
 				{
-					name: "Default export folder",
-					desc: "Shared destination for exports saved into the vault.",
+					name: t("set.export.folder.name"),
+					desc: t("set.export.folder.desc"),
 					control: { type: "text", key: "exportFolder" },
 				},
 				{
-					name: "Default format",
-					desc: "Default format used for recipe export.",
-					control: { type: "dropdown", key: "recipeExportDefaultFormat", options: EXPORT_FORMAT_OPTIONS },
+					name: t("set.export.format.name"),
+					desc: t("set.export.format.desc"),
+					control: { type: "dropdown", key: "recipeExportDefaultFormat", options: exportFormatOptions() },
 				},
 				{
-					name: "Include cook history and sections by default",
+					name: t("set.export.includeHistory.name"),
 					control: { type: "toggle", key: "recipeExportIncludeCookHistoryDefault" },
 				},
 				{
-					name: "Include images by default",
-					desc: "Image bundling is not implemented yet, so local images are still omitted for now.",
+					name: t("set.export.includeImages.name"),
+					desc: t("set.export.includeImages.desc"),
 					control: { type: "toggle", key: "recipeExportIncludeImagesDefault" },
 				},
 			],
 		},
 		{
 			type: "page",
-			name: "Recipe sharing",
-			desc: "Server URL for hosted recipe sharing.",
+			name: t("set.sharing.title"),
+			desc: t("set.sharing.desc"),
 			items: [
 				{
-					name: "Share server URL",
-					desc: "Server used for shared recipe links. Change only if you self-host the sharing worker.",
+					name: t("set.sharing.serverUrl.name"),
+					desc: t("set.sharing.serverUrl.desc"),
 					control: {
 						type: "text",
 						key: "shareServerUrl",
-						validate: (value: string) => value.trim().length > 0 ? undefined : "Share server URL cannot be empty.",
+						validate: (value: string) => value.trim().length > 0 ? undefined : t("set.sharing.serverUrlRequired"),
 					},
 				},
 			],

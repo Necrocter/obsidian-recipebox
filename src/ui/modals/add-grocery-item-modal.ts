@@ -6,6 +6,7 @@
  * the whole value is stored verbatim as the unit with quantity: null.
  */
 import { App, Notice } from "obsidian";
+import { t } from "../../i18n";
 import { GroceryItemEntry } from "../../types";
 import { parseLeadingQuantity } from "../../parser/quantity-parse";
 import { BaseModal } from "./modal-shell";
@@ -35,21 +36,21 @@ export class AddGroceryItemModal extends BaseModal {
 		this.isEdit = existingItem !== undefined;
 	}
 
-	getTitle(): string { return this.isEdit ? "Edit grocery item" : "Add grocery item"; }
+	getTitle(): string { return this.isEdit ? t("modal.addGroceryItem.titleEdit") : t("modal.addGroceryItem.titleAdd"); }
 	getContentClasses(): string[] { return ["rb-add-grocery-item-modal"]; }
 
 	renderBody(bodyEl: HTMLElement): void {
 		const fields = bodyEl.createDiv({ cls: "rb-modal-fields" });
 
 		const nameField = fields.createDiv({ cls: "rb-modal-field" });
-		nameField.createEl("label", { cls: "rb-modal-field-label", text: "Name *" });
-		this.nameInput = nameField.createEl("input", { cls: "rb-modal-input", attr: { type: "text", placeholder: "E.g. Black beans" } });
+		nameField.createEl("label", { cls: "rb-modal-field-label", text: t("field.nameRequired") });
+		this.nameInput = nameField.createEl("input", { cls: "rb-modal-input", attr: { type: "text", placeholder: t("modal.addGroceryItem.namePlaceholder") } });
 		this.nameInput.value = this.existing?.name ?? "";
 
 		const qtyField = fields.createDiv({ cls: "rb-modal-field" });
-		qtyField.createEl("label", { cls: "rb-modal-field-label", text: "Quantity" });
-		qtyField.createEl("small", { cls: "rb-modal-field-hint", text: "E.g. 2, 2 cans, a box, 1 gallon" });
-		this.qtyInput = qtyField.createEl("input", { cls: "rb-modal-input", attr: { type: "text", placeholder: "Optional" } });
+		qtyField.createEl("label", { cls: "rb-modal-field-label", text: t("field.quantity") });
+		qtyField.createEl("small", { cls: "rb-modal-field-hint", text: t("modal.addGroceryItem.qtyHint") });
+		this.qtyInput = qtyField.createEl("input", { cls: "rb-modal-input", attr: { type: "text", placeholder: t("field.optional") } });
 		// Reconstruct display value from stored quantity + unit for edit mode
 		if (this.existing) {
 			const parts: string[] = [];
@@ -59,9 +60,9 @@ export class AddGroceryItemModal extends BaseModal {
 		}
 
 		const catField = fields.createDiv({ cls: "rb-modal-field" });
-		catField.createEl("label", { cls: "rb-modal-field-label", text: "Category" });
-		catField.createEl("small", { cls: "rb-modal-field-hint", text: "Leave blank to auto-detect" });
-		this.catInput = catField.createEl("input", { cls: "rb-modal-input", attr: { type: "text", placeholder: "E.g. Produce" } });
+		catField.createEl("label", { cls: "rb-modal-field-label", text: t("field.category") });
+		catField.createEl("small", { cls: "rb-modal-field-hint", text: t("modal.addGroceryItem.catHint") });
+		this.catInput = catField.createEl("input", { cls: "rb-modal-input", attr: { type: "text", placeholder: t("modal.addGroceryItem.catPlaceholder") } });
 		this.catInput.value = this.existing?.categoryOverride ?? "";
 
 		// Enter-to-submit from name or quantity fields
@@ -71,16 +72,16 @@ export class AddGroceryItemModal extends BaseModal {
 	}
 
 	renderFooter(footerEl: HTMLElement): void {
-		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: "Cancel" })
+		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: t("common.cancel") })
 			.addEventListener("click", () => this.close());
-		footerEl.createEl("button", { cls: "mod-cta", text: this.isEdit ? "Save" : "Add" })
+		footerEl.createEl("button", { cls: "mod-cta", text: this.isEdit ? t("common.save") : t("common.add") })
 			.addEventListener("click", () => { void this.submit(); });
 	}
 
 	private async submit(): Promise<void> {
 		const name = this.nameInput.value.trim();
 		if (!name) {
-			new Notice("Name is required.");
+			new Notice(t("notice.nameRequired"));
 			return;
 		}
 

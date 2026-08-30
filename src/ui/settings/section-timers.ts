@@ -3,6 +3,7 @@
  * display, and range default.
  */
 import { Setting } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 
 export function renderSectionTimers(
@@ -11,13 +12,13 @@ export function renderSectionTimers(
 	save: () => Promise<void>,
 	rerender: () => void
 ): void {
-	new Setting(container).setName("Timers").setHeading();
+	new Setting(container).setName(t("set.timers.title")).setHeading();
 
 	new Setting(container)
-		.setName("Enable timers")
-		.setDesc("Show interactive countdown timers for time-based steps in the recipe view.")
-		.addToggle((t) =>
-			t.setValue(settings.timersEnabled).onChange(async (v) => {
+		.setName(t("set.timers.enable.name"))
+		.setDesc(t("set.timers.enable.desc"))
+		.addToggle((c) =>
+			c.setValue(settings.timersEnabled).onChange(async (v) => {
 				settings.timersEnabled = v;
 				await save();
 				rerender();
@@ -27,29 +28,29 @@ export function renderSectionTimers(
 	if (!settings.timersEnabled) return;
 
 	new Setting(container)
-		.setName("Auto-start timer on click")
-		.addToggle((t) =>
-			t.setValue(settings.timerAutoStart).onChange(async (v) => {
+		.setName(t("set.timers.autoStart.name"))
+		.addToggle((c) =>
+			c.setValue(settings.timerAutoStart).onChange(async (v) => {
 				settings.timerAutoStart = v;
 				await save();
 			})
 		);
 
 	new Setting(container)
-		.setName("Default to compact display")
-		.addToggle((t) =>
-			t.setValue(settings.timerCompactDisplay).onChange(async (v) => {
+		.setName(t("set.timers.compact.name"))
+		.addToggle((c) =>
+			c.setValue(settings.timerCompactDisplay).onChange(async (v) => {
 				settings.timerCompactDisplay = v;
 				await save();
 			})
 		);
 
 	new Setting(container)
-		.setName("Time range default")
-		.setDesc("When a step gives a range like '10–15 min', use the min or max.")
+		.setName(t("set.timers.rangeDefault.name"))
+		.setDesc(t("set.timers.rangeDefault.desc"))
 		.addDropdown((dd) =>
 			dd
-				.addOptions({ max: "Max", min: "Min" })
+				.addOptions({ max: t("set.opt.timerRange.max"), min: t("set.opt.timerRange.min") })
 				.setValue(settings.timerRangeDefault)
 				.onChange(async (v) => {
 					settings.timerRangeDefault = v as "min" | "max";

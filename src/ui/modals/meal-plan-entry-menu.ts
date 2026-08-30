@@ -3,6 +3,7 @@
  * providing navigate, edit, and remove actions.
  */
 import { App, Menu, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { MealPlanEntry } from "../../types";
 import { RecipeViewDeps } from "../recipe-view/recipe-view-deps";
 
@@ -16,13 +17,13 @@ export function openMealPlanEntryMenu(
 	const menu = new Menu();
 
 	menu.addItem(item =>
-		item.setTitle("View in meal plan")
+		item.setTitle(t("modal.mpEntryMenu.viewInMealPlan"))
 			.setIcon("calendar")
 			.onClick(() => deps.openMealPlanView())
 	);
 
 	menu.addItem(item =>
-		item.setTitle("Change day / meal type")
+		item.setTitle(t("modal.mpEntryMenu.changeDayMeal"))
 			.setIcon("pencil")
 			.onClick(() => {
 				deps.openEditMealPlanEntry(file, entry, async (day, meal, isLeftovers) => {
@@ -35,7 +36,7 @@ export function openMealPlanEntryMenu(
 	menu.addSeparator();
 
 	menu.addItem(item =>
-		item.setTitle("Remove from meal plan")
+		item.setTitle(t("rview.removeFromMealPlan"))
 			.setIcon("trash")
 			.onClick(async () => { await deps.removeFromMealPlanById(entry.id); })
 	);

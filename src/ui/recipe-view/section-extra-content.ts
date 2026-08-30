@@ -2,6 +2,7 @@
  * Splits trailing Markdown sections from the recipe body and renders them as
  * collapsible cards in the desktop sidebar, adjacent to the instructions column.
  */
+import { t } from "../../i18n";
 import { App, Component, MarkdownView, setIcon, TFile, WorkspaceLeaf } from "obsidian";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { CookHistoryModal } from "../modals/cook-history-modal";
@@ -59,7 +60,7 @@ export function renderExtraSectionsButtons(
 		const btn = sectionButtons.createEl("button", { cls: "rb-sidebar-btn rb-sidebar-btn--history" });
 		const iconSpan = btn.createSpan({ cls: "rb-sidebar-btn-icon rb-icon" });
 		setIcon(iconSpan, "history");
-		btn.createSpan({ cls: "rb-sidebar-btn-label", text: "Cook history" });
+		btn.createSpan({ cls: "rb-sidebar-btn-label", text: t("rview.menu.cookHistory") });
 		if (cookedCount > 0) {
 			btn.createSpan({ cls: "rb-sidebar-btn-badge", text: String(cookedCount) });
 		}

@@ -6,6 +6,7 @@
  * instructions-section.ts, and section-sidebar.ts instead.
  */
 import { App, Component, getAllTags, MarkdownRenderer, Modal, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { CustomBadge, IngredientGroup, InstructionGroup } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { GroceryItem } from "../../types";
@@ -144,7 +145,7 @@ function renderNativeCard(
 
 	if (settings.cookHistoryEnabled) {
 		const lastGroup = metaCol.createDiv({ cls: "rb-mobile-native-group" });
-		lastGroup.createDiv({ cls: "rb-label-caps", text: "Last prepared" });
+		lastGroup.createDiv({ cls: "rb-label-caps", text: t("rview.lastPrepared") });
 		const dateText = meta.lastMade ? formatDateValue(meta.lastMade) : "–";
 		lastGroup.createDiv({ cls: "rb-mobile-native-value", text: dateText });
 	}
@@ -174,11 +175,11 @@ function renderMobileStatRow(
 
 	const cells: { label: string; value: string }[] = [];
 	if (enabled.some((badge) => isMobilePrepBadge(badge, settings)) && meta.times.prep !== null)
-		cells.push({ label: "Prep time", value: formatMinutes(meta.times.prep) });
+		cells.push({ label: t("set.pn.prepTime.name"), value: formatMinutes(meta.times.prep) });
 	if (enabled.some((badge) => isMobileCookBadge(badge, settings)) && meta.times.cook !== null)
-		cells.push({ label: "Cook time", value: formatMinutes(meta.times.cook) });
+		cells.push({ label: t("set.pn.cookTime.name"), value: formatMinutes(meta.times.cook) });
 	if (enabled.some((badge) => isMobileTotalBadge(badge, settings)) && meta.times.total !== null)
-		cells.push({ label: "Total", value: formatMinutes(meta.times.total) });
+		cells.push({ label: t("rview.time.total"), value: formatMinutes(meta.times.total) });
 
 	if (cells.length === 0) return;
 
@@ -201,7 +202,7 @@ class ScalePickerModal extends Modal {
 	}
 
 	onOpen(): void {
-		this.titleEl.setText("Scale recipe");
+		this.titleEl.setText(t("rview.scaleRecipe"));
 		const { contentEl } = this;
 		const grid = contentEl.createDiv({ cls: "rb-scale-grid" });
 		for (const p of [0.5, 1, 1.5, 2, 3, 4]) {
@@ -215,7 +216,7 @@ class ScalePickerModal extends Modal {
 		const input = customRow.createEl("input", { type: "text", cls: "rb-scale-custom-input" });
 		input.inputMode = "decimal";
 		input.value = String(this.current);
-		input.placeholder = "e.g. 2.5";
+		input.placeholder = t("rview.scalePlaceholder");
 		const applyBtn = customRow.createEl("button", { text: "Apply", cls: "rb-scale-apply-btn" });
 		const apply = (): void => {
 			const v = parseFloat(input.value);
@@ -417,7 +418,7 @@ export async function renderMobileLayout(
 	if (descriptionText) {
 		const descWrap = container.createDiv({ cls: "rb-mobile-desc" });
 		descWrap.createSpan({ cls: "rb-mobile-desc-text", text: descriptionText });
-		const moreLink = descWrap.createEl("a", { cls: "rb-mobile-desc-more", text: "More" });
+		const moreLink = descWrap.createEl("a", { cls: "rb-mobile-desc-more", text: t("common.more") });
 		moreLink.addEventListener("click", () => {
 			activateTab(_panels, _tabs, _tabBar, 2);
 			// _panelsWrapper is set once tabs are built; scroll there so content is in view
@@ -455,9 +456,9 @@ export async function renderMobileLayout(
 	// Tabs
 	const tabBar = container.createDiv({ cls: "rb-tab-bar" });
 	_tabBar = tabBar;
-	const tabIngr = tabBar.createEl("button", { cls: "rb-tab-btn", text: "Ingredients" });
-	const tabSteps = tabBar.createEl("button", { cls: "rb-tab-btn", text: "Steps" });
-	const tabInfo = tabBar.createEl("button", { cls: "rb-tab-btn", text: "Info" });
+	const tabIngr = tabBar.createEl("button", { cls: "rb-tab-btn", text: t("rview.tab.ingredients") });
+	const tabSteps = tabBar.createEl("button", { cls: "rb-tab-btn", text: t("rview.tab.steps") });
+	const tabInfo = tabBar.createEl("button", { cls: "rb-tab-btn", text: t("rview.tab.info") });
 
 	// All panels live inside this wrapper. display:grid with grid-area:1/1 makes them
 	// stack in the same cell so the wrapper height always equals the tallest panel.
@@ -473,7 +474,7 @@ export async function renderMobileLayout(
 
 	// 4th tab: cook history (icon-only to keep tab bar compact)
 	if (settings.cookHistoryEnabled) {
-		const tabHistory = tabBar.createEl("button", { cls: "rb-tab-btn rb-tab-btn--icon", attr: { "aria-label": "Cook history" } });
+		const tabHistory = tabBar.createEl("button", { cls: "rb-tab-btn rb-tab-btn--icon", attr: { "aria-label": t("rview.menu.cookHistory") } });
 		setIcon(tabHistory, "clock");
 		const panelHistory = panelsWrapper.createDiv({ cls: "rb-tab-panel" });
 		_panels.push(panelHistory);

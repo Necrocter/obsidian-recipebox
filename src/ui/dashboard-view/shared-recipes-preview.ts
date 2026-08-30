@@ -5,6 +5,7 @@
  * logic here -- this is purely a glance surface over that same state.
  */
 import { App, Notice, setIcon, TFile } from "obsidian";
+import { t, tPlural } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { getShareData } from "../../sharing/share-frontmatter";
 import { getShareStatus, ShareStatus } from "../../sharing/share-status";
@@ -32,8 +33,8 @@ export function computeSharedRecipes(app: App, files: TFile[], settings: RecipeB
 }
 
 function formatStatus(status: ShareStatus): string {
-	if (status.kind === "expired") return "Expired";
-	if (status.kind === "shared") return status.daysLeft === 1 ? "Expires in 1 day" : `Expires in ${status.daysLeft} days`;
+	if (status.kind === "expired") return t("dash.share.expired");
+	if (status.kind === "shared") return tPlural("dash.share.expiresIn.one", "dash.share.expiresIn.other", status.daysLeft);
 	return "";
 }
 
@@ -45,15 +46,15 @@ export interface SharedRecipesPreviewActions {
 function confirmAndRevoke(app: App, file: TFile, actions: SharedRecipesPreviewActions): void {
 	new ConfirmModal(
 		app,
-		"Revoke share?",
-		`The public link for "${file.basename}" will stop working immediately.`,
-		"Revoke",
+		t("dash.share.revokeTitle"),
+		t("dash.share.revokeBody", { name: file.basename }),
+		t("dash.share.revoke"),
 		{
 			destructive: true,
 			onConfirm: () => {
 				void actions.unshareRecipe(file)
-					.then(() => new Notice("Recipe unshared."))
-					.catch((err: unknown) => new Notice(`Failed to unshare recipe: ${err instanceof Error ? err.message : String(err)}`));
+					.then(() => new Notice(t("notice.recipeUnshared")))
+					.catch((err: unknown) => new Notice(t("notice.failedUnshare", { error: err instanceof Error ? err.message : String(err) })));
 			},
 		},
 	).open();
@@ -67,11 +68,11 @@ export function renderSharedRecipesPreview(
 	actions: SharedRecipesPreviewActions,
 ): void {
 	const card = container.createDiv({ cls: "rb-dashboard-card rb-dashboard-span-8" });
-	card.createDiv({ cls: "rb-dashboard-card-label", text: "Shared recipes" });
+	card.createDiv({ cls: "rb-dashboard-card-label", text: t("dash.sharedRecipes") });
 
 	const shared = computeSharedRecipes(app, files, settings);
 	if (shared.length === 0) {
-		card.createDiv({ cls: "rb-dashboard-empty-text", text: "No recipes shared yet." });
+		card.createDiv({ cls: "rb-dashboard-empty-text", text: t("dash.sharedEmpty") });
 		return;
 	}
 
@@ -96,7 +97,7 @@ export function renderSharedRecipesPreview(
 
 		const revokeBtn = row.createDiv({
 			cls: "rb-dashboard-shared-revoke",
-			attr: { role: "button", "aria-label": "Revoke share", title: "Revoke share" },
+			attr: { role: "button", "aria-label": t("dash.share.revokeAria"), title: t("dash.share.revokeAria") },
 		});
 		setIcon(revokeBtn, "trash-2");
 		revokeBtn.addEventListener("click", (e) => {
