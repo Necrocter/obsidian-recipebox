@@ -128,6 +128,7 @@ export const en = {
 	"mpv.leftovers": "(Leftovers)",
 	"mpv.col.addTo": "Add recipe to {label}",
 	"mpv.col.dropHere": "Drop a recipe here",
+	"mpv.dropUnresolved": "Couldn't read the dragged recipe. Use the + button on the day column instead.",
 	"mpv.queue": "Queue",
 	"mealType.prompt": "Meal type?",
 	"mealType.dismiss": "Dismiss",
