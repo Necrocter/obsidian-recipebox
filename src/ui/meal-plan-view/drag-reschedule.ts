@@ -150,7 +150,7 @@ function firstMdFile(value: unknown, depth = 0): TFile | null {
 	return null;
 }
 
-function explorerFilePath(app: App, e?: DragEvent): string | null {
+export function explorerFilePath(app: App, e?: DragEvent): string | null {
 	// Try all dataTransfer types, resolving each value
 	if (e?.dataTransfer) {
 		for (const type of Array.from(e.dataTransfer.types)) {
