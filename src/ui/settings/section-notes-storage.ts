@@ -5,6 +5,7 @@
 import { App, Setting } from "obsidian";
 import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
+import { localeDefault } from "../../settings/locale-defaults";
 import { NotePathSuggest } from "../components/note-path-suggest";
 import { renderNotePathPreview } from "../components/note-path-preview";
 
@@ -82,7 +83,7 @@ export function renderSectionNotesStorage(
 		.setDesc(t("set.notes.ignoreTag.desc"))
 		.addText((c) =>
 			c.setValue(settings.ignoreIngredientTag).onChange(async (v) => {
-				settings.ignoreIngredientTag = v.trim() || "ignore-ingredient";
+				settings.ignoreIngredientTag = v.trim() || localeDefault("ignoreIngredientTag");
 				await save();
 			})
 		);

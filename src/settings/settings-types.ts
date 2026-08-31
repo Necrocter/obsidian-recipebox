@@ -121,6 +121,10 @@ export interface RecipeBoxSettings {
 	// Frontmatter key holding the recipe source (URL / cookbook / person).
 	// "source", "url", "sourceUrl", "source_url" are always tried as fallbacks.
 	sourceProperty: string;
+	// Frontmatter key holding the recipe's ingredient list (array). Configurable
+	// so a non-English vault can use e.g. "ingredientes"; "ingredients" and
+	// "ingredientes" are always tried as fallbacks.
+	ingredientsListProperty: string;
 	ratingProperty: string;
 	caloriesProperty: string;
 	proteinProperty: string;

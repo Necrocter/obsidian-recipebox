@@ -86,6 +86,7 @@ export const DEFAULT_SETTINGS: RecipeBoxSettings = {
 
 	imageProperty: "image",
 	sourceProperty: "source",
+	ingredientsListProperty: "ingredients",
 	ratingProperty: "rating",
 	caloriesProperty: "calories",
 	proteinProperty: "protein",
