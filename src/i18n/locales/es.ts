@@ -128,6 +128,7 @@ export const es: Record<TranslationKey, string> = {
 	"mpv.leftovers": "(Sobras)",
 	"mpv.col.addTo": "Añadir receta a {label}",
 	"mpv.col.dropHere": "Suelta una receta aquí",
+	"mpv.dropUnresolved": "No se pudo leer la receta arrastrada. Usa el botón + de la columna del día.",
 	"mpv.queue": "Cola",
 	"mealType.prompt": "¿Tipo de comida?",
 	"mealType.dismiss": "Descartar",
