@@ -543,6 +543,7 @@ export const en = {
 	"rview.sourceLabel": "Source: ",
 	"rview.methods": "Methods",
 	"rview.equipment": "Equipment",
+	"rview.methodsEquipment.toggleAll": "Show / hide all labels",
 	"rview.allergenWarning": "Contains: {list}",
 	"rview.cookMode.on": "Cook mode: on",
 	"rview.cookMode.off": "Cook mode: off",

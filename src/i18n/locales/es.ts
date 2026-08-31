@@ -538,6 +538,7 @@ export const es: Record<TranslationKey, string> = {
 	"rview.sourceLabel": "Fuente: ",
 	"rview.methods": "Métodos",
 	"rview.equipment": "Equipo",
+	"rview.methodsEquipment.toggleAll": "Mostrar u ocultar todas las etiquetas",
 	"rview.allergenWarning": "Contiene: {list}",
 	"rview.cookMode.on": "Modo cocina: activado",
 	"rview.cookMode.off": "Modo cocina: desactivado",

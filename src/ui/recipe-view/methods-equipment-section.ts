@@ -24,6 +24,15 @@ function renderGroup(
 	if (terms.length === 0) return;
 	const group = parent.createDiv({ cls: "rb-me-group" });
 	group.createSpan({ cls: "rb-me-group-label", text: label });
+
+	// Master toggle: reveal / hide every label in this group at once.
+	const groupToggle = group.createEl("button", {
+		cls: "rb-me-toggle",
+		attr: { "aria-label": t("rview.methodsEquipment.toggleAll"), title: t("rview.methodsEquipment.toggleAll") },
+	});
+	setIcon(groupToggle, "chevron-right");
+	groupToggle.addEventListener("click", () => group.classList.toggle("is-expanded"));
+
 	const chips = group.createDiv({ cls: "rb-me-chips" });
 	for (const term of terms) {
 		const display = titleCase(term);

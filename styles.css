@@ -6073,7 +6073,38 @@ input[type='search'].rb-gallery-search {
   text-transform: uppercase;
   color: var(--text-muted);
   flex: 0 0 auto;
-  margin-right: 0.1rem;
+}
+
+.rb-me-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  padding: 0;
+  margin: 0 0.1rem;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-faint);
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.rb-me-toggle:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-muted);
+}
+
+.rb-me-toggle svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  transition: transform 0.12s ease;
+}
+
+.rb-me-group.is-expanded .rb-me-toggle svg {
+  transform: rotate(180deg);
 }
 
 .rb-me-chips {
@@ -6116,17 +6147,19 @@ input[type='search'].rb-gallery-search {
   height: 0.95rem;
 }
 
-/* Label hidden until the chip is tapped. */
+/* Label hidden until the chip is tapped or the group toggle is expanded. */
 .rb-me-chip .rb-me-label {
   display: none;
 }
 
-.rb-me-chip.is-open {
+.rb-me-chip.is-open,
+.rb-me-group.is-expanded .rb-me-chip {
   width: auto;
   padding-right: 0.65rem;
 }
 
-.rb-me-chip.is-open .rb-me-label {
+.rb-me-chip.is-open .rb-me-label,
+.rb-me-group.is-expanded .rb-me-chip .rb-me-label {
   display: inline;
 }
 
