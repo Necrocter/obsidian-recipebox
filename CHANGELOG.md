@@ -1,41 +1,41 @@
-## 0.1.12-es.2 — Necrocter/obsidian-recipebox fork
-
-### Features
-
-* **settings:** the recipe **source** frontmatter key is now configurable
-  (`sourceProperty`, default `source`), so a non-English vault can use
-  `fuente`. `source` / `url` / `sourceUrl` / `source_url` are still checked as
-  fallbacks. Lives in **Settings → Property names → Recipe source**, and now
-  drives the recipe-view banner, the mobile Info tab and the shared page. The
-  "Source" / "Source:" labels are also localised.
-
----
-
 ## 0.1.12-es.1 — Necrocter/obsidian-recipebox fork
 
+Spanish (Español) language support for the whole plugin. Tracks upstream
+`0.1.12` (upstream's in-progress line; latest upstream stable is `0.1.11`).
+
 ### Features
 
-* **i18n:** add a `t()`-based translation layer with English + Spanish
-  catalogues typed against a single source of truth, a **Settings → Language**
-  control (`Automatic` follows Obsidian's UI language, or pin `English` /
-  `Español`), and locale-aware date formatting.
-* **i18n:** every user-facing string across the ribbon, command palette,
-  notices, settings tab (both renderers), all five views and every modal now
-  resolves through `t()`.
+* **i18n:** a `t()`-based translation layer with English + Spanish catalogues
+  typed against a single source of truth, a **Settings → Language** control
+  (`Automatic` follows Obsidian's UI language, or pin `English` / `Español`),
+  and locale-aware date formatting (`toLocaleDateString` follows the plugin
+  language, not the OS).
+* **i18n:** every user-facing string — ribbon, command palette, notices,
+  both settings renderers, all five views and every modal — resolves through
+  `t()`.
 * **parser:** Spanish-aware recipe parsing (bilingual, not locale-switched):
   ingredient/instruction section headings, prep/cook/total time labels,
-  `hora`/`minuto` units, servings (`Para 4 personas`, `6 raciones`), step
-  durations (`10 a 15 minutos`) and ingredient units (`taza`, `cucharada`,
-  `pizca`, …).
-* **settings:** the previously hardcoded `#ignore-ingredient` tag is now a
-  configurable `ignoreIngredientTag` setting (the built-in English tag is
-  still always recognised).
-
-### Bug Fixes
-
-* **recipe-view:** `#ignore-ingredient` ingredients stay visible in the recipe
-  view (matching the docs) while remaining excluded from automatic
-  grocery-list additions.
+  `hora`/`minuto`, servings (`Para 4 personas`, `6 raciones`), step durations
+  (`10 a 15 minutos`) and ingredient units (`taza`, `cucharada`, `pizca`, …),
+  which now also *display* in Spanish instead of being mapped to English.
+* **settings:** configurable frontmatter/note keys so a non-English vault can
+  use its own names — `ignoreIngredientTag` (built-in `ignore-ingredient`
+  still recognised), `sourceProperty` (`source` / `url` / `sourceUrl` /
+  `source_url` still tried), and `ingredientsListProperty`.
+* **i18n:** meal-plan note day-section headings are written in the chosen
+  language (`## Lunes`), canonicalised back to the English key on read so
+  existing `## Monday` notes keep working; the week grid and dashboard
+  day/date labels are built at render time so they are never frozen in
+  English.
+* **i18n:** locale-aware defaults for the names of notes, section headings and
+  folders a fresh vault creates (`Despensa.md`, `Plan de comidas.md`,
+  `Ingredientes`, `Recetas`, …). `DEFAULT_SETTINGS` stays English; the
+  localised value is applied only where the user has not set one.
+* **i18n:** grocery categories display in the chosen language (`## Verduras y
+  frutas`), canonicalised on read, and the auto-categoriser recognises Spanish
+  (incl. Mexican-Spanish) ingredient names.
+* **notes:** an auto-created / re-rendered note takes its `# H1` from its own
+  filename, so a translated title is not reverted to the English default.
 
 ---
 
