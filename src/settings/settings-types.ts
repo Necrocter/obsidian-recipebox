@@ -126,6 +126,11 @@ export interface RecipeBoxSettings {
 	// so a non-English vault can use e.g. "ingredientes"; "ingredients" and
 	// "ingredientes" are always tried as fallbacks.
 	ingredientsListProperty: string;
+	// Frontmatter keys holding the recipe's cooking methods / equipment lists
+	// (arrays). Configurable so a non-English vault can use e.g. "metodos" /
+	// "equipo"; English spellings are always tried as fallbacks.
+	methodsProperty: string;
+	equipmentProperty: string;
 	ratingProperty: string;
 	caloriesProperty: string;
 	proteinProperty: string;
@@ -163,6 +168,8 @@ export interface RecipeBoxSettings {
 	// One toggle for both surfaces: the desktop banner cell and the mobile Info
 	// tab row are the same feature, so they are never configured independently.
 	showRecipeSource: boolean;
+	// Show the "Methods & equipment" icon-chip section in the recipe view.
+	showMethodsEquipment: boolean;
 	showTagsInHeader: boolean;
 	prefixTagsWithHash: boolean;
 	showFullTagPath: boolean;

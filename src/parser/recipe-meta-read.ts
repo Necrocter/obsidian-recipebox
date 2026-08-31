@@ -21,6 +21,8 @@ export interface RecipeMeta {
 	favorite: boolean;
 	cookedCount: number;
 	lastMade: string | null;
+	methods: string[];
+	equipment: string[];
 }
 
 export function formatLocalISO(date: Date): string {
@@ -70,6 +72,14 @@ function readFavorite(fm: Record<string, unknown>, settings: RecipeBoxSettings):
 	return toBoolean(findValue(fm, getRecipeMetaAliases(settings).favorite));
 }
 
+function readMethods(fm: Record<string, unknown>, settings: RecipeBoxSettings): string[] {
+	return toTagArray(findValue(fm, getRecipeMetaAliases(settings).methods));
+}
+
+function readEquipment(fm: Record<string, unknown>, settings: RecipeBoxSettings): string[] {
+	return toTagArray(findValue(fm, getRecipeMetaAliases(settings).equipment));
+}
+
 function readCookedCount(fm: Record<string, unknown>, settings: RecipeBoxSettings): number {
 	const n = toNumber(findValue(fm, getRecipeMetaAliases(settings).cookedCount));
 	if (n === null) return 0;
@@ -98,5 +108,7 @@ export function readRecipeMeta(
 		favorite: readFavorite(fm, settings),
 		cookedCount: readCookedCount(fm, settings),
 		lastMade: readLastMade(fm, settings.lastMadeProperty),
+		methods: readMethods(fm, settings),
+		equipment: readEquipment(fm, settings),
 	};
 }

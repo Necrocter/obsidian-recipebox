@@ -7,6 +7,7 @@ import { t } from "../../../i18n";
 import { findOrOpenLeaf } from "../../../utils/open-leaf";
 import { renderMetaBanner } from "../meta-banner";
 import { renderMealPlanStatus } from "../meal-plan-status";
+import { renderMethodsEquipmentSection } from "../methods-equipment-section";
 import { renderIngredientsSection } from "../ingredients-section";
 import { renderInstructionsSection } from "../instructions-section";
 import { renderImageCard } from "../image-resolve";
@@ -52,6 +53,7 @@ export const renderDesktopTwoColumnLayout: RecipeLayoutRenderer = async ({
     );
 
     renderMealPlanStatus(topMain, app, context.file, context.mealPlanEntries, deps);
+    renderMethodsEquipmentSection(topMain, context.meta, context.settings);
 
     if (context.beforeContent.trim()) {
         await MarkdownRenderer.render(app, context.beforeContent, topMain, context.file.path, component);
