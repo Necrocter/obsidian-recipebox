@@ -119,6 +119,7 @@ export const es: Record<TranslationKey, string> = {
 	"mpv.leftovers": "(Sobras)",
 	"mpv.col.addTo": "Añadir receta a {label}",
 	"mpv.col.dropHere": "Suelta una receta aquí",
+	"mpv.dropUnresolved": "No se pudo leer la receta arrastrada. Usa el botón + de la columna del día.",
 	"mpv.queue": "Cola",
 	"mealType.prompt": "¿Tipo de comida?",
 	"mealType.dismiss": "Descartar",
@@ -201,7 +202,7 @@ export const es: Record<TranslationKey, string> = {
 	"set.notes.notesHeading.name": "Encabezado de notas",
 	"set.notes.notesHeading.desc": "Encabezado que marca la sección opcional de notas en una nota de receta.",
 	"set.notes.ignoreTag.name": "Etiqueta para ignorar ingredientes",
-	"set.notes.ignoreTag.desc": "Etiqueta en una línea de ingrediente que la mantiene fuera de la lista de la compra y de las exportaciones. La etiqueta integrada \"ignore-ingredient\" también se reconoce siempre.",
+	"set.notes.ignoreTag.desc": "Etiqueta al final de una línea de ingrediente. El ingrediente se sigue mostrando en la receta, pero no se añade automáticamente a la lista de la compra. La etiqueta integrada \"ignore-ingredient\" también se reconoce siempre.",
 
 	"default.mealPlanPath": "Plan de comidas.md",
 	"default.groceryListPath": "Lista de la compra.md",

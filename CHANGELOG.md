@@ -1,3 +1,32 @@
+## 0.1.12-es.2 — Necrocter/obsidian-recipebox fork
+
+Fixes for bugs that predate the fork, on top of `0.1.12-es.1`.
+
+### Bug Fixes
+
+* **recipe-view:** `#ignore-ingredient` ingredients stay visible in the recipe
+  view (matching the docs) while still being left out of automatic
+  grocery-list additions and exports.
+* **meal-plan → grocery:** the "add ingredients to the grocery list on sync"
+  auto-add now runs on plugin load and whenever the meal plan note changes,
+  not only when the grocery *view* is opened.
+* **grocery:** the auto-add reads recipes whose ingredients live only in the
+  frontmatter list, or under `### Para …` sub-headings between `---` rules
+  (RecipeMD layout), not just a single `## Ingredientes` section. Quantities
+  come from the body bullets; `#ignore-ingredient` on a bullet is honoured;
+  `sal y pimienta …` combined lines are split.
+* **meal plan:** blank lines no longer accumulate between the note title and
+  the first day heading on every add/remove.
+* **meal plan:** dragging a recipe from the file explorer onto a week-grid day
+  column resolves reliably (wikilink / URI / dragManager fallbacks), and an
+  unreadable drop reports instead of doing nothing.
+* **meal plan:** a scheduled recipe no longer vanishes when you set its meal
+  type or drag it to another day — plugin-initiated note rewrites now suppress
+  the watcher's reconciliation across the remove-then-insert gap, without
+  suppressing the grocery auto-add on a plain add.
+
+---
+
 ## 0.1.12-es.1 — Necrocter/obsidian-recipebox fork
 
 Spanish (Español) language support for the whole plugin. Tracks upstream

@@ -10,7 +10,8 @@
  * (a WeakMap keyed by element) so `touchend` can hit-test to find the target
  * column and invoke the right handler without changing the public signatures.
  */
-import { App, Platform, TFile } from "obsidian";
+import { App, Notice, Platform, TFile } from "obsidian";
+import { t } from "../../i18n";
 
 export type DropPayload =
 	| { kind: "entry"; id: string }
@@ -101,8 +102,9 @@ function removeTouchListeners(): void {
 //   obsidian://open?vault=VaultName&file=Recipes%2FMy%20Recipe
 // or the partial form:
 //   open?vault=VaultName&file=Recipes%2FMy%20Recipe
-function resolveVaultPath(raw: string): string | null {
-	const s = raw.trim();
+export function resolveVaultPath(raw: string): string | null {
+	// A text/uri-list payload is one URI per line (# lines are comments).
+	const s = (raw.split("\n").find((l) => l.trim() && !l.startsWith("#")) ?? raw).trim();
 	if (!s) return null;
 
 	// Already a vault-relative .md path (set by our own makeDraggable)
@@ -130,29 +132,49 @@ function resolveVaultPath(raw: string): string | null {
 	return null;
 }
 
-function explorerFilePath(app: App, e?: DragEvent): string | null {
+/** Entry ids from generateEntryId() look like "mtgf3imj-s9xi": base36 chunks
+ *  joined by a dash, never a path or a phrase. */
+const ENTRY_ID_RE = /^[a-z0-9]+-[a-z0-9]{1,8}$/i;
+
+/** Depth-limited search for the first markdown TFile reachable from Obsidian's
+ *  dragManager payload, whose exact shape (draggable.file / .source / .files /
+ *  a plural draggables) has shifted between Obsidian versions. */
+function firstMdFile(value: unknown, depth = 0): TFile | null {
+	if (value instanceof TFile) return value.extension === "md" ? value : null;
+	if (!value || typeof value !== "object" || depth >= 3) return null;
+	if (typeof Node !== "undefined" && value instanceof Node) return null; // don't walk DOM
+	for (const v of Object.values(value as Record<string, unknown>)) {
+		const found = firstMdFile(v, depth + 1);
+		if (found) return found;
+	}
+	return null;
+}
+
+export function explorerFilePath(app: App, e?: DragEvent): string | null {
 	// Try all dataTransfer types, resolving each value
 	if (e?.dataTransfer) {
 		for (const type of Array.from(e.dataTransfer.types)) {
 			try {
 				const val = e.dataTransfer.getData(type);
-				const resolved = val ? resolveVaultPath(val) : null;
-				if (resolved) return resolved;
+				if (!val) continue;
+				const direct = resolveVaultPath(val);
+				if (direct) return direct;
+				// A wikilink ("[[Albóndigas]]") or a bare note name -- resolve it
+				// against the vault the way Obsidian's own links do.
+				const wl = val.trim().match(/^\[\[([^\]|#]+)/);
+				const linktext = (wl ? wl[1] : val.trim()).replace(/\.md$/i, "");
+				if (linktext && !linktext.includes("\n")) {
+					const dest = app.metadataCache.getFirstLinkpathDest(linktext, "");
+					if (dest && dest.extension === "md") return dest.path;
+				}
 			} catch { /* some types can't be read outside dragstart */ }
 		}
 	}
 
-	// Fall back to Obsidian's drag manager (try common property shapes)
-	const dm = (app as unknown as { dragManager?: { draggable?: Record<string, unknown> } }).dragManager;
-	const d = dm?.draggable;
-	if (d) {
-		for (const key of ["file", "source"]) {
-			const f = d[key];
-			if (f instanceof TFile && f.extension === "md") return f.path;
-		}
-	}
-
-	return null;
+	// Fall back to Obsidian's drag manager, whose payload shape varies by version.
+	const dm = (app as unknown as { dragManager?: { draggable?: unknown; draggables?: unknown } }).dragManager;
+	const f = firstMdFile(dm?.draggable) ?? firstMdFile(dm?.draggables);
+	return f ? f.path : null;
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
@@ -224,23 +246,32 @@ export function makeDropTarget(
 		return;
 	}
 
-	// Desktop: snapshot the explorer file path during dragover — dragManager may be
-	// cleared before the drop event fires.
+	// Desktop: snapshot the explorer file path during the drag — dragManager can
+	// be cleared before the drop event fires, and getData() is unreadable outside
+	// the drop. Captured on every dragenter/dragover and only reset on drop:
+	// dragleave fires with a null relatedTarget while the cursor is still inside
+	// the column (moving over a child card), and clearing here used to wipe the
+	// path mid-drag so the drop silently did nothing.
 	let pendingExplorerPath: string | null = null;
+	const capture = (e: DragEvent): void => {
+		const fp = explorerFilePath(app, e);
+		if (fp) pendingExplorerPath = fp;
+	};
+
+	colEl.addEventListener("dragenter", (e: DragEvent) => {
+		e.preventDefault();
+		capture(e);
+	});
 
 	colEl.addEventListener("dragover", (e: DragEvent) => {
 		e.preventDefault();
 		if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
 		colEl.addClass("rb-mpv-drop-active");
-		const fp = explorerFilePath(app, e);
-		if (fp) pendingExplorerPath = fp;
+		capture(e);
 	});
 
 	colEl.addEventListener("dragleave", (e: DragEvent) => {
-		if (!colEl.contains(e.relatedTarget as Node | null)) {
-			colEl.removeClass("rb-mpv-drop-active");
-			pendingExplorerPath = null;
-		}
+		if (!colEl.contains(e.relatedTarget as Node | null)) colEl.removeClass("rb-mpv-drop-active");
 	});
 
 	colEl.addEventListener("drop", (e: DragEvent) => {
@@ -249,18 +280,17 @@ export function makeDropTarget(
 		const rawPlain = e.dataTransfer?.getData("text/plain") ?? "";
 		const dropPoint: DropPoint = { x: e.clientX, y: e.clientY };
 
-		// Try to resolve as a vault path (file explorer drops or Obsidian URIs)
-		const recipePath =
-			resolveVaultPath(rawPlain) ||
-			explorerFilePath(app, e) ||
-			(pendingExplorerPath ? resolveVaultPath(pendingExplorerPath) : null);
+		const recipePath = resolveVaultPath(rawPlain) || explorerFilePath(app, e) || pendingExplorerPath;
 		pendingExplorerPath = null;
 
 		if (recipePath) {
 			onDrop({ kind: "recipe", path: recipePath }, day, dropPoint);
-		} else if (rawPlain) {
+		} else if (ENTRY_ID_RE.test(rawPlain)) {
 			// rawPlain is an entry ID from our own card drag (not a file path)
 			onDrop({ kind: "entry", id: rawPlain }, day, dropPoint);
+		} else {
+			// A recipe drag we couldn't resolve -- fail loudly, not silently.
+			new Notice(t("mpv.dropUnresolved"));
 		}
 	});
 }

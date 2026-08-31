@@ -6,9 +6,19 @@ import { TFile } from "obsidian";
 import RecipeBoxPlugin from "../main";
 import { debounce } from "../utils/debounce";
 import { resolveNotePath } from "../utils/vault-notes";
+import { isMealPlanSyncSuppressed } from "./meal-plan-sync-guard";
 
 export function registerVaultWatchers(plugin: RecipeBoxPlugin): void {
-	const syncMealPlan = debounce(() => { void plugin.manager.refresh(); }, 500, true);
+	// A meal-plan-note edit must run the note -> grocery auto-add, not just a
+	// grocery rebuild -- otherwise a recipe typed straight into the note never
+	// reaches the shopping list unless the grocery view is later opened.
+	// Skipped while a plugin-initiated write is in flight: those edits (notably
+	// the remove-then-insert for meal type / reschedule) briefly drop a line,
+	// and reconciling then would delete the entry from state.
+	const syncMealPlan = debounce(() => {
+		if (isMealPlanSyncSuppressed()) return;
+		void plugin.manager.syncFromMealPlanNote();
+	}, 500, true);
 	const refreshGrocery = debounce(() => { void plugin.manager.refresh(); }, 300, true);
 
 	plugin.registerEvent(

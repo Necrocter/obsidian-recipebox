@@ -6,12 +6,11 @@
 import { App } from "obsidian";
 import { ContributionMap, MealPlanEntry } from "../types";
 import { RecipeBoxSettings } from "../settings/settings-types";
-import { parseIngredientLine } from "../parser/ingredient-parse";
-import { ingredientKey, hasIgnoreTag } from "../parser/ingredient-clean";
 import { generateEntryId } from "../utils/date";
 import { localDateISO } from "../utils/date";
 import { readNoteOrEmpty, resolveNotePath } from "../utils/vault-notes";
 import { parseMealPlanNote } from "./meal-plan-note/parse";
+import { collectRecipeContributions } from "./recipe-contributions";
 import { addToGroceryNote, removeFromGroceryNote } from "../grocery/grocery-note/write";
 import { recordContributions } from "../grocery/contribution-history";
 
@@ -54,38 +53,13 @@ export function checkTagFilter(app: App, filePath: string, tagFilter: string): b
 	return tags.some((t) => t.replace(/^#/, "").toLowerCase() === normalized);
 }
 
-function escapeRegex(s: string): string {
-	return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
 async function parseRecipeContributions(app: App, filePath: string, settings: RecipeBoxSettings): Promise<ContributionMap> {
 	const file = app.vault.getFileByPath(filePath);
 	if (!file) return {};
 
-	const text = await app.vault.read(file);
-	const headingRe = new RegExp(`^#{1,6}\\s+${escapeRegex(settings.ingredientsHeading)}\\s*$`, "i");
-	const nextHeadingRe = /^#{1,6}\s/;
-
-	let inIngredients = false;
-	const contributions: ContributionMap = {};
-
-	for (const line of text.split("\n")) {
-		if (headingRe.test(line)) { inIngredients = true; continue; }
-		if (inIngredients && nextHeadingRe.test(line)) break;
-		if (!inIngredients) continue;
-
-		const parsed = parseIngredientLine(line);
-		if (!parsed?.name || hasIgnoreTag(parsed.tags, settings.ignoreIngredientTag)) continue;
-
-		const key = ingredientKey(parsed.name, parsed.unit);
-		if (!contributions[key]) {
-			contributions[key] = { name: parsed.name, unit: parsed.unit, quantity: parsed.quantity };
-		} else if (parsed.quantity !== null && contributions[key].quantity !== null) {
-			contributions[key] = { ...contributions[key], quantity: contributions[key].quantity + parsed.quantity };
-		}
-	}
-
-	return contributions;
+	const body = await app.vault.read(file);
+	const frontmatter = (app.metadataCache.getFileCache(file)?.frontmatter ?? {}) as Record<string, unknown>;
+	return collectRecipeContributions(body, frontmatter, settings);
 }
 
 async function tryAutoAdd(app: App, entry: MealPlanEntry, settings: RecipeBoxSettings): Promise<void> {

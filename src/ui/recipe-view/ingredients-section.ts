@@ -57,7 +57,15 @@ export async function renderIngredientsSection(
 
 		for (const raw of group.lines) {
 			const parsed = parseIngredientLine(raw);
-			if (!parsed || !parsed.name || hasIgnoreTag(parsed.tags, settings.ignoreIngredientTag)) continue;
+			if (!parsed || !parsed.name) continue;
+
+			// The ignore-ingredient tag is deliberately NOT a filter here: per the
+			// docs it keeps an ingredient ("salt to taste", pantry staples) out of
+			// automatic grocery-list additions while leaving it visible in the
+			// recipe. The grocery/meal-plan paths do the filtering; the recipe
+			// view only suppresses the control tag's chip (below).
+			const isIgnoreTag = (tag: string): boolean =>
+				hasIgnoreTag([tag], settings.ignoreIngredientTag);
 
 			const scaled = parsed.quantity !== null ? parsed.quantity * multiplier : null;
 			const key = ingredientKey(parsed.name, parsed.unit);
@@ -84,6 +92,7 @@ export async function renderIngredientsSection(
 			const nameEl = nameCol.createDiv({ cls: "rb-ingredient-name" });
 			await MarkdownRenderer.render(app, parsed.name, nameEl, file.path, component);
 			for (const tag of parsed.tags) {
+				if (isIgnoreTag(tag)) continue; // control tag, not a real label
 				nameEl.createSpan({ cls: "rb-ingredient-tag", text: `#${tag}` });
 			}
 			if (parsed.note) {
