@@ -3,6 +3,7 @@
  * queue column, re-rendering on every "change" event.
  */
 import { ItemView, Notice, WorkspaceLeaf, setIcon } from "obsidian";
+import { t, tPlural } from "../../i18n";
 import { MealPlanViewDeps } from "./meal-plan-view-deps";
 import { renderWeekGrid } from "./week-grid";
 import { ConfirmModal } from "../modals/confirm-modal";
@@ -21,11 +22,11 @@ export class MealPlanView extends ItemView {
 	}
 
 	getViewType(): string { return MEAL_PLAN_VIEW_TYPE; }
-	getDisplayText(): string { return "Meal plan"; }
+	getDisplayText(): string { return t("mpv.title"); }
 	getIcon(): string { return "calendar"; }
 
 	async onOpen(): Promise<void> {
-		this.addAction("pencil", "Edit as Markdown", () => this.deps.editAsMarkdown());
+		this.addAction("pencil", t("mpv.editAsMarkdown"), () => this.deps.editAsMarkdown());
 		this.unsubscribe = this.deps.subscribeToChanges(() => this.render());
 		this.render();
 	}
@@ -44,7 +45,7 @@ export class MealPlanView extends ItemView {
 
 		const addRecipeBtn = topBar.createEl("button", { cls: "rb-icon-btn rb-mpv-add-recipe-btn" });
 		setIcon(addRecipeBtn.createSpan({ cls: "rb-mpv-add-recipe-btn-icon" }), "plus");
-		addRecipeBtn.createSpan({ cls: "rb-mpv-add-recipe-btn-label", text: "Add recipe" });
+		addRecipeBtn.createSpan({ cls: "rb-mpv-add-recipe-btn-label", text: t("mpv.addRecipe") });
 		addRecipeBtn.addEventListener("click", () => {
 			new RecipePickerModal(
 				this.app, this.deps.getSettings(), undefined,
@@ -55,7 +56,7 @@ export class MealPlanView extends ItemView {
 
 		const suggestMealBtn = topBar.createEl("button", { cls: "rb-icon-btn rb-mpv-suggest-meal-btn" });
 		setIcon(suggestMealBtn.createSpan({ cls: "rb-mpv-suggest-meal-btn-icon" }), "wand-sparkles");
-		suggestMealBtn.createSpan({ cls: "rb-mpv-suggest-meal-btn-label", text: "Suggest a meal" });
+		suggestMealBtn.createSpan({ cls: "rb-mpv-suggest-meal-btn-label", text: t("mpv.suggestMeal") });
 
 		suggestMealBtn.addEventListener("click", () => {
 			new SuggestMealModal(this.app, {
@@ -73,23 +74,22 @@ export class MealPlanView extends ItemView {
 
 		const clearBtn = topBar.createEl("button", { cls: "rb-icon-btn rb-mpv-clear-btn" });
 		setIcon(clearBtn.createSpan({ cls: "rb-mpv-clear-btn-icon" }), "eraser");
-		clearBtn.createSpan({ cls: "rb-mpv-clear-btn-label", text: "Clear all" });
+		clearBtn.createSpan({ cls: "rb-mpv-clear-btn-label", text: t("mpv.clearAll") });
 		clearBtn.addEventListener("click", () => {
 			new ConfirmModal(
 				this.app,
-				"Clear meal plan?",
-				"Every scheduled recipe and leftovers card will be removed from the meal plan.",
-				"Clear meal plan",
+				t("mpv.clearConfirm.title"),
+				t("mpv.clearConfirm.body"),
+				t("mpv.clearConfirm.cta"),
 				{
 					destructive: true,
 					checkbox: {
-						label: "Also remove these recipes' ingredients from the grocery list",
+						label: t("mpv.clearConfirm.checkbox"),
 						defaultChecked: true,
 					},
 					onConfirm: (removeFromGrocery) => {
 						void this.deps.clearMealPlan(removeFromGrocery).then((count) => {
-							const n = count === 1 ? "entry" : "entries";
-							new Notice(`Cleared ${count} meal plan ${n}.`);
+							new Notice(tPlural("notice.mealPlanCleared.one", "notice.mealPlanCleared.other", count));
 						});
 					},
 				},

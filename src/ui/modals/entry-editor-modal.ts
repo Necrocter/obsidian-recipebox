@@ -5,6 +5,7 @@
  * the form values.
  */
 import { App, Platform, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { CookedImageResult } from "../recipe-view/recipe-view-deps";
 import { VaultImageSuggestModal } from "./vault-image-suggest-modal";
@@ -37,7 +38,7 @@ export class EntryEditorModal extends BaseModal {
 		this.notes = editing?.note ?? "";
 	}
 
-	getTitle(): string { return this.editing ? "Edit entry" : "Add entry"; }
+	getTitle(): string { return this.editing ? t("modal.entryEditor.titleEdit") : t("modal.entryEditor.titleAdd"); }
 	getIcon(): string { return this.editing ? "pencil" : "plus"; }
 	getSubtitle(): string { return this.recipeFile.basename; }
 	getContentClasses(): string[] { return ["rb-mark-cooked-modal"]; }
@@ -46,7 +47,7 @@ export class EntryEditorModal extends BaseModal {
 		const fields = bodyEl.createDiv({ cls: "rb-mark-cooked-fields" });
 
 		const dateField = fields.createDiv({ cls: "rb-modal-field rb-mark-cooked-date-field" });
-		dateField.createEl("label", { cls: "rb-modal-field-label", text: "Date" });
+		dateField.createEl("label", { cls: "rb-modal-field-label", text: t("field.date") });
 		const dateInput = dateField.createEl("input", { cls: "rb-modal-input", attr: { type: "date" } });
 		dateInput.value = this.selectedDate;
 		dateInput.addEventListener("change", () => {
@@ -55,10 +56,10 @@ export class EntryEditorModal extends BaseModal {
 		});
 
 		const notesField = fields.createDiv({ cls: "rb-modal-field rb-mark-cooked-notes-field" });
-		notesField.createEl("label", { cls: "rb-modal-field-label", text: "Notes" });
+		notesField.createEl("label", { cls: "rb-modal-field-label", text: t("field.notes") });
 		const notesInput = notesField.createEl("textarea", {
 			cls: "rb-modal-input rb-mark-cooked-notes-input",
-			attr: { rows: "6", placeholder: "How did it turn out?" },
+			attr: { rows: "6", placeholder: t("field.notesPlaceholder") },
 		});
 		notesInput.value = this.notes;
 		notesInput.addEventListener("input", () => { this.notes = notesInput.value; });
@@ -68,9 +69,9 @@ export class EntryEditorModal extends BaseModal {
 	}
 
 	renderFooter(footerEl: HTMLElement): void {
-		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: "Cancel" })
+		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: t("common.cancel") })
 			.addEventListener("click", () => this.close());
-		footerEl.createEl("button", { cls: "mod-cta", text: this.editing ? "Save changes" : "Add entry" })
+		footerEl.createEl("button", { cls: "mod-cta", text: this.editing ? t("common.saveChanges") : t("modal.entryEditor.titleAdd") })
 			.addEventListener("click", () => {
 				void this.onSave(this.selectedDate, this.notes.trim(), this.imageResult);
 				this.close();
@@ -83,7 +84,7 @@ export class EntryEditorModal extends BaseModal {
 	}
 
 	private buildImageSection(container: HTMLElement): void {
-		container.createEl("p", { cls: "rb-modal-section-title", text: "Photo" });
+		container.createEl("p", { cls: "rb-modal-section-title", text: t("photo.heading") });
 
 		const imageLayout = container.createDiv({ cls: "rb-modal-image-layout" });
 		const btnRow = imageLayout.createDiv({ cls: "rb-modal-image-btns" });
@@ -99,7 +100,7 @@ export class EntryEditorModal extends BaseModal {
 			removeBtn.toggleClass("rb-hidden", !hasImage);
 		};
 
-		const vaultBtn = btnRow.createEl("button", { cls: "rb-modal-btn", title: "Choose from vault" });
+		const vaultBtn = btnRow.createEl("button", { cls: "rb-modal-btn", title: t("photo.chooseFromVault") });
 		vaultBtn.addEventListener("click", () => {
 			new VaultImageSuggestModal(this.app, vaultFile => {
 				this.releasePreview();
@@ -109,26 +110,26 @@ export class EntryEditorModal extends BaseModal {
 			}).open();
 		});
 		setIcon(vaultBtn.createSpan({ cls: "rb-modal-btn-icon" }), "folder");
-		if (!Platform.isMobile) vaultBtn.createSpan({ text: "Select from vault" });
+		if (!Platform.isMobile) vaultBtn.createSpan({ text: t("photo.selectFromVault") });
 
 		const uploadInput = container.createEl("input", { attr: { type: "file", accept: "image/*", style: "display:none" } });
 		uploadInput.addEventListener("change", () => void this.handleFileInput(uploadInput, showPreview));
-		const uploadBtn = btnRow.createEl("button", { cls: "rb-modal-btn", title: "Upload image" });
+		const uploadBtn = btnRow.createEl("button", { cls: "rb-modal-btn", title: t("photo.uploadImage") });
 		uploadBtn.addEventListener("click", () => uploadInput.click());
 		setIcon(uploadBtn.createSpan({ cls: "rb-modal-btn-icon" }), "upload");
-		if (!Platform.isMobile) uploadBtn.createSpan({ text: "Upload" });
+		if (!Platform.isMobile) uploadBtn.createSpan({ text: t("photo.upload") });
 
 		if (Platform.isMobile) {
 			const cameraInput = container.createEl("input", {
 				attr: { type: "file", accept: "image/*", capture: "environment", style: "display:none" },
 			});
-			const cameraBtn = btnRow.createEl("button", { cls: "rb-modal-btn", title: "Take photo", text: "" });
+			const cameraBtn = btnRow.createEl("button", { cls: "rb-modal-btn", title: t("photo.takePhoto"), text: "" });
 			cameraBtn.addEventListener("click", () => cameraInput.click());
 			setIcon(cameraBtn, "camera");
 			cameraInput.addEventListener("change", () => void this.handleFileInput(cameraInput, showPreview));
 		}
 
-		const removeBtn = btnRow.createEl("button", { cls: "rb-modal-btn rb-modal-btn-danger rb-modal-btn-remove", title: "Remove image", text: "" });
+		const removeBtn = btnRow.createEl("button", { cls: "rb-modal-btn rb-modal-btn-danger rb-modal-btn-remove", title: t("photo.removeImage"), text: "" });
 		removeBtn.addEventListener("click", () => {
 			this.releasePreview();
 			this.userChangedImage = true;
@@ -137,7 +138,7 @@ export class EntryEditorModal extends BaseModal {
 			showPreview(null);
 		});
 		setIcon(removeBtn, "trash-2");
-		if (!Platform.isMobile) removeBtn.createSpan({ text: "Remove" });
+		if (!Platform.isMobile) removeBtn.createSpan({ text: t("common.remove") });
 
 		showPreview(null);
 

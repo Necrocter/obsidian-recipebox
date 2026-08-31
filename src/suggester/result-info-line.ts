@@ -3,6 +3,7 @@
  * suggester results list: active mode's scoring-field values (in rule order,
  * capped at 3) followed by prep/cook times when set.
  */
+import { t } from "../i18n";
 import { RecipeBoxSettings } from "../settings/settings-types";
 import { SuggesterMode } from "./strategy-types";
 import { RECIPE_FRONTMATTER } from "../settings/frontmatter-keys";
@@ -25,26 +26,26 @@ function ruleToken(
 	// lastMade: date-distance display
 	if (field === lastMadeKey || field === "lastMade") {
 		const raw = fm[lastMadeKey] ?? fm["lastMade"];
-		if (!raw || typeof raw !== "string") return "Never made";
+		if (!raw || typeof raw !== "string") return t("info.neverMade");
 		const days = daysSince(raw);
-		if (days === null) return "Never made";
-		if (days === 0) return "Made today";
-		if (days === 1) return "Made yesterday";
-		return `Last made ${days}d ago`;
+		if (days === null) return t("info.neverMade");
+		if (days === 0) return t("dash.made.today");
+		if (days === 1) return t("dash.made.yesterday");
+		return t("info.lastMadeDaysAgo", { days });
 	}
 
 	// favorite: only show when true — omit when false to avoid clutter
 	if (field === settings.favoriteProperty || field === RECIPE_FRONTMATTER.favorite) {
 		const val = findValue(fm, aliases.favorite);
-		return val === true || val === "true" ? "Favorited" : null;
+		return val === true || val === "true" ? t("info.favorited") : null;
 	}
 
 	// cookedCount: show as "Made N times"
 	if (field === settings.cookedCountProperty || field === RECIPE_FRONTMATTER.cookedCount) {
 		const raw = findValue(fm, aliases.cookedCount);
 		const n = typeof raw === "number" ? raw : null;
-		if (n === null || n === 0) return "Never cooked";
-		return `Made ${n}x`;
+		if (n === null || n === 0) return t("gallery.neverCooked");
+		return t("info.madeNx", { n });
 	}
 
 	// Generic field: render the raw value as a string if present
@@ -59,9 +60,9 @@ function timingTokens(fm: Record<string, unknown>, settings: RecipeBoxSettings):
 	const aliases = getRecipeMetaAliases(settings);
 	const tokens: string[] = [];
 	const prep = findValue(fm, aliases.prepTime);
-	if (typeof prep === "number" && prep > 0) tokens.push(`Prep ${formatMinutes(prep)}`);
+	if (typeof prep === "number" && prep > 0) tokens.push(t("info.prepToken", { value: formatMinutes(prep) }));
 	const cook = findValue(fm, aliases.cookTime);
-	if (typeof cook === "number" && cook > 0) tokens.push(`Cook ${formatMinutes(cook)}`);
+	if (typeof cook === "number" && cook > 0) tokens.push(t("info.cookToken", { value: formatMinutes(cook) }));
 	return tokens;
 }
 

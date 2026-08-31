@@ -4,6 +4,7 @@
  * editor.
  */
 import { App, Setting } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { AllergensModal } from "../modals/modal-allergens";
 import { GiDictionaryModal } from "../modals/modal-gi-dictionary";
@@ -16,29 +17,29 @@ export function renderSectionHealthSafety(
 	app: App
 ): void {
 	new Setting(container)
-		.setName("My allergens")
-		.setDesc(`Warn when a recipe contains any of these: ${settings.myAllergens.length > 0 ? settings.myAllergens.join(", ") : "None configured"}`)
+		.setName(t("set.health.allergens.name"))
+		.setDesc(t("set.health.allergens.desc", { list: settings.myAllergens.length > 0 ? settings.myAllergens.join(", ") : t("set.health.allergens.none") }))
 		.addButton((btn) =>
-			btn.setButtonText("Edit allergens…").onClick(() => {
+			btn.setButtonText(t("set.health.allergens.button")).onClick(() => {
 				new AllergensModal(app, settings, save).open();
 			})
 		);
 
 	new Setting(container)
-		.setName("Show meat temperature warnings")
-		.setDesc("Warn when an ingredient may need to reach a safe internal temperature.")
-		.addToggle((t) =>
-			t.setValue(settings.showMeatTempWarnings).onChange(async (v) => {
+		.setName(t("set.health.meatTemp.name"))
+		.setDesc(t("set.health.meatTemp.desc"))
+		.addToggle((c) =>
+			c.setValue(settings.showMeatTempWarnings).onChange(async (v) => {
 				settings.showMeatTempWarnings = v;
 				await save();
 			})
 		);
 
 	new Setting(container)
-		.setName("Show high-gi ingredients warnings")
-		.setDesc("Flag high-glycemic-index ingredients in the recipe view.")
-		.addToggle((t) =>
-			t.setValue(settings.showHighGIWarnings).onChange(async (v) => {
+		.setName(t("set.health.gi.name"))
+		.setDesc(t("set.health.gi.desc"))
+		.addToggle((c) =>
+			c.setValue(settings.showHighGIWarnings).onChange(async (v) => {
 				settings.showHighGIWarnings = v;
 				await save();
 				rerender();
@@ -47,10 +48,10 @@ export function renderSectionHealthSafety(
 
 	if (settings.showHighGIWarnings) {
 		new Setting(container)
-			.setName("High-gi dictionary")
-			.setDesc("Regex patterns identifying high-gi ingredients.")
+			.setName(t("set.health.giDict.name"))
+			.setDesc(t("set.health.giDict.desc"))
 			.addButton((btn) =>
-				btn.setButtonText("Edit gi dictionary…").onClick(() => {
+				btn.setButtonText(t("set.health.giDict.button")).onClick(() => {
 					new GiDictionaryModal(app, settings, save).open();
 				})
 			);

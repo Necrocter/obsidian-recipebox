@@ -9,6 +9,13 @@ describe("findSourceUrl", () => {
 		expect(findSourceUrl({ source_url: "https://example.com" })).toBe("https://example.com");
 	});
 
+	it("checks a configured property name first, then the defaults", () => {
+		expect(findSourceUrl({ fuente: "https://a.com" }, "fuente")).toBe("https://a.com");
+		expect(findSourceUrl({ fuente: "https://a.com", source: "https://b.com" }, "fuente")).toBe("https://a.com");
+		expect(findSourceUrl({ source: "https://b.com" }, "fuente")).toBe("https://b.com");
+		expect(findSourceUrl({ enlace: "https://a.com" }, "  ")).toBeNull();
+	});
+
 	it("trims whitespace", () => {
 		expect(findSourceUrl({ source: "  https://example.com  " })).toBe("https://example.com");
 	});

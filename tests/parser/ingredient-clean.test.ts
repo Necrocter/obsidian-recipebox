@@ -101,8 +101,15 @@ describe("stripOf", () => {
 		expect(stripOf("Of Sugar")).toBe("Sugar");
 	});
 
-	it("leaves text without a leading 'of' unchanged", () => {
+	it("strips a leading Spanish 'de'", () => {
+		expect(stripOf("de azúcar")).toBe("azúcar");
+		expect(stripOf("De Harina")).toBe("Harina");
+	});
+
+	it("leaves text without a leading partitive unchanged", () => {
 		expect(stripOf("sugar")).toBe("sugar");
+		expect(stripOf("cream of tartar")).toBe("cream of tartar");
+		expect(stripOf("diente de ajo")).toBe("diente de ajo");
 	});
 });
 
@@ -123,15 +130,26 @@ describe("ingredientKey", () => {
 });
 
 describe("hasIgnoreTag", () => {
-	it("detects the ignore-ingredient tag regardless of separators/case", () => {
-		expect(hasIgnoreTag(["ignore-ingredient"])).toBe(true);
-		expect(hasIgnoreTag(["IgnoreIngredient"])).toBe(true);
-		expect(hasIgnoreTag(["ignore_ingredient"])).toBe(true);
+	const DEFAULT = "ignore-ingredient";
+
+	it("detects the built-in ignore-ingredient tag regardless of separators/case", () => {
+		expect(hasIgnoreTag(["ignore-ingredient"], DEFAULT)).toBe(true);
+		expect(hasIgnoreTag(["IgnoreIngredient"], DEFAULT)).toBe(true);
+		expect(hasIgnoreTag(["ignore_ingredient"], DEFAULT)).toBe(true);
+	});
+
+	it("detects a configured localised tag", () => {
+		expect(hasIgnoreTag(["ignorar-ingrediente"], "ignorar-ingrediente")).toBe(true);
+		expect(hasIgnoreTag(["IgnorarIngrediente"], "ignorar-ingrediente")).toBe(true);
+	});
+
+	it("still accepts the built-in English tag even when a custom one is configured", () => {
+		expect(hasIgnoreTag(["ignore-ingredient"], "ignorar-ingrediente")).toBe(true);
 	});
 
 	it("returns false when the tag is absent", () => {
-		expect(hasIgnoreTag(["pantry"])).toBe(false);
-		expect(hasIgnoreTag([])).toBe(false);
+		expect(hasIgnoreTag(["pantry"], DEFAULT)).toBe(false);
+		expect(hasIgnoreTag([], DEFAULT)).toBe(false);
 	});
 });
 

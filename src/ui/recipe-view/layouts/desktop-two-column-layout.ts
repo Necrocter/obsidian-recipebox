@@ -3,6 +3,7 @@
  * two-column split while preserving existing section helpers and interactions.
  */
 import { MarkdownRenderer } from "obsidian";
+import { t } from "../../../i18n";
 import { findOrOpenLeaf } from "../../../utils/open-leaf";
 import { renderMetaBanner } from "../meta-banner";
 import { renderMealPlanStatus } from "../meal-plan-status";
@@ -77,7 +78,7 @@ export const renderDesktopTwoColumnLayout: RecipeLayoutRenderer = async ({
         const rightCol = main.createDiv({ cls: "rb-desktop-two-col-col" });
 
         divider.setAttribute("role", "separator");
-        divider.setAttribute("aria-label", "Resize recipe columns");
+        divider.setAttribute("aria-label", t("rview.resizeColumns"));
         divider.setAttribute("aria-orientation", "vertical");
         divider.tabIndex = 0;
 

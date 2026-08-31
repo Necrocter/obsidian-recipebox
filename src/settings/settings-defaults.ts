@@ -34,6 +34,7 @@ export const DEFAULT_CATEGORY_ORDER: string[] = [
 ];
 
 export const DEFAULT_SETTINGS: RecipeBoxSettings = {
+	language: "auto",
 	recipeFolders: ["Recipes"],
 	openGalleryOnFolderClick: false,
 	openGalleryOnFolderClickSubfolders: false,
@@ -42,6 +43,8 @@ export const DEFAULT_SETTINGS: RecipeBoxSettings = {
 	ingredientsHeading: "Ingredients",
 	instructionsHeading: "Instructions",
 	notesHeading: "Notes",
+	pantryNotePath: "Pantry.md",
+	ignoreIngredientTag: "ignore-ingredient",
 	enableDashboard: true,
 
 
@@ -82,6 +85,8 @@ export const DEFAULT_SETTINGS: RecipeBoxSettings = {
 	showMeatTempWarnings: true,
 
 	imageProperty: "image",
+	sourceProperty: "source",
+	ingredientsListProperty: "ingredients",
 	ratingProperty: "rating",
 	caloriesProperty: "calories",
 	proteinProperty: "protein",

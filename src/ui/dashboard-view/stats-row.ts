@@ -4,6 +4,7 @@
  * stat cards beside it. See dashboard-spec.md sections 3, 11.2-11.4, 13.2.
  */
 import { Menu, TFile } from "obsidian";
+import { t, tPlural, getLocaleTag } from "../../i18n";
 import { RecipeBoxSettings, DashboardActivityRangeWeeks } from "../../settings/settings-types";
 import { DashboardStats, CookingActivityResult, CookingActivityBucket, ActivityGranularity } from "./dashboard-stats";
 import { renderBarChart, BarChartBar } from "./chart-bars";
@@ -21,15 +22,15 @@ const RANGE_OPTIONS: DashboardActivityRangeWeeks[] = [2, 4, 8, 12];
 function formatLastMade(iso: string): string {
 	const days = daysSince(iso);
 	if (days === null) return iso;
-	if (days === 0) return "Made today";
-	if (days === 1) return "Made yesterday";
-	return `Made ${days}d ago`;
+	if (days === 0) return t("dash.made.today");
+	if (days === 1) return t("dash.made.yesterday");
+	return t("dash.made.daysAgo", { days });
 }
 
 function renderRecentlyMadeFallback(hero: HTMLElement, stats: DashboardStats, actions: StatsRowActions): void {
-	hero.createDiv({ cls: "rb-dashboard-card-label", text: "Recently made" });
+	hero.createDiv({ cls: "rb-dashboard-card-label", text: t("dash.recentlyMade") });
 	if (stats.recentlyMade.length === 0) {
-		hero.createDiv({ cls: "rb-dashboard-empty-text", text: "Nothing marked cooked yet." });
+		hero.createDiv({ cls: "rb-dashboard-empty-text", text: t("dash.recentlyMadeEmpty") });
 		return;
 	}
 	const list = hero.createDiv({ cls: "rb-dashboard-recently-made-list" });
@@ -41,18 +42,21 @@ function renderRecentlyMadeFallback(hero: HTMLElement, stats: DashboardStats, ac
 	}
 }
 
+// Date labels follow the plugin's language (getLocaleTag()), not the OS
+// locale -- passing undefined here rendered weekday/month names in the
+// system language even when the plugin was set to Spanish.
 function formatAxisLabel(bucketStart: string, granularity: ActivityGranularity): string {
 	const d = new Date(bucketStart + "T00:00:00");
 	if (isNaN(d.getTime())) return bucketStart;
-	if (granularity === "day") return d.toLocaleDateString(undefined, { weekday: "short" });
-	return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+	if (granularity === "day") return d.toLocaleDateString(getLocaleTag(), { weekday: "short" });
+	return d.toLocaleDateString(getLocaleTag(), { month: "short", day: "numeric" });
 }
 
 function formatHoverLabel(bucket: CookingActivityBucket, granularity: ActivityGranularity): string {
 	const d = new Date(bucket.bucketStart + "T00:00:00");
-	const dateStr = isNaN(d.getTime()) ? bucket.bucketStart : d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-	const prefix = granularity === "week" ? `Week of ${dateStr}` : dateStr;
-	return `${prefix}: ${bucket.count} cooked`;
+	const dateStr = isNaN(d.getTime()) ? bucket.bucketStart : d.toLocaleDateString(getLocaleTag(), { month: "short", day: "numeric" });
+	const prefix = granularity === "week" ? t("dash.activity.weekOf", { date: dateStr }) : dateStr;
+	return `${prefix}: ${tPlural("dash.activity.cooked.one", "dash.activity.cooked.other", bucket.count)}`;
 }
 
 // Reuses the same lightweight-popover pattern as the meal plan mini-grid's
@@ -79,7 +83,7 @@ function openBucketMenu(evt: MouseEvent, bucket: CookingActivityBucket, openReci
 function renderRangeSelect(container: HTMLElement, current: DashboardActivityRangeWeeks, onChange: (weeks: DashboardActivityRangeWeeks) => void): void {
 	const select = container.createEl("select", { cls: "rb-dashboard-chart-range-select" });
 	for (const weeks of RANGE_OPTIONS) {
-		const opt = select.createEl("option", { value: String(weeks), text: `${weeks} weeks` });
+		const opt = select.createEl("option", { value: String(weeks), text: t("dash.weeksOption", { weeks }) });
 		if (weeks === current) opt.selected = true;
 	}
 	select.addEventListener("change", () => {
@@ -102,7 +106,7 @@ function renderHero(
 	}
 
 	const labelRow = hero.createDiv({ cls: "rb-dashboard-chart-label-row" });
-	labelRow.createDiv({ cls: "rb-dashboard-card-label", text: "Cooking activity" });
+	labelRow.createDiv({ cls: "rb-dashboard-card-label", text: t("dash.cookingActivity") });
 	renderRangeSelect(labelRow, actions.activityRangeWeeks, actions.onActivityRangeChange);
 
 	const bars: BarChartBar[] = activity.buckets.map((bucket) => ({
@@ -123,13 +127,13 @@ function renderStatCards(grid: HTMLElement, stats: DashboardStats, actions: Stat
 
 	const totalCard = col.createDiv({ cls: "rb-dashboard-card rb-dashboard-stat-card rb-dashboard-stat-card--number", attr: { role: "button", tabindex: "0" } });
 	totalCard.createDiv({ cls: "rb-dashboard-stat-number", text: String(stats.totalRecipes) });
-	totalCard.createDiv({ cls: "rb-dashboard-card-label", text: "recipes in your vault" });
+	totalCard.createDiv({ cls: "rb-dashboard-card-label", text: t("dash.recipesInVault") });
 	totalCard.addEventListener("click", () => actions.openGalleryView());
 
 	const cookedCard = col.createDiv({ cls: "rb-dashboard-card rb-dashboard-stat-card" });
-	cookedCard.createDiv({ cls: "rb-dashboard-card-label", text: "Most cooked" });
+	cookedCard.createDiv({ cls: "rb-dashboard-card-label", text: t("dash.mostCooked") });
 	if (!stats.mostCooked) {
-		cookedCard.createDiv({ cls: "rb-dashboard-empty-text", text: "Cook something to see it here." });
+		cookedCard.createDiv({ cls: "rb-dashboard-empty-text", text: t("dash.mostCookedEmpty") });
 	} else {
 		const { file, cookedCount } = stats.mostCooked;
 		const row = cookedCard.createDiv({ cls: "rb-dashboard-most-cooked-row", attr: { role: "button", tabindex: "0" } });

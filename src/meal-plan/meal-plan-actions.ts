@@ -3,6 +3,7 @@
  * entries — each function updates settings state, saves, and writes to the notes.
  */
 import { App, Notice } from "obsidian";
+import { t, tPlural } from "../i18n";
 import { ContributionMap, GroceryContributionSource, MealPlanEntry } from "../types";
 import { RecipeBoxSettings } from "../settings/settings-types";
 import { generateEntryId, localDateISO } from "../utils/date";
@@ -63,7 +64,7 @@ export async function addToMealPlan(
 
 	const name = resolveRecipeName(app, recipePath);
 	const dayMeal = [entry.day, entry.meal].filter(Boolean).join(", ");
-	new Notice(dayMeal ? `${name} added to meal plan (${dayMeal})` : `${name} added to meal plan`);
+	new Notice(dayMeal ? t("notice.recipeAddedToMealPlanWhen", { name, when: dayMeal }) : t("notice.recipeAddedToMealPlan", { name }));
 }
 
 /** Creates a new independent entry without replacing any existing entry for the same recipe. Used by drag-drop in the meal plan view, and by multi-day placement (add-to-meal-plan-modal) which needs one entry per day rather than addToMealPlan's replace-by-recipe-path behavior. Returns the new entry ID. */
@@ -91,8 +92,7 @@ export async function addMealPlanEntry(
 	await insertMealPlanEntry(app, entry, settings);
 
 	const name = resolveRecipeName(app, recipePath);
-	const dayLabel = entry.day ? ` (${entry.day})` : "";
-	new Notice(`${name} added to meal plan${dayLabel}`);
+	new Notice(entry.day ? t("notice.recipeAddedToMealPlanWhen", { name, when: entry.day }) : t("notice.recipeAddedToMealPlan", { name }));
 	return entry.id;
 }
 
@@ -177,7 +177,7 @@ export async function addToGroceryOnly(
 	await addToGroceryNote(app, contributions, settings);
 	if (!silent) {
 		const n = Object.keys(contributions).length;
-		new Notice(`${n} item${n === 1 ? "" : "s"} added to grocery list.`);
+		new Notice(tPlural("notice.groceryItemsAdded.one", "notice.groceryItemsAdded.other", n));
 	}
 }
 
@@ -227,7 +227,7 @@ export async function removeFromMealPlan(
 	await reverseContributions(app, entry, settings);
 
 	const name = entry.label ?? resolveRecipeName(app, entry.recipePath);
-	new Notice(`${name} removed from meal plan.`);
+	new Notice(t("notice.recipeRemovedFromMealPlan", { name }));
 }
 
 export async function clearMealPlan(

@@ -3,6 +3,7 @@
  * auto-add on sync, and tag filter. The note path lives in the Notes section.
  */
 import { Setting } from "obsidian";
+import { t } from "../../i18n";
 import { MealTypeNotation, RecipeBoxSettings } from "../../settings/settings-types";
 
 export function renderSectionMealPlan(
@@ -11,17 +12,17 @@ export function renderSectionMealPlan(
 	save: () => Promise<void>,
 	rerender: () => void
 ): void {
-	new Setting(container).setName("Meal plan").setHeading();
+	new Setting(container).setName(t("set.mealPlan.title")).setHeading();
 
 	let fieldNameSetting: Setting | null = null;
 
 	new Setting(container)
-		.setName("Meal type notation")
-		.setDesc("How meal types are written in your meal plan note.")
+		.setName(t("set.mealPlan.notation.name"))
+		.setDesc(t("set.mealPlan.notation.desc"))
 		.addDropdown((d) => {
-			d.addOption("tag", "Obsidian tag  (#meal/dinner)");
-			d.addOption("dataview", "Dataview field  ([meal:: Dinner])");
-			d.addOption("text", "Plain text  ((dinner))");
+			d.addOption("tag", t("set.opt.mealNotation.tag"));
+			d.addOption("dataview", t("set.opt.mealNotation.dataview"));
+			d.addOption("text", t("set.opt.mealNotation.text"));
 			d.setValue(settings.mealTypeNotation);
 			d.onChange(async (v) => {
 				settings.mealTypeNotation = v as MealTypeNotation;
@@ -31,10 +32,10 @@ export function renderSectionMealPlan(
 		});
 
 	fieldNameSetting = new Setting(container)
-		.setName("Meal type field/tag name")
-		.setDesc('The tag or field name used in the note. Changing this won\'t rename existing entries until they\'re next updated.')
-		.addText((t) =>
-			t.setValue(settings.mealTypeFieldName).onChange(async (v) => {
+		.setName(t("set.mealPlan.fieldName.name"))
+		.setDesc(t("set.mealPlan.fieldName.descLong"))
+		.addText((c) =>
+			c.setValue(settings.mealTypeFieldName).onChange(async (v) => {
 				settings.mealTypeFieldName = v.trim() || "meal";
 				await save();
 			})
@@ -42,10 +43,10 @@ export function renderSectionMealPlan(
 	fieldNameSetting.settingEl.toggle(settings.mealTypeNotation !== "text");
 
 	new Setting(container)
-		.setName("Auto-add ingredients on sync")
-		.setDesc("Automatically add ingredients to the grocery list when manually added entries are added to the meal plan.")
-		.addToggle((t) =>
-			t.setValue(settings.autoAddOnSync).onChange(async (v) => {
+		.setName(t("set.mealPlan.autoAdd.name"))
+		.setDesc(t("set.mealPlan.autoAdd.descLong"))
+		.addToggle((c) =>
+			c.setValue(settings.autoAddOnSync).onChange(async (v) => {
 				settings.autoAddOnSync = v;
 				await save();
 				rerender();
@@ -55,10 +56,10 @@ export function renderSectionMealPlan(
 	if (!settings.autoAddOnSync) return;
 
 	new Setting(container)
-		.setName("Required tag filter")
-		.setDesc("Only auto-add ingredients from recipes carrying this tag. Leave empty to include all recipes.")
-		.addText((t) =>
-			t.setValue(settings.autoAddTagFilter).onChange(async (v) => {
+		.setName(t("set.mealPlan.tagFilter.name"))
+		.setDesc(t("set.mealPlan.tagFilter.descLong"))
+		.addText((c) =>
+			c.setValue(settings.autoAddTagFilter).onChange(async (v) => {
 				settings.autoAddTagFilter = v;
 				await save();
 			})

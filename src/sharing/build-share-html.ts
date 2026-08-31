@@ -113,7 +113,7 @@ export function buildShareHtml(
 ): string {
 	const title = escapeHtml(data.title);
 	const intro = stripObsidianMarkdown(data.introContent).trim();
-	const sourceUrl = findSourceUrl(frontmatter);
+	const sourceUrl = findSourceUrl(frontmatter, settings.sourceProperty);
 	// "<" is escaped to its unicode form so a "</script>" inside any field
 	// (title, ingredient/instruction text, or a scraped source's data) can't
 	// break out of this <script type="application/ld+json"> tag and inject a

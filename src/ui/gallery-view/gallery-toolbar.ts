@@ -11,18 +11,21 @@
  * panel that expands below the toolbar and stays open across changes.
  */
 import { App, Menu, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { GallerySavedState, GallerySortField } from "../../settings/settings-types";
 import { debounce } from "../../utils/debounce";
 import { distinctFolders, distinctTags } from "./gallery-filters";
 
-const SORT_FIELD_LABELS: Record<GallerySortField, string> = {
-	title: "Title",
-	"date-added": "Date added",
-	"date-modified": "Last modified",
-	"last-cooked": "Last cooked",
-	rating: "Rating",
-	"times-cooked": "Times cooked",
-};
+function sortFieldLabels(): Record<GallerySortField, string> {
+	return {
+		title: t("gallery.sort.title"),
+		"date-added": t("gallery.sort.dateAdded"),
+		"date-modified": t("gallery.sort.dateModified"),
+		"last-cooked": t("gallery.sort.lastCooked"),
+		rating: t("gallery.sort.rating"),
+		"times-cooked": t("gallery.sort.timesCooked"),
+	};
+}
 
 const SORT_FIELD_ICONS: Record<GallerySortField, string> = {
 	title: "type",
@@ -33,14 +36,16 @@ const SORT_FIELD_ICONS: Record<GallerySortField, string> = {
 	"times-cooked": "repeat",
 };
 
-const RATING_LABELS: Record<number, string> = {
-	0: "Any rating",
-	1: "1+ stars",
-	2: "2+ stars",
-	3: "3+ stars",
-	4: "4+ stars",
-	5: "5 stars",
-};
+function ratingLabels(): Record<number, string> {
+	return {
+		0: t("gallery.rating.any"),
+		1: t("gallery.rating.r1"),
+		2: t("gallery.rating.r2"),
+		3: t("gallery.rating.r3"),
+		4: t("gallery.rating.r4"),
+		5: t("gallery.rating.r5"),
+	};
+}
 
 const CLEARED_FILTERS: Pick<GallerySavedState, "folder" | "tag" | "favoriteOnly" | "minRating" | "neverCooked" | "excludeAllergens"> = {
 	folder: null,
@@ -64,7 +69,7 @@ function hasActiveFilters(state: GallerySavedState): boolean {
 
 function openSortMenu(evt: MouseEvent, state: GallerySavedState, onChange: (next: GallerySavedState) => void): void {
 	const menu = new Menu();
-	for (const [value, label] of Object.entries(SORT_FIELD_LABELS) as [GallerySortField, string][]) {
+	for (const [value, label] of Object.entries(sortFieldLabels()) as [GallerySortField, string][]) {
 		menu.addItem((item) =>
 			item.setTitle(label)
 				.setIcon(SORT_FIELD_ICONS[value])
@@ -76,13 +81,13 @@ function openSortMenu(evt: MouseEvent, state: GallerySavedState, onChange: (next
 	menu.addSeparator();
 
 	menu.addItem((item) =>
-		item.setTitle("Ascending")
+		item.setTitle(t("gallery.sort.ascending"))
 			.setIcon("arrow-up-narrow-wide")
 			.setChecked(state.sortDirection === "asc")
 			.onClick(() => onChange({ ...state, sortDirection: "asc" }))
 	);
 	menu.addItem((item) =>
-		item.setTitle("Descending")
+		item.setTitle(t("gallery.sort.descending"))
 			.setIcon("arrow-down-wide-narrow")
 			.setChecked(state.sortDirection === "desc")
 			.onClick(() => onChange({ ...state, sortDirection: "desc" }))
@@ -103,7 +108,7 @@ function renderFilterPanel(
 	const panel = container.createDiv({ cls: "rb-gallery-filter-panel" });
 
 	const folderSelect = panel.createEl("select", { cls: "rb-gallery-select" });
-	folderSelect.createEl("option", { value: "", text: "All folders" });
+	folderSelect.createEl("option", { value: "", text: t("gallery.allFolders") });
 	const folders = distinctFolders(files);
 	// A folder-click (see src/integrations/) can set state.folder to a path
 	// with no in-scope recipes yet, which wouldn't otherwise appear here --
@@ -119,7 +124,7 @@ function renderFilterPanel(
 	});
 
 	const tagSelect = panel.createEl("select", { cls: "rb-gallery-select" });
-	tagSelect.createEl("option", { value: "", text: "All tags" });
+	tagSelect.createEl("option", { value: "", text: t("gallery.allTags") });
 	for (const tag of distinctTags(app, files)) {
 		const opt = tagSelect.createEl("option", { value: tag, text: tag });
 		if (state.tag === tag) opt.selected = true;
@@ -130,7 +135,7 @@ function renderFilterPanel(
 
 	const ratingSelect = panel.createEl("select", { cls: "rb-gallery-select" });
 	for (let i = 0; i <= 5; i++) {
-		const opt = ratingSelect.createEl("option", { value: String(i), text: RATING_LABELS[i] });
+		const opt = ratingSelect.createEl("option", { value: String(i), text: ratingLabels()[i] });
 		if (state.minRating === i) opt.selected = true;
 	}
 	ratingSelect.addEventListener("change", () => {
@@ -140,7 +145,7 @@ function renderFilterPanel(
 	const favoriteToggle = panel.createEl("label", { cls: "rb-gallery-toggle" });
 	const favoriteCheckbox = favoriteToggle.createEl("input", { attr: { type: "checkbox" } });
 	favoriteCheckbox.checked = state.favoriteOnly;
-	favoriteToggle.createSpan({ text: "Favorites only" });
+	favoriteToggle.createSpan({ text: t("gallery.favoritesOnly") });
 	favoriteCheckbox.addEventListener("change", () => {
 		onChange({ ...state, favoriteOnly: favoriteCheckbox.checked });
 	});
@@ -148,7 +153,7 @@ function renderFilterPanel(
 	const neverCookedToggle = panel.createEl("label", { cls: "rb-gallery-toggle" });
 	const neverCookedCheckbox = neverCookedToggle.createEl("input", { attr: { type: "checkbox" } });
 	neverCookedCheckbox.checked = state.neverCooked;
-	neverCookedToggle.createSpan({ text: "Never cooked" });
+	neverCookedToggle.createSpan({ text: t("gallery.neverCooked") });
 	neverCookedCheckbox.addEventListener("change", () => {
 		onChange({ ...state, neverCooked: neverCookedCheckbox.checked });
 	});
@@ -157,7 +162,7 @@ function renderFilterPanel(
 		const allergenToggle = panel.createEl("label", { cls: "rb-gallery-toggle" });
 		const allergenCheckbox = allergenToggle.createEl("input", { attr: { type: "checkbox" } });
 		allergenCheckbox.checked = state.excludeAllergens;
-		allergenToggle.createSpan({ text: "Exclude my allergens" });
+		allergenToggle.createSpan({ text: t("gallery.excludeAllergens") });
 		allergenCheckbox.addEventListener("change", () => {
 			onChange({ ...state, excludeAllergens: allergenCheckbox.checked });
 		});
@@ -167,7 +172,7 @@ function renderFilterPanel(
 
 	const clearBtn = footer.createEl("button", { cls: "rb-gallery-filter-panel-btn" });
 	setIcon(clearBtn, "eraser");
-	clearBtn.createSpan({ text: "Clear" });
+	clearBtn.createSpan({ text: t("common.clear") });
 	clearBtn.addEventListener("click", () => onChange({ ...state, ...CLEARED_FILTERS }));
 
 	const hideBtn = footer.createEl("button", { cls: "rb-gallery-filter-panel-btn" });
@@ -193,7 +198,7 @@ export function renderGalleryToolbar(
 
 	const searchInput = searchWrap.createEl("input", {
 		cls: "rb-gallery-search",
-		attr: { type: "search", placeholder: "Search recipes…" },
+		attr: { type: "search", placeholder: t("gallery.searchPlaceholder") },
 	});
 	searchInput.value = state.search;
 	const debouncedSearch = debounce(() => onChange({ ...state, search: searchInput.value }), 200);
@@ -203,7 +208,7 @@ export function renderGalleryToolbar(
 
 	const filterBtn = actions.createDiv({
 		cls: "rb-gallery-toolbar-btn",
-		attr: { role: "button", "aria-label": "Filter", tabindex: "0" },
+		attr: { role: "button", "aria-label": t("gallery.filterAria"), tabindex: "0" },
 	});
 	filterBtn.toggleClass("is-active", filterPanelOpen);
 	filterBtn.toggleClass("has-active-filters", hasActiveFilters(state));
@@ -212,7 +217,7 @@ export function renderGalleryToolbar(
 
 	const sortBtn = actions.createDiv({
 		cls: "rb-gallery-toolbar-btn",
-		attr: { role: "button", "aria-label": "Sort", tabindex: "0" },
+		attr: { role: "button", "aria-label": t("gallery.sortAria"), tabindex: "0" },
 	});
 	setIcon(sortBtn, "arrow-up-down");
 	sortBtn.addEventListener("click", (evt) => openSortMenu(evt, state, onChange));

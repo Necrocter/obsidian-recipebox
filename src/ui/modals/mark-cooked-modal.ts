@@ -3,6 +3,7 @@
  * and an optional photo before writing the history entry.
  */
 import { App, Platform, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { CookedImageResult } from "../recipe-view/recipe-view-deps";
 import { VaultImageSuggestModal } from "./vault-image-suggest-modal";
@@ -25,7 +26,7 @@ export class MarkCookedModal extends BaseModal {
 		this.selectedDate = localDateISO();
 	}
 
-	getTitle(): string { return "Mark as cooked"; }
+	getTitle(): string { return t("modal.markCooked.title"); }
 	getIcon(): string { return "circle-check-big"; }
 	getSubtitle(): string { return this.file.basename; }
 	getContentClasses(): string[] { return ["rb-mark-cooked-modal"]; }
@@ -34,7 +35,7 @@ export class MarkCookedModal extends BaseModal {
 		const fields = bodyEl.createDiv({ cls: "rb-mark-cooked-fields" });
 
 		const dateField = fields.createDiv({ cls: "rb-modal-field rb-mark-cooked-date-field" });
-		dateField.createEl("label", { cls: "rb-modal-field-label", text: "Date" });
+		dateField.createEl("label", { cls: "rb-modal-field-label", text: t("field.date") });
 		const dateInput = dateField.createEl("input", {
 			cls: "rb-modal-input",
 			attr: { type: "date" },
@@ -47,10 +48,10 @@ export class MarkCookedModal extends BaseModal {
 
 		if (this.settings.cookHistoryEnabled) {
 			const notesField = fields.createDiv({ cls: "rb-modal-field rb-mark-cooked-notes-field" });
-			notesField.createEl("label", { cls: "rb-modal-field-label", text: "Notes" });
+			notesField.createEl("label", { cls: "rb-modal-field-label", text: t("field.notes") });
 			const notesInput = notesField.createEl("textarea", {
 				cls: "rb-modal-input rb-mark-cooked-notes-input",
-				attr: { rows: "6", placeholder: "How did it turn out?" },
+				attr: { rows: "6", placeholder: t("field.notesPlaceholder") },
 			});
 			notesInput.addEventListener("input", () => { this.notes = notesInput.value; });
 
@@ -62,9 +63,9 @@ export class MarkCookedModal extends BaseModal {
 	}
 
 	renderFooter(footerEl: HTMLElement): void {
-		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: "Cancel" })
+		footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: t("common.cancel") })
 			.addEventListener("click", () => this.close());
-		footerEl.createEl("button", { cls: "mod-cta", text: "Mark as cooked" })
+		footerEl.createEl("button", { cls: "mod-cta", text: t("modal.markCooked.title") })
 			.addEventListener("click", () => {
 				this.onStamp(this.selectedDate, this.notes.trim(), this.imageResult);
 				this.close();
@@ -77,7 +78,7 @@ export class MarkCookedModal extends BaseModal {
 	}
 
 	private buildImageSection(container: HTMLElement): void {
-		container.createEl("p", { cls: "rb-modal-section-title", text: "Photo" });
+		container.createEl("p", { cls: "rb-modal-section-title", text: t("photo.heading") });
 
 		const imageLayout = container.createDiv({ cls: "rb-modal-image-layout" });
 		const btnRow = imageLayout.createDiv({ cls: "rb-modal-image-btns" });
@@ -87,7 +88,7 @@ export class MarkCookedModal extends BaseModal {
 		// Image selection buttons: vault, upload, camera (mobile only), remove
 
 		// VAULT
-		const vaultBtn = btnRow.createEl("button", { cls: "rb-modal-btn", title: "Choose from vault" });
+		const vaultBtn = btnRow.createEl("button", { cls: "rb-modal-btn", title: t("photo.chooseFromVault") });
 		vaultBtn.addEventListener("click", () => {
 			new VaultImageSuggestModal(this.app, vaultFile => {
 				this.releasePreview();
@@ -97,7 +98,7 @@ export class MarkCookedModal extends BaseModal {
 		});
 		const vaultIcon = vaultBtn.createSpan({ cls: "rb-modal-btn-icon" });
 		setIcon(vaultIcon, "folder");
-		if (!Platform.isMobile) vaultBtn.createSpan({ text: "Select from vault" });
+		if (!Platform.isMobile) vaultBtn.createSpan({ text: t("photo.selectFromVault") });
 
 		// UPLOAD
 		const uploadInput = container.createEl("input", {
@@ -105,12 +106,12 @@ export class MarkCookedModal extends BaseModal {
 		});
 		uploadInput.addEventListener("change", () => void this.handleFileInput(uploadInput, showPreview));
 
-		const uploadBtn = btnRow.createEl("button", { cls: "rb-modal-btn", title: "Upload image" });
+		const uploadBtn = btnRow.createEl("button", { cls: "rb-modal-btn", title: t("photo.uploadImage") });
 		uploadBtn.addEventListener("click", () => uploadInput.click());
 
 		const uploadIcon = uploadBtn.createSpan({ cls: "rb-modal-btn-icon" });
 		setIcon(uploadIcon, "upload");
-		if (!Platform.isMobile) uploadBtn.createSpan({ text: "Upload" });
+		if (!Platform.isMobile) uploadBtn.createSpan({ text: t("photo.upload") });
 
 
 		if (Platform.isMobile) {
@@ -119,17 +120,17 @@ export class MarkCookedModal extends BaseModal {
 			const cameraInput = container.createEl("input", {
 				attr: { type: "file", accept: "image/*", capture: "environment", style: "display:none" },
 			});
-			const cameraBtn = btnRow.createEl("button", { cls: "rb-modal-btn", title: "Take photo", text: "" });
+			const cameraBtn = btnRow.createEl("button", { cls: "rb-modal-btn", title: t("photo.takePhoto"), text: "" });
 			cameraBtn.addEventListener("click", () => cameraInput.click());
 			setIcon(cameraBtn, "camera");
 			cameraInput.addEventListener("change", () => void this.handleFileInput(cameraInput, showPreview));
 		}
 
 		// REMOVE
-		const removeBtn = btnRow.createEl("button", { cls: "rb-modal-btn rb-modal-btn-danger rb-modal-btn-remove", title: "Remove image", text: "" });
+		const removeBtn = btnRow.createEl("button", { cls: "rb-modal-btn rb-modal-btn-danger rb-modal-btn-remove", title: t("photo.removeImage"), text: "" });
 		removeBtn.addEventListener("click", () => { this.releasePreview(); this.imageResult = null; showPreview(null); });
 		setIcon(removeBtn, "trash-2");
-		if (!Platform.isMobile) removeBtn.createSpan({ text: "Remove" });
+		if (!Platform.isMobile) removeBtn.createSpan({ text: t("common.remove") });
 
 
 		// Show or hide the preview image and remove button based on whether an image is selected

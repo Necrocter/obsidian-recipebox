@@ -5,6 +5,7 @@
  * "jump there" or "act on whatever I'm currently looking at" shortcuts.
  */
 import RecipeBoxPlugin from "../main";
+import { t } from "../i18n";
 import { ImportRecipeModal } from "../ui/modals/import-recipe-modal";
 import { AddGroceryItemModal } from "../ui/modals/add-grocery-item-modal";
 import { AddToMealPlanModal } from "../ui/modals/add-to-meal-plan-modal";
@@ -18,31 +19,31 @@ import { multiDayMealPlanDeps } from "../lifecycle/register-views";
 export function registerCommands(plugin: RecipeBoxPlugin): void {
 	plugin.addCommand({
 		id: "open-grocery-list",
-		name: "Open grocery list",
+		name: t("command.openGrocery"),
 		callback: () => plugin.activateGroceryView(),
 	});
 
 	plugin.addCommand({
 		id: "open-meal-plan",
-		name: "Open meal plan",
+		name: t("command.openMealPlan"),
 		callback: () => plugin.activateMealPlanView(),
 	});
 
 	plugin.addCommand({
 		id: "open-recipe-gallery",
-		name: "Open recipe gallery",
+		name: t("command.openGallery"),
 		callback: () => plugin.activateGalleryView(),
 	});
 
 	plugin.addCommand({
 		id: "import-recipe",
-		name: "Import recipe",
+		name: t("command.importRecipe"),
 		callback: () => new ImportRecipeModal(plugin.app, plugin.settings).open(),
 	});
 
 	plugin.addCommand({
 		id: "add-grocery-item",
-		name: "Add grocery item",
+		name: t("command.addGroceryItem"),
 		callback: () => {
 			new AddGroceryItemModal(plugin.app, {
 				addGroceryItem: (item) => plugin.manager.addGroceryItem(item),
@@ -54,7 +55,7 @@ export function registerCommands(plugin: RecipeBoxPlugin): void {
 
 	plugin.addCommand({
 		id: "toggle-recipe-in-meal-plan",
-		name: "Toggle current recipe in meal plan",
+		name: t("command.toggleRecipeInMealPlan"),
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
 			if (!file || !isRecipeFile(plugin.app, file, plugin.settings)) return false;
@@ -81,7 +82,7 @@ export function registerCommands(plugin: RecipeBoxPlugin): void {
 
 	plugin.addCommand({
 		id: "open-current-as-recipe",
-		name: "Open current file as recipe",
+		name: t("command.openCurrentAsRecipe"),
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
 			// Eligible when a recipe file is active but not yet shown in the recipe view
@@ -97,7 +98,7 @@ export function registerCommands(plugin: RecipeBoxPlugin): void {
 
 	plugin.addCommand({
 		id: "open-current-as-markdown",
-		name: "Open current file as Markdown",
+		name: t("command.openCurrentAsMarkdown"),
 		checkCallback: (checking) => {
 			// Only relevant when the active view is the recipe view
 			const view = plugin.app.workspace.getActiveViewOfType(RecipeView);
@@ -108,7 +109,7 @@ export function registerCommands(plugin: RecipeBoxPlugin): void {
 
 	plugin.addCommand({
 		id: "export-current-recipe",
-		name: "Export current recipe",
+		name: t("command.exportCurrentRecipe"),
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
 			if (!file || !isRecipeFile(plugin.app, file, plugin.settings)) return false;
@@ -120,7 +121,7 @@ export function registerCommands(plugin: RecipeBoxPlugin): void {
 
 	plugin.addCommand({
 		id: "share-current-recipe",
-		name: "Share this recipe",
+		name: t("command.shareThisRecipe"),
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
 			if (!file || !isRecipeFile(plugin.app, file, plugin.settings)) return false;
@@ -132,7 +133,7 @@ export function registerCommands(plugin: RecipeBoxPlugin): void {
 
 	plugin.addCommand({
 		id: "suggest-meal",
-		name: "Suggest a meal",
+		name: t("command.suggestMeal"),
 		callback: () => {
 			new SuggestMealModal(plugin.app, {
 				getSettings: () => plugin.settings,
@@ -156,7 +157,7 @@ export function registerCommands(plugin: RecipeBoxPlugin): void {
 
 		plugin.addCommand({
 			id: "open-dashboard",
-			name: "Open recipe dashboard",
+			name: t("command.openDashboard"),
 			callback: async () => {
 				await plugin.activateDashboardView();
 			},

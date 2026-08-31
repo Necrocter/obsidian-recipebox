@@ -2,6 +2,7 @@
  * Renders the URL / paste-text input stage of the import modal into the
  * provided body and footer elements (supplied by BaseModal's shell).
  */
+import { t } from "../../i18n";
 import { App } from "obsidian";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { FolderSuggest } from "../components/folder-suggest";
@@ -26,8 +27,8 @@ export function renderInputStage(
 ): void {
 	// Tab switcher
 	const tabs = bodyEl.createDiv({ cls: "rb-import-tabs" });
-	const urlTab = tabs.createEl("button", { cls: "rb-import-tab", text: "From URL" });
-	const textTab = tabs.createEl("button", { cls: "rb-import-tab", text: "From text" });
+	const urlTab = tabs.createEl("button", { cls: "rb-import-tab", text: t("modal.import.fromUrl") });
+	const textTab = tabs.createEl("button", { cls: "rb-import-tab", text: t("modal.import.fromText") });
 
 	function setTab(tab: "url" | "text"): void {
 		state.tab = tab;
@@ -42,10 +43,10 @@ export function renderInputStage(
 
 	// URL pane
 	const urlPane = bodyEl.createDiv({ cls: "rb-import-pane" });
-	urlPane.createDiv({ cls: "rb-import-field-label", text: "Recipe URL" });
+	urlPane.createDiv({ cls: "rb-import-field-label", text: t("modal.import.recipeUrl") });
 	const urlInput = urlPane.createEl("input", {
 		cls: "rb-import-text-input",
-		attr: { type: "url", placeholder: "HTTPS://…" },
+		attr: { type: "url", placeholder: t("modal.import.urlPlaceholder") },
 	});
 	urlInput.value = state.url;
 	const urlErrorBox = urlPane.createDiv({ cls: "rb-import-error-box" });
@@ -58,37 +59,37 @@ export function renderInputStage(
 
 	// Text pane
 	const textPane = bodyEl.createDiv({ cls: "rb-import-pane" });
-	textPane.createDiv({ cls: "rb-import-field-label", text: "Title (optional)" });
+	textPane.createDiv({ cls: "rb-import-field-label", text: t("modal.import.titleOptional") });
 	const titleInput = textPane.createEl("input", {
 		cls: "rb-import-text-input",
-		attr: { type: "text", placeholder: "My recipe" },
+		attr: { type: "text", placeholder: t("modal.import.titlePlaceholder") },
 	});
 	titleInput.value = state.titleOverride;
 	titleInput.addEventListener("input", () => { state.titleOverride = titleInput.value; });
-	textPane.createDiv({ cls: "rb-import-field-label", text: "Paste recipe text" });
+	textPane.createDiv({ cls: "rb-import-field-label", text: t("modal.import.pasteText") });
 	const textArea = textPane.createEl("textarea", {
 		cls: "rb-import-textarea rb-import-textarea--tall",
-		attr: { placeholder: "Paste ingredients and instructions here…" },
+		attr: { placeholder: t("modal.import.pastePlaceholder") },
 	});
 	textArea.value = state.text;
 	textArea.addEventListener("input", () => { state.text = textArea.value; });
 
 	// Shared folder field
 	const folderSection = bodyEl.createDiv({ cls: "rb-import-folder-row" });
-	folderSection.createDiv({ cls: "rb-import-field-label", text: "Destination folder" });
+	folderSection.createDiv({ cls: "rb-import-field-label", text: t("modal.import.destinationFolder") });
 	const folderInput = folderSection.createEl("input", {
 		cls: "rb-import-text-input",
-		attr: { type: "text", placeholder: "Recipes" },
+		attr: { type: "text", placeholder: t("modal.import.folderPlaceholder") },
 	});
 	if (!state.folder) state.folder = resolveDestinationFolder(settings);
 	folderInput.value = state.folder;
 	folderInput.addEventListener("input", () => { state.folder = folderInput.value; });
 	new FolderSuggest(app, folderInput);
 
-	const importBtn = footerEl.createEl("button", { cls: "mod-cta", text: "Import" });
+	const importBtn = footerEl.createEl("button", { cls: "mod-cta", text: t("modal.import.importButton") });
 	importBtn.addEventListener("click", () => { void (async () => {
 		importBtn.disabled = true;
-		importBtn.setText("Importing…");
+		importBtn.setText(t("modal.import.importing"));
 		urlErrorBox.empty();
 		urlErrorBox.hide();
 		try {
@@ -106,7 +107,7 @@ export function renderInputStage(
 			}
 		} finally {
 			importBtn.disabled = false;
-			importBtn.setText("Import");
+			importBtn.setText(t("modal.import.importButton"));
 		}
 	})(); });
 

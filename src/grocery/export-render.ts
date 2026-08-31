@@ -4,6 +4,7 @@
  */
 import { GroceryItem } from "../types";
 import { ExportFormat } from "./export-format";
+import { categoryLabel } from "./category-labels";
 import { renderLine, RenderOptions } from "./export-render-line";
 
 export function exportGroceryList(
@@ -23,7 +24,7 @@ export function exportGroceryList(
 		}
 		const lines: string[] = [];
 		for (const [cat, catItems] of groups) {
-			lines.push(`## ${cat}`);
+			lines.push(`## ${categoryLabel(cat)}`);
 			for (const item of catItems) {
 				lines.push(renderLine(item, format, options));
 			}

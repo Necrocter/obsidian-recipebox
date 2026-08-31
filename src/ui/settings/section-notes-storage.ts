@@ -3,7 +3,9 @@
  * path, and the ingredients/instructions heading names.
  */
 import { App, Setting } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
+import { localeDefault } from "../../settings/locale-defaults";
 import { NotePathSuggest } from "../components/note-path-suggest";
 import { renderNotePathPreview } from "../components/note-path-preview";
 
@@ -14,64 +16,74 @@ export function renderSectionNotesStorage(
 	rerender: () => void,
 	app: App
 ): void {
-	new Setting(container).setName("Notes").setHeading();
+	new Setting(container).setName(t("set.notes.title")).setHeading();
 
 	const mealPlanPathSetting = new Setting(container)
-		.setName("Meal plan note path")
-		.setDesc("Path to the note used as your meal plan. Created automatically if it doesn't exist. Supports {token} date patterns, e.g. \"Meal Plans/{YYYY}/Week {ww}.md\".");
+		.setName(t("set.notes.mealPlanPath.name"))
+		.setDesc(t("set.notes.mealPlanPath.descLong"));
 
 	const mealPlanPathPreview = renderNotePathPreview(mealPlanPathSetting.descEl, settings.mealPlanPath);
 
-	mealPlanPathSetting.addText((t) => {
-		t.setValue(settings.mealPlanPath).onChange(async (v) => {
+	mealPlanPathSetting.addText((c) => {
+		c.setValue(settings.mealPlanPath).onChange(async (v) => {
 			settings.mealPlanPath = v;
 			mealPlanPathPreview.update(v);
 			await save();
 		});
-		new NotePathSuggest(app, t.inputEl);
+		new NotePathSuggest(app, c.inputEl);
 	});
 
 	const groceryListPathSetting = new Setting(container)
-		.setName("Grocery list note path")
-		.setDesc("Path to the note used as your grocery list. Created automatically if it doesn't exist. Supports {token} date patterns, e.g. \"Groceries/{YYYY}/Week {ww}.md\".");
+		.setName(t("set.notes.groceryListPath.name"))
+		.setDesc(t("set.notes.groceryListPath.descLong"));
 
 	const groceryListPathPreview = renderNotePathPreview(groceryListPathSetting.descEl, settings.groceryListPath);
 
-	groceryListPathSetting.addText((t) => {
-		t.setValue(settings.groceryListPath).onChange(async (v) => {
+	groceryListPathSetting.addText((c) => {
+		c.setValue(settings.groceryListPath).onChange(async (v) => {
 			settings.groceryListPath = v;
 			groceryListPathPreview.update(v);
 			await save();
 		});
-		new NotePathSuggest(app, t.inputEl);
+		new NotePathSuggest(app, c.inputEl);
 	});
 
 	new Setting(container)
-		.setName("Ingredients heading")
-		.setDesc("The heading that marks the ingredients section in a recipe note.")
-		.addText((t) =>
-			t.setValue(settings.ingredientsHeading).onChange(async (v) => {
+		.setName(t("set.notes.ingredientsHeading.name"))
+		.setDesc(t("set.notes.ingredientsHeading.desc"))
+		.addText((c) =>
+			c.setValue(settings.ingredientsHeading).onChange(async (v) => {
 				settings.ingredientsHeading = v;
 				await save();
 			})
 		);
 
 	new Setting(container)
-		.setName("Instructions heading")
-		.setDesc("The heading that marks the instructions section in a recipe note.")
-		.addText((t) =>
-			t.setValue(settings.instructionsHeading).onChange(async (v) => {
+		.setName(t("set.notes.instructionsHeading.name"))
+		.setDesc(t("set.notes.instructionsHeading.desc"))
+		.addText((c) =>
+			c.setValue(settings.instructionsHeading).onChange(async (v) => {
 				settings.instructionsHeading = v;
 				await save();
 			})
 		);
 
 	new Setting(container)
-		.setName("Notes heading")
-		.setDesc("The heading that marks the (optional) notes section in a recipe note.")
-		.addText((t) =>
-			t.setValue(settings.notesHeading).onChange(async (v) => {
+		.setName(t("set.notes.notesHeading.name"))
+		.setDesc(t("set.notes.notesHeading.desc"))
+		.addText((c) =>
+			c.setValue(settings.notesHeading).onChange(async (v) => {
 				settings.notesHeading = v;
+				await save();
+			})
+		);
+
+	new Setting(container)
+		.setName(t("set.notes.ignoreTag.name"))
+		.setDesc(t("set.notes.ignoreTag.desc"))
+		.addText((c) =>
+			c.setValue(settings.ignoreIngredientTag).onChange(async (v) => {
+				settings.ignoreIngredientTag = v.trim() || localeDefault("ignoreIngredientTag");
 				await save();
 			})
 		);

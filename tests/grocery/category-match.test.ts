@@ -40,4 +40,30 @@ describe("categorize", () => {
 	it("prefers a tag match over the dictionary for 'tag-then-dictionary'", () => {
 		expect(categorize("chicken breast", ["produce"], [], "tag-then-dictionary")).toBe("Produce");
 	});
+
+	describe("Spanish ingredient names", () => {
+		const cat = (name: string) => categorize(name, [], [], "dictionary");
+
+		it("categorises common Spanish produce, meat, dairy and staples", () => {
+			expect(cat("jitomate")).toBe("Produce");
+			expect(cat("cebolla mediana")).toBe("Produce");
+			expect(cat("ajo")).toBe("Produce");
+			expect(cat("carne molida")).toBe("Meat");
+			expect(cat("filete de res")).toBe("Meat");
+			expect(cat("huevo")).toBe("Egg");
+			expect(cat("hierbabuena")).toBe("Herb");
+			expect(cat("leche entera")).toBe("Dairy");
+			expect(cat("queso panela")).toBe("Cheese");
+			expect(cat("aceite de oliva")).toBe("Oil");
+			expect(cat("sal")).toBe("Seasoning");
+			expect(cat("azúcar de coco")).toBe("Baking");
+			expect(cat("crema de cacahuate")).toBe("Nuts & Seeds");
+			expect(cat("totopos")).toBe("Snack");
+		});
+
+		it("does not put 'chile chipotle' in Snack via the 'chip' substring", () => {
+			expect(cat("chile chipotle")).toBe("Produce");
+			expect(cat("chile")).toBe("Produce");
+		});
+	});
 });

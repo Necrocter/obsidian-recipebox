@@ -4,6 +4,7 @@
  */
 import { setIcon } from "obsidian";
 import { GroupingMode } from "../../types";
+import { categoryLabel } from "../../grocery/category-labels";
 import { DisplayGroup } from "./display-groups";
 import { GroceryViewDeps } from "./grocery-view-deps";
 import { renderItemRow } from "./item-row";
@@ -28,7 +29,9 @@ export function renderGroupSection(
 		const chevron = header.createSpan({ cls: "rb-gv-chevron rb-icon" });
 		setIcon(chevron, isCollapsed ? "chevron-right" : "chevron-down");
 
-		header.createSpan({ cls: "rb-gv-group-name", text: group.name });
+		// Category groups key their collapse state and sources off the English
+		// key in group.name; only the visible label is localised.
+		header.createSpan({ cls: "rb-gv-group-name", text: mode === "category" ? categoryLabel(group.name) : group.name });
 		header.createSpan({
 			cls: "rb-gv-group-badge",
 			text: `${checkedCount}/${group.items.length}`,

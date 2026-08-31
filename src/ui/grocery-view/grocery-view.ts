@@ -3,6 +3,7 @@
  * the meal-plan carousel, and the summary bar, re-rendering on every "change" event.
  */
 import { ItemView, setIcon, WorkspaceLeaf } from "obsidian";
+import { t } from "../../i18n";
 import { GroceryViewDeps } from "./grocery-view-deps";
 import { renderHeaderActions } from "./header-actions";
 import { renderSummary } from "./summary";
@@ -27,7 +28,7 @@ export class GroceryView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "Shopping assistant";
+		return t("set.shopping.title");
 	}
 
 	getIcon(): string {
@@ -69,10 +70,10 @@ export class GroceryView extends ItemView {
 
 		if (items.length === 0) {
 			const empty = content.createDiv({ cls: "rb-gv-empty" });
-			empty.createEl("p", { text: "Your grocery list is empty." });
+			empty.createEl("p", { text: t("gv.empty") });
 			empty.createEl("p", {
 				cls: "rb-gv-empty-hint",
-				text: 'Add meals to your meal plan note to populate the list, or tap + to add items manually.',
+				text: t("gv.emptyHint"),
 			});
 			return;
 		}
@@ -84,7 +85,7 @@ export class GroceryView extends ItemView {
 
 		const checkToggle = aboveLeft.createEl("button", { cls: "rb-gv-link-btn" });
 		setIcon(checkToggle.createSpan({ cls: "rb-gv-link-btn-icon" }), allChecked ? "square" : "square-check");
-		checkToggle.createSpan({ text: allChecked ? "Uncheck all" : "Check all" });
+		checkToggle.createSpan({ text: allChecked ? t("gv.uncheckAll") : t("gv.checkAll") });
 		checkToggle.addEventListener("click", () => {
 			void this.deps.setAllChecked(!allChecked);
 		});
@@ -93,7 +94,7 @@ export class GroceryView extends ItemView {
 
 		const addItemBtn = aboveList.createEl("button", { cls: "rb-gv-link-btn" });
 		setIcon(addItemBtn.createSpan({ cls: "rb-gv-link-btn-icon" }), "plus");
-		addItemBtn.createSpan({ text: "Add item" });
+		addItemBtn.createSpan({ text: t("gv.addItem") });
 		addItemBtn.addEventListener("click", () => this.deps.openAddGroceryItemModal());
 
 		const groups = buildDisplayGroups(items, mode);

@@ -29,6 +29,8 @@ import {
 	RecipeExportFormat,
 } from "../settings/settings-types";
 import { DEFAULT_SETTINGS } from "../settings/settings-defaults";
+import { localeDefault, localeDefaultRecipeFolders } from "../settings/locale-defaults";
+import { setActiveLanguage } from "../i18n";
 
 // ── primitive validators ──────────────────────────────────────────────────────
 
@@ -218,6 +220,11 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 	if (!raw || typeof raw !== "object") return { ...d };
 	const r = raw as Record<string, unknown>;
 
+	// Resolve the language before the fallbacks below, so locale-aware defaults
+	// (note paths, section headings, folders) come out in the right language on
+	// a fresh vault. onload() and saveSettings() also call this; it is idempotent.
+	setActiveLanguage(oneOf<RecipeBoxSettings["language"]>(r.language, ["auto", "en", "es"], d.language));
+
 	const state = r.state && typeof r.state === "object" ? (r.state as Record<string, unknown>) : {};
 	const collapsedRaw =
 		state.collapsedSections && typeof state.collapsedSections === "object"
@@ -229,14 +236,17 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 	}
 
 	const merged: RecipeBoxSettings = {
-		recipeFolders: strArr(r.recipeFolders, d.recipeFolders),
+		language: oneOf<RecipeBoxSettings["language"]>(r.language, ["auto", "en", "es"], d.language),
+		recipeFolders: strArr(r.recipeFolders, localeDefaultRecipeFolders()),
 		openGalleryOnFolderClick: bool(r.openGalleryOnFolderClick, d.openGalleryOnFolderClick),
 		openGalleryOnFolderClickSubfolders: bool(r.openGalleryOnFolderClickSubfolders, d.openGalleryOnFolderClickSubfolders),
-		mealPlanPath: str(r.mealPlanPath, d.mealPlanPath),
-		groceryListPath: str(r.groceryListPath, d.groceryListPath),
-		ingredientsHeading: str(r.ingredientsHeading, d.ingredientsHeading),
-		instructionsHeading: str(r.instructionsHeading, d.instructionsHeading),
-		notesHeading: str(r.notesHeading, d.notesHeading),
+		mealPlanPath: str(r.mealPlanPath, localeDefault("mealPlanPath")),
+		groceryListPath: str(r.groceryListPath, localeDefault("groceryListPath")),
+		ingredientsHeading: str(r.ingredientsHeading, localeDefault("ingredientsHeading")),
+		instructionsHeading: str(r.instructionsHeading, localeDefault("instructionsHeading")),
+		notesHeading: str(r.notesHeading, localeDefault("notesHeading")),
+		pantryNotePath: str(r.pantryNotePath, localeDefault("pantryNotePath")),
+		ignoreIngredientTag: str(r.ignoreIngredientTag, localeDefault("ignoreIngredientTag")),
 
 		groupingMode: oneOf<GroupingMode>(r.groupingMode, ["category", "recipe", "source", "none"], d.groupingMode),
 		categorySource: oneOf<CategorySource>(r.categorySource, ["dictionary", "tag", "tag-then-dictionary"], d.categorySource),
@@ -260,7 +270,7 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 		desktopTwoColumnSplitRatio: numInRange(r.desktopTwoColumnSplitRatio, d.desktopTwoColumnSplitRatio, 0.25, 0.75),
 
 		cookHistoryEnabled: bool(r.cookHistoryEnabled, d.cookHistoryEnabled),
-		cookHistoryHeading: str(r.cookHistoryHeading, d.cookHistoryHeading),
+		cookHistoryHeading: str(r.cookHistoryHeading, localeDefault("cookHistoryHeading")),
 		cookHistoryFrontmatterProperty: str(r.cookHistoryFrontmatterProperty, d.cookHistoryFrontmatterProperty),
 		lastMadeProperty: str(r.lastMadeProperty, d.lastMadeProperty),
 		cookedCountProperty: str(r.cookedCountProperty, d.cookedCountProperty),
@@ -277,6 +287,8 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 		showMeatTempWarnings: bool(r.showMeatTempWarnings, d.showMeatTempWarnings),
 
 		imageProperty: str(r.imageProperty, d.imageProperty),
+		sourceProperty: str(r.sourceProperty, d.sourceProperty),
+		ingredientsListProperty: str(r.ingredientsListProperty, d.ingredientsListProperty),
 		ratingProperty: str(r.ratingProperty, d.ratingProperty),
 		caloriesProperty: str(r.caloriesProperty, d.caloriesProperty),
 		proteinProperty: str(r.proteinProperty, d.proteinProperty),
@@ -301,7 +313,7 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 		mealTypeFieldName: str(r.mealTypeFieldName, d.mealTypeFieldName),
 
 		importerTemplatePath: str(r.importerTemplatePath, d.importerTemplatePath),
-		importerDefaultFolder: str(r.importerDefaultFolder, d.importerDefaultFolder),
+		importerDefaultFolder: str(r.importerDefaultFolder, localeDefault("importerDefaultFolder")),
 		downloadImagesOnImport: bool(r.downloadImagesOnImport, d.downloadImagesOnImport),
 
 		headerBadges: Array.isArray(r.headerBadges)
@@ -312,7 +324,7 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 		prefixTagsWithHash: bool(r.prefixTagsWithHash, d.prefixTagsWithHash),
 		showFullTagPath: bool(r.showFullTagPath, d.showFullTagPath),
 
-		exportFolder: str(r.exportFolder, d.exportFolder),
+		exportFolder: str(r.exportFolder, localeDefault("exportFolder")),
 		recipeExportDefaultFormat: oneOf<RecipeExportFormat>(
 			r.recipeExportDefaultFormat,
 			["plain-markdown", "importable-markdown", "json", "json-ld"],

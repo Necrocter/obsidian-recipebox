@@ -10,8 +10,9 @@
  * this modal does the same rather than mutating settings directly.
  */
 import { App, TFile } from "obsidian";
+import { t, tPlural } from "../../i18n";
 import { SuggestMealDeps } from "./suggest-meal-modal";
-import { MEAL_SUGGESTIONS } from "./add-to-meal-plan-modal";
+import { mealSuggestions } from "./add-to-meal-plan-modal";
 import { BaseModal, addFooterButtons } from "./modal-shell";
 import { FillMode, scheduleRecipes } from "../../meal-plan/schedule-recipes";
 
@@ -33,7 +34,7 @@ export class ScheduleRecipesModal extends BaseModal {
 		super(app);
 	}
 
-	getTitle(): string { return `Schedule ${this.files.length} recipe${this.files.length === 1 ? "" : "s"}`; }
+	getTitle(): string { return tPlural("modal.schedule.titleN.one", "modal.schedule.titleN.other", this.files.length); }
 	getIcon(): string { return "calendar"; }
 	getContentClasses(): string[] { return ["rb-schedule-modal"]; }
 
@@ -44,7 +45,7 @@ export class ScheduleRecipesModal extends BaseModal {
 		const clearField = clearRow.createDiv({ cls: "rb-modal-field rb-modal-field--checkbox" });
 		const clearLabel = clearField.createEl("label", { cls: "rb-modal-field-label rb-modal-field-label--checkbox" });
 		const clearCheck = clearLabel.createEl("input", { attr: { type: "checkbox" } });
-		clearLabel.createSpan({ text: "Clear meal plan first" });
+		clearLabel.createSpan({ text: t("modal.schedule.clearFirst") });
 		clearCheck.addEventListener("change", () => {
 			this.clearFirst = clearCheck.checked;
 			// An empty plan makes every day available, same as "skip occupied days" —
@@ -53,11 +54,11 @@ export class ScheduleRecipesModal extends BaseModal {
 		});
 
 		const mealField = section.createDiv({ cls: "rb-modal-field" });
-		mealField.createEl("label", { cls: "rb-modal-field-label", text: "Meal type" });
+		mealField.createEl("label", { cls: "rb-modal-field-label", text: t("modal.schedule.mealType") });
 		const datalistId = "rb-schedule-meal-datalist";
 		const mealInput = mealField.createEl("input", {
 			cls: "rb-modal-input",
-			attr: { type: "text", list: datalistId, placeholder: "E.g. Dinner" },
+			attr: { type: "text", list: datalistId, placeholder: t("modal.addToMealPlan.mealPlaceholder") },
 		});
 		const datalist = mealField.createEl("datalist", { attr: { id: datalistId } });
 		for (const m of this.mealTypeSuggestions()) datalist.createEl("option", { attr: { value: m } });
@@ -66,19 +67,19 @@ export class ScheduleRecipesModal extends BaseModal {
 		bodyEl.createEl("hr", { cls: "rb-modal-divider" });
 
 		this.fillModeRow = bodyEl.createDiv({ cls: "rb-modal-field" });
-		this.fillModeRow.createEl("label", { cls: "rb-modal-field-label", text: "Day fill mode" });
+		this.fillModeRow.createEl("label", { cls: "rb-modal-field-label", text: t("modal.schedule.dayFillMode") });
 		const radioGroup = this.fillModeRow.createDiv({ cls: "rb-modal-radio-group" });
-		this.renderFillModeOption(radioGroup, "skip-occupied", "Skip occupied days");
-		this.renderFillModeOption(radioGroup, "one-per-meal-type", "One per meal type");
-		this.renderFillModeOption(radioGroup, "stack-freely", "Stack freely");
-		this.renderFillModeOption(radioGroup, "queue-only", "Add all to queue");
+		this.renderFillModeOption(radioGroup, "skip-occupied", t("modal.schedule.fill.skipOccupied"));
+		this.renderFillModeOption(radioGroup, "one-per-meal-type", t("modal.schedule.fill.onePerMealType"));
+		this.renderFillModeOption(radioGroup, "stack-freely", t("modal.schedule.fill.stackFreely"));
+		this.renderFillModeOption(radioGroup, "queue-only", t("modal.schedule.fill.addAllToQueue"));
 
 		this.overflowRow = bodyEl.createDiv({ cls: "rb-modal-fields rb-modal-fields--full" });
 		const overflowField = this.overflowRow.createDiv({ cls: "rb-modal-field rb-modal-field--checkbox" });
 		const overflowLabel = overflowField.createEl("label", { cls: "rb-modal-field-label rb-modal-field-label--checkbox" });
 		const overflowCheck = overflowLabel.createEl("input", { attr: { type: "checkbox" } });
 		overflowCheck.checked = this.overflowToQueue;
-		overflowLabel.createSpan({ text: "Add overflow to queue" });
+		overflowLabel.createSpan({ text: t("modal.schedule.addOverflowToQueue") });
 		overflowCheck.addEventListener("change", () => { this.overflowToQueue = overflowCheck.checked; });
 	}
 
@@ -98,7 +99,7 @@ export class ScheduleRecipesModal extends BaseModal {
 	}
 
 	private mealTypeSuggestions(): string[] {
-		const used = new Set<string>(MEAL_SUGGESTIONS);
+		const used = new Set<string>(mealSuggestions());
 		for (const entry of this.deps.getMealPlan()) {
 			if (entry.meal) used.add(entry.meal);
 		}
@@ -107,7 +108,7 @@ export class ScheduleRecipesModal extends BaseModal {
 
 	renderFooter(footerEl: HTMLElement): void {
 		this.confirmBtn = addFooterButtons(footerEl, {
-			confirmLabel: `Schedule ${this.files.length} recipe${this.files.length === 1 ? "" : "s"}`,
+			confirmLabel: tPlural("modal.schedule.titleN.one", "modal.schedule.titleN.other", this.files.length),
 			onCancel: () => this.close(),
 			onConfirm: () => { void this.confirm(); },
 		});
@@ -115,7 +116,7 @@ export class ScheduleRecipesModal extends BaseModal {
 
 	private async confirm(): Promise<void> {
 		this.confirmBtn.disabled = true;
-		this.confirmBtn.textContent = "Scheduling…";
+		this.confirmBtn.textContent = t("modal.schedule.scheduling");
 
 		if (this.clearFirst) {
 			await this.deps.clearMealPlan(false);

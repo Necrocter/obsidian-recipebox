@@ -12,6 +12,7 @@ import {
 	CustomBadge,
 } from "../types";
 import type { SuggesterMode } from "../suggester/strategy-types";
+import type { AppLanguage } from "../i18n";
 
 export type NutritionDisplay = "per-serving" | "total";
 export type MealTypeNotation = "tag" | "dataview" | "text";
@@ -46,6 +47,10 @@ export interface GallerySavedState {
 }
 
 export interface RecipeBoxSettings {
+	// Interface language. "auto" follows Obsidian's own display language;
+	// "en"/"es" pin the plugin regardless of the app setting.
+	language: AppLanguage;
+
 	// Recipe location & structure
 	recipeFolders: string[];
 	// Folder-note style navigation: clicking a recipe folder in the file
@@ -58,6 +63,13 @@ export interface RecipeBoxSettings {
 	ingredientsHeading: string;
 	instructionsHeading: string;
 	notesHeading: string;
+	// Note listing kitchen stock, for the "what can I cook?" matcher. Path only;
+	// the matcher feature itself is a separate concern.
+	pantryNotePath: string;
+	// Tag on an ingredient line that excludes it from grocery lists and
+	// exports. Configurable so non-English vaults can use a localised tag;
+	// the built-in "ignore-ingredient" is always recognised as well.
+	ignoreIngredientTag: string;
 	enableDashboard: boolean;
 
 	// Grocery list display
@@ -106,6 +118,13 @@ export interface RecipeBoxSettings {
 
 	// Nutrition property names
 	imageProperty: string;
+	// Frontmatter key holding the recipe source (URL / cookbook / person).
+	// "source", "url", "sourceUrl", "source_url" are always tried as fallbacks.
+	sourceProperty: string;
+	// Frontmatter key holding the recipe's ingredient list (array). Configurable
+	// so a non-English vault can use e.g. "ingredientes"; "ingredients" and
+	// "ingredientes" are always tried as fallbacks.
+	ingredientsListProperty: string;
 	ratingProperty: string;
 	caloriesProperty: string;
 	proteinProperty: string;

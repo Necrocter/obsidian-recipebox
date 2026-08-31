@@ -3,6 +3,7 @@
  * and safety settings section.
  */
 import { App } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { BaseModal } from "./modal-shell";
 
@@ -13,8 +14,8 @@ export class AllergensModal extends BaseModal {
 		private readonly save: () => Promise<void>,
 	) { super(app); }
 
-	getTitle(): string { return "My allergens"; }
-	getSubtitle(): string { return "Warn when a recipe contains any of these allergens."; }
+	getTitle(): string { return t("modal.allergens.title"); }
+	getSubtitle(): string { return t("modal.allergens.desc"); }
 
 	renderBody(bodyEl: HTMLElement): void {
 		const wrapper = bodyEl.createDiv("rb-tag-editor");
@@ -35,7 +36,7 @@ export class AllergensModal extends BaseModal {
 			});
 		});
 
-		const input = wrapper.createEl("input", { type: "text", placeholder: "Add allergen and press Enter…" });
+		const input = wrapper.createEl("input", { type: "text", placeholder: t("modal.allergens.addPlaceholder") });
 		input.addEventListener("keydown", (e) => {
 			if (e.key !== "Enter" || !input.value.trim()) return;
 			const val = input.value.trim();

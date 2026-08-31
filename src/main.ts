@@ -4,11 +4,13 @@
  */
 import { Plugin, TFile, WorkspaceLeaf } from "obsidian";
 import { findOrOpenLeaf } from "./utils/open-leaf";
+import { setActiveLanguage, t } from "./i18n";
 import { RecipeBoxSettings } from "./settings/settings-types";
 import { GroceryManager } from "./grocery/manager";
 import { DiscoveryCache } from "./discovery/discovery-cache";
 import { mergeSettings } from "./lifecycle/settings-persistence";
 import { resolveNotePath } from "./utils/vault-notes";
+import { noteTitleFromPath } from "./utils/note-title";
 import { registerViews } from "./lifecycle/register-views";
 import { registerVaultWatchers } from "./lifecycle/register-vault-watchers";
 import { registerAutoOpen, registerContextMenu, suppressAutoOpenOnce } from "./lifecycle/recipe-file-detection";
@@ -33,6 +35,7 @@ export default class RecipeBoxPlugin extends Plugin {
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
+		setActiveLanguage(this.settings.language);
 
 		this.manager = new GroceryManager(this.app, {
 			getSettings: () => this.settings,
@@ -115,6 +118,9 @@ export default class RecipeBoxPlugin extends Plugin {
 	}
 
 	async saveSettings(): Promise<void> {
+		// Re-resolve the active locale so a language change in the settings tab
+		// takes effect on the next render without an Obsidian reload.
+		setActiveLanguage(this.settings.language);
 		await this.saveData(this.settings);
 		this.notifyRecipeViews();
 		// Every settings change (including the folder-click toggles) flows
@@ -132,11 +138,11 @@ export default class RecipeBoxPlugin extends Plugin {
 	// entirely: the DOM nodes never leave the ribbon, so there's nothing for
 	// Obsidian to resurrect.
 	private setUpRibbonIcons(): void {
-		this.dashboardRibbonIcon = this.addRibbonIcon("tool-case", "Recipe box dashboard", () => this.activateDashboardView());
+		this.dashboardRibbonIcon = this.addRibbonIcon("tool-case", t("ribbon.dashboard"), () => this.activateDashboardView());
 		this.individualRibbonIcons = [
-			this.addRibbonIcon("shopping-cart", "Open grocery list", () => this.activateGroceryView()),
-			this.addRibbonIcon("calendar", "Open meal plan", () => this.activateMealPlanView()),
-			this.addRibbonIcon("layout-list", "Browse recipes", () => this.activateGalleryView()),
+			this.addRibbonIcon("shopping-cart", t("ribbon.openGrocery"), () => this.activateGroceryView()),
+			this.addRibbonIcon("calendar", t("ribbon.openMealPlan"), () => this.activateMealPlanView()),
+			this.addRibbonIcon("layout-list", t("ribbon.browseRecipes"), () => this.activateGalleryView()),
 		];
 		this.refreshRibbonIcons();
 	}
@@ -194,7 +200,7 @@ export default class RecipeBoxPlugin extends Plugin {
 	async navigateToGroceryCategory(category: string): Promise<void> {
 		const path = resolveNotePath(this.settings.groceryListPath);
 		let file = this.app.vault.getFileByPath(path);
-		if (!file) file = await this.app.vault.create(path, "# Grocery List\n");
+		if (!file) file = await this.app.vault.create(path, `# ${noteTitleFromPath(path)}\n`);
 		const leaf = this.app.workspace.getLeaf("tab");
 		await leaf.openFile(file);
 		window.setTimeout(() => scrollToHeading(leaf.view.containerEl, category), 50);

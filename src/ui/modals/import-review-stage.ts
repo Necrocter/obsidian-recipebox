@@ -2,6 +2,7 @@
  * Renders the review and edit stage of the import modal into the provided
  * body and footer elements (supplied by BaseModal's shell).
  */
+import { t } from "../../i18n";
 import { App, setIcon } from "obsidian";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { ExtractedRecipe } from "../../importer/recipe-extract-types";
@@ -133,28 +134,28 @@ export function renderReviewStage(
 
 	// Title stays outside every card -- it's the one field worth seeing no
 	// matter which sections are expanded or collapsed.
-	field(bodyEl, "Title", recipe.title, false, (v) => { recipe.title = v; });
+	field(bodyEl, t("field.title"), recipe.title, false, (v) => { recipe.title = v; });
 
 	// Basic info: description, timing, servings. Expanded by default -- this is
 	// the section most worth seeing right away.
-	const basicBody = importCard(bodyEl, "Basic info", true);
-	field(basicBody, "Description", recipe.description, true, (v) => { recipe.description = v; }, "rb-import-textarea rb-import-textarea--auto");
+	const basicBody = importCard(bodyEl, t("modal.import.basicInfo"), true);
+	field(basicBody, t("field.description"), recipe.description, true, (v) => { recipe.description = v; }, "rb-import-textarea rb-import-textarea--auto");
 
 	const timingValues = {
 		prep: recipe.prepTime !== null ? String(recipe.prepTime) : "",
 		cook: recipe.cookTime !== null ? String(recipe.cookTime) : "",
 		total: recipe.totalTime !== null ? String(recipe.totalTime) : "",
 	};
-	basicBody.createDiv({ cls: "rb-import-field-label", text: "Timing (minutes)" });
+	basicBody.createDiv({ cls: "rb-import-field-label", text: t("modal.import.timing") });
 	inlineRow(basicBody, [
-		{ label: "Prep", placeholder: "15", value: timingValues.prep, onInput: (v) => { recipe.prepTime = parseNum(v); timingValues.prep = v; } },
-		{ label: "Cook", placeholder: "30", value: timingValues.cook, onInput: (v) => { recipe.cookTime = parseNum(v); timingValues.cook = v; } },
-		{ label: "Total", placeholder: "45", value: timingValues.total, onInput: (v) => { recipe.totalTime = parseNum(v); timingValues.total = v; } },
+		{ label: t("modal.import.prep"), placeholder: "15", value: timingValues.prep, onInput: (v) => { recipe.prepTime = parseNum(v); timingValues.prep = v; } },
+		{ label: t("modal.import.cook"), placeholder: "30", value: timingValues.cook, onInput: (v) => { recipe.cookTime = parseNum(v); timingValues.cook = v; } },
+		{ label: t("modal.import.total"), placeholder: "45", value: timingValues.total, onInput: (v) => { recipe.totalTime = parseNum(v); timingValues.total = v; } },
 	]);
 
 	// Servings (leading-int extraction)
 	const servWrap = basicBody.createDiv({ cls: "rb-import-field" });
-	servWrap.createDiv({ cls: "rb-import-field-label", text: "Servings" });
+	servWrap.createDiv({ cls: "rb-import-field-label", text: t("field.servings") });
 	const servInput = servWrap.createEl("input", {
 		cls: "rb-import-text-input rb-import-text-input--short",
 		attr: { type: "number", min: "1", placeholder: "4" },
@@ -163,14 +164,14 @@ export function renderReviewStage(
 	servInput.addEventListener("input", () => { recipe.servings = servInput.value || null; });
 
 	// Ingredients: its own card, stacked (not side-by-side with steps).
-	const ingredientsBody = importCard(bodyEl, "Ingredients", false);
+	const ingredientsBody = importCard(bodyEl, t("modal.import.ingredients"), false);
 	const ingTa = ingredientsBody.createEl("textarea", { cls: "rb-import-textarea rb-import-textarea--auto" });
 	ingTa.value = groupsToTextarea(recipe.ingredientGroups);
 	ingTa.addEventListener("input", () => { recipe.ingredientGroups = textareaToGroups(ingTa.value); });
 	autosizeTextarea(ingTa);
 
 	// Steps: its own card.
-	const stepsBody = importCard(bodyEl, "Steps", false);
+	const stepsBody = importCard(bodyEl, t("modal.import.steps"), false);
 	const instrTa = stepsBody.createEl("textarea", { cls: "rb-import-textarea rb-import-textarea--auto" });
 	instrTa.value = groupsToTextarea(recipe.instructionGroups);
 	instrTa.addEventListener("input", () => { recipe.instructionGroups = textareaToGroups(instrTa.value); });
@@ -178,7 +179,7 @@ export function renderReviewStage(
 
 	// Notes: its own card, hide if no notes imported --
 	if (recipe.notesGroups.length > 0) {
-		const notesBody = importCard(bodyEl, "Notes", false);
+		const notesBody = importCard(bodyEl, t("modal.import.notes"), false);
 		const notesTa = notesBody.createEl("textarea", { cls: "rb-import-textarea rb-import-textarea--auto" });
 		notesTa.value = groupsToTextarea(recipe.notesGroups);
 		notesTa.addEventListener("input", () => { recipe.notesGroups = textareaToGroups(notesTa.value); });
@@ -188,30 +189,30 @@ export function renderReviewStage(
 	// Nutrition: its own card. Collapsed by default -- least essential field
 	// set, and often blank on a fresh import, so it's the one worth hiding
 	// to shorten the overall scroll unless the user wants to fill it in.
-	const nutritionBody = importCard(bodyEl, "Nutrition", false);
+	const nutritionBody = importCard(bodyEl, t("modal.import.nutrition"), false);
 	const nutValues = {
 		cal: recipe.calories !== null ? String(recipe.calories) : "",
 		prot: recipe.protein !== null ? String(recipe.protein) : "",
 		fat: recipe.fat !== null ? String(recipe.fat) : "",
 		carb: recipe.carbs !== null ? String(recipe.carbs) : "",
 	};
-	nutritionBody.createDiv({ cls: "rb-import-field-label", text: "Nutrition (per serving)" });
+	nutritionBody.createDiv({ cls: "rb-import-field-label", text: t("modal.import.nutritionPerServing") });
 	inlineRow(nutritionBody, [
-		{ label: "Calories", placeholder: "350", value: nutValues.cal, onInput: (v) => { recipe.calories = parseNum(v); } },
-		{ label: "Protein g", placeholder: "20", value: nutValues.prot, onInput: (v) => { recipe.protein = parseNum(v); } },
-		{ label: "Fat g", placeholder: "12", value: nutValues.fat, onInput: (v) => { recipe.fat = parseNum(v); } },
-		{ label: "Carbs g", placeholder: "40", value: nutValues.carb, onInput: (v) => { recipe.carbs = parseNum(v); } },
+		{ label: t("modal.import.calories"), placeholder: "350", value: nutValues.cal, onInput: (v) => { recipe.calories = parseNum(v); } },
+		{ label: t("modal.import.proteinG"), placeholder: "20", value: nutValues.prot, onInput: (v) => { recipe.protein = parseNum(v); } },
+		{ label: t("modal.import.fatG"), placeholder: "12", value: nutValues.fat, onInput: (v) => { recipe.fat = parseNum(v); } },
+		{ label: t("modal.import.carbsG"), placeholder: "40", value: nutValues.carb, onInput: (v) => { recipe.carbs = parseNum(v); } },
 	]);
 
 	// Cancel (back) first, then Save (spec section 55)
 	footerEl.createEl("button", { cls: "rb-shell-cancel-btn", text: "← back" })
 		.addEventListener("click", onBack);
 
-	const saveBtn = footerEl.createEl("button", { cls: "mod-cta", text: "Save recipe" });
+	const saveBtn = footerEl.createEl("button", { cls: "mod-cta", text: t("modal.import.saveRecipe") });
 	saveBtn.addEventListener("click", () => { void (async () => {
-		if (!recipe.title.trim()) recipe.title = "Untitled recipe";
+		if (!recipe.title.trim()) recipe.title = t("modal.import.untitledRecipe");
 		saveBtn.disabled = true;
-		saveBtn.setText("Saving…");
+		saveBtn.setText(t("modal.import.saving"));
 		try {
 			await saveRecipe(
 				app,
@@ -221,9 +222,9 @@ export function renderReviewStage(
 				(path, proceed) => {
 					new ConfirmModal(
 						app,
-						"Overwrite existing file?",
-						`A note already exists at "${path}". Replace it?`,
-						"Overwrite",
+						t("modal.import.overwriteTitle"),
+						t("modal.import.overwriteBody", { path }),
+						t("common.overwrite"),
 						{ destructive: true, onConfirm: () => void proceed() },
 					).open();
 				},
@@ -231,7 +232,7 @@ export function renderReviewStage(
 			);
 		} finally {
 			saveBtn.disabled = false;
-			saveBtn.setText("Save recipe");
+			saveBtn.setText(t("modal.import.saveRecipe"));
 		}
 	})(); });
 }

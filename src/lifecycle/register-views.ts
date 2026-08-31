@@ -3,6 +3,7 @@
  * Obsidian and wires each view's dependency interface to the live plugin instance.
  */
 import { Notice, TFile } from "obsidian";
+import { tPlural } from "../i18n";
 import RecipeBoxPlugin from "../main";
 import { suppressAutoOpenOnce } from "./recipe-file-detection";
 import { GroceryView, GROCERY_VIEW_TYPE } from "../ui/grocery-view";
@@ -49,8 +50,8 @@ function openGroceryModalForFile(plugin: RecipeBoxPlugin, file: TFile): void {
 			if (addCount > 0) await plugin.manager.addToGroceryOnly(toAdd, { kind: "recipe", path: file.path }, true);
 			for (const key of toRemoveKeys) await plugin.manager.removeFromGroceryByKey(key, true);
 			const parts: string[] = [];
-			if (addCount > 0) parts.push(`${addCount} item${addCount === 1 ? "" : "s"} added`);
-			if (toRemoveKeys.length > 0) parts.push(`${toRemoveKeys.length} item${toRemoveKeys.length === 1 ? "" : "s"} removed`);
+			if (addCount > 0) parts.push(tPlural("notice.itemsAdded.one", "notice.itemsAdded.other", addCount));
+			if (toRemoveKeys.length > 0) parts.push(tPlural("notice.itemsRemoved.one", "notice.itemsRemoved.other", toRemoveKeys.length));
 			if (parts.length > 0) new Notice(parts.join(", ") + ".");
 		},
 	).open();

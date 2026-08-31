@@ -3,6 +3,7 @@
  * structured cooking card with ingredients, instructions, metadata, and timers.
  */
 import { EventRef, Menu, Notice, setIcon, TextFileView, TFile, WorkspaceLeaf } from "obsidian";
+import { t, tPlural } from "../../i18n";
 import { RecipeViewDeps } from "./recipe-view-deps";
 import { stripFrontmatter } from "../../parser/recipe-frontmatter-strip";
 import { stripRedundantBodyContent } from "../../parser/recipe-body-clean";
@@ -47,7 +48,7 @@ export class RecipeView extends TextFileView {
 	}
 
 	getViewType(): string { return RECIPE_VIEW_TYPE; }
-	getDisplayText(): string { return this.file?.basename ?? "Recipe"; }
+	getDisplayText(): string { return this.file?.basename ?? t("rview.fallbackTitle"); }
 	getViewData(): string { return this.data; }
 
 	setViewData(data: string, _clear: boolean): void {
@@ -63,15 +64,15 @@ export class RecipeView extends TextFileView {
 	async onOpen(): Promise<void> {
 		// Cook mode sits left of the pencil so it's easy to reach while cooking.
 		// sun-dim = off (screen may sleep), sun = on (screen stays awake).
-		this.cookModeActionEl = this.addAction("sun-dim", "Cook mode: off", () => {
+		this.cookModeActionEl = this.addAction("sun-dim", t("rview.cookMode.off"), () => {
 			void this.toggleCookMode();
 		});
 
-		this.addAction("pencil", "Edit as Markdown", () => {
+		this.addAction("pencil", t("mpv.editAsMarkdown"), () => {
 			if (this.file) this.deps.editAsMarkdown(this.file.path);
 		});
 
-		this.shareActionEl = this.addAction("share-2", "Share recipe", () => {
+		this.shareActionEl = this.addAction("share-2", t("gallery.card.shareRecipe"), () => {
 			if (this.file) {
 				new ShareRecipeModal(this.app, this.file, this.deps.getSettings(), this.deps.saveSettings).open();
 			}
@@ -119,7 +120,7 @@ export class RecipeView extends TextFileView {
 
 			if (settings.cookHistoryEnabled) {
 				menu.addItem(item =>
-					item.setTitle("Cook history")
+					item.setTitle(t("rview.menu.cookHistory"))
 						.setIcon("clock")
 						.onClick(() => new CookHistoryModal(this.app, file, settings).open())
 				);
@@ -128,7 +129,7 @@ export class RecipeView extends TextFileView {
 			const planEntries = this.deps.getMealPlan().filter(e => e.recipePath === file.path);
 			const inPlan = planEntries.length > 0;
 			menu.addItem(item =>
-				item.setTitle(inPlan ? "Remove from meal plan" : "Add to meal plan")
+				item.setTitle(inPlan ? t("rview.removeFromMealPlan") : t("gallery.card.addToMealPlan"))
 					.setIcon(inPlan ? "calendar-x-2" : "calendar-plus")
 					.onClick(() => {
 						if (inPlan) {
@@ -142,19 +143,19 @@ export class RecipeView extends TextFileView {
 			);
 
 			menu.addItem(item =>
-				item.setTitle("Open as Markdown")
+				item.setTitle(t("rview.menu.openAsMarkdown"))
 					.setIcon("pencil")
 					.onClick(() => this.deps.editAsMarkdown(file.path))
 			);
 
 			menu.addItem(item =>
-				item.setTitle("Export recipe")
+				item.setTitle(t("rview.menu.exportRecipe"))
 					.setIcon("download")
 					.onClick(() => new RecipeExportModal(this.app, file, settings).open())
 			);
 
 			menu.addItem(item =>
-				item.setTitle("Share recipe")
+				item.setTitle(t("gallery.card.shareRecipe"))
 					.setIcon("share-2")
 					.onClick(() => new ShareRecipeModal(this.app, file, settings, this.deps.saveSettings).open())
 			);
@@ -168,17 +169,17 @@ export class RecipeView extends TextFileView {
 		this.cookModeActive = !this.cookModeActive;
 		if (this.cookModeActive) {
 			await this.requestWakeLock();
-			new Notice("Cook mode on · screen will stay awake");
+			new Notice(t("notice.cookModeOn"));
 		} else {
 			this.releaseWakeLock();
-			new Notice("Cook mode off");
+			new Notice(t("notice.cookModeOff"));
 		}
 		this.updateCookModeButton();
 	}
 
 	private async requestWakeLock(): Promise<void> {
 		if (!("wakeLock" in navigator)) {
-			new Notice("Screen wake lock is not supported on this device.");
+			new Notice(t("notice.wakeLockUnsupported"));
 			return;
 		}
 		try {
@@ -189,7 +190,7 @@ export class RecipeView extends TextFileView {
 				this.updateCookModeButton();
 			});
 		} catch {
-			new Notice("Could not activate screen wake lock.");
+			new Notice(t("notice.wakeLockFailed"));
 			this.cookModeActive = false;
 		}
 	}
@@ -202,7 +203,7 @@ export class RecipeView extends TextFileView {
 	private updateCookModeButton(): void {
 		if (!this.cookModeActionEl) return;
 		setIcon(this.cookModeActionEl, this.cookModeActive ? "sun" : "sun-dim");
-		this.cookModeActionEl.setAttribute("aria-label", this.cookModeActive ? "Cook mode: on" : "Cook mode: off");
+		this.cookModeActionEl.setAttribute("aria-label", this.cookModeActive ? t("rview.cookMode.on") : t("rview.cookMode.off"));
 		this.cookModeActionEl.toggleClass("rb-cook-mode-active", this.cookModeActive);
 	}
 
@@ -217,7 +218,7 @@ export class RecipeView extends TextFileView {
 		// setIcon(this.shareActionEl, isShared ? "link-2" : "share-2");
 		this.shareActionEl.setAttribute(
 			"aria-label",
-			isShared ? `Recipe shared · expires in ${status.daysLeft} day${status.daysLeft === 1 ? "" : "s"}` : "Share recipe",
+			isShared ? tPlural("rview.shareStatus.one", "rview.shareStatus.other", status.daysLeft) : t("gallery.card.shareRecipe"),
 		);
 		this.shareActionEl.toggleClass("rb-share-active", isShared);
 	}
@@ -250,7 +251,7 @@ export class RecipeView extends TextFileView {
 			const warning = wrap.createDiv({ cls: "rb-allergen-warning" });
 			const warnIcon = warning.createSpan();
 			setIcon(warnIcon, "alert-triangle");
-			warning.createSpan({ text: `Contains: ${allergenMatches.join(", ")}` });
+			warning.createSpan({ text: t("rview.allergenWarning", { list: allergenMatches.join(", ") }) });
 		}
 
 		const renderLayout = getRecipeLayoutRenderer(layoutId);

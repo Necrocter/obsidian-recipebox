@@ -3,6 +3,8 @@
  * categories, overriding the automatic dictionary-based categorisation.
  */
 import { App } from "obsidian";
+import { t } from "../../i18n";
+import { categoryLabel, canonicalCategory } from "../../grocery/category-labels";
 import { CategoryOverride } from "../../types";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { BaseModal } from "./modal-shell";
@@ -15,8 +17,8 @@ export class CategoryOverridesModal extends BaseModal {
 		private readonly getKnownCategories: () => string[],
 	) { super(app); }
 
-	getTitle(): string { return "Category overrides"; }
-	getSubtitle(): string { return "Map ingredient name substrings to specific categories."; }
+	getTitle(): string { return t("modal.categoryOverrides.title"); }
+	getSubtitle(): string { return t("modal.categoryOverrides.desc"); }
 
 	renderBody(bodyEl: HTMLElement): void {
 		const list = bodyEl.createDiv("rb-override-list");
@@ -31,12 +33,13 @@ export class CategoryOverridesModal extends BaseModal {
 
 		this.settings.categoryOverrides.forEach((override: CategoryOverride, i: number) => {
 			const row = list.createDiv("rb-list-row");
-			const matchInput = row.createEl("input", { type: "text", value: override.match, placeholder: "Ingredient substring" });
-			const catInput = row.createEl("input", { type: "text", value: override.category, placeholder: "Category" });
+			const matchInput = row.createEl("input", { type: "text", value: override.match, placeholder: t("modal.categoryOverrides.substring") });
+			// Show and offer localised labels; store the canonical English key.
+			const catInput = row.createEl("input", { type: "text", value: categoryLabel(override.category), placeholder: t("field.category") });
 
 			const datalist = catInput.createEl("datalist");
 			datalist.id = `rb-cat-datalist-${i}`;
-			knownCategories.forEach((cat) => datalist.createEl("option", { value: cat }));
+			knownCategories.forEach((cat) => datalist.createEl("option", { value: categoryLabel(cat) }));
 			catInput.setAttribute("list", datalist.id);
 
 			const del = row.createEl("button", { text: "✕" });
@@ -46,7 +49,7 @@ export class CategoryOverridesModal extends BaseModal {
 				void this.save();
 			});
 			catInput.addEventListener("change", () => {
-				this.settings.categoryOverrides[i].category = catInput.value.trim();
+				this.settings.categoryOverrides[i].category = canonicalCategory(catInput.value.trim());
 				void this.save();
 			});
 			del.addEventListener("click", () => {

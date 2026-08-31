@@ -1,4 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+// category-labels -> i18n imports getLanguage() from obsidian; stub it for Node.
+vi.mock("obsidian", () => ({ getLanguage: () => "" }));
+
 import { exportGroceryList } from "../../src/grocery/export-render";
 import type { GroceryItem } from "../../src/types";
 

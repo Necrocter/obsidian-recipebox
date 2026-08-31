@@ -5,6 +5,7 @@
  * refresh callback that re-renders the body after any mutation.
  */
 import { App, EventRef, setIcon, TFile } from "obsidian";
+import { t } from "../../i18n";
 import { RecipeBoxSettings } from "../../settings/settings-types";
 import { BaseModal } from "./modal-shell";
 import { EntryEditorModal } from "./entry-editor-modal";
@@ -23,7 +24,7 @@ export class CookHistoryModal extends BaseModal {
 		super(app);
 	}
 
-	getTitle(): string { return "Cook history"; }
+	getTitle(): string { return t("modal.cookHistory.title"); }
 	getIcon(): string { return "history"; }
 	getSubtitle(): string { return this.recipeFile.basename; }
 	getContentClasses(): string[] { return ["rb-ch-modal"]; }
@@ -36,7 +37,7 @@ export class CookHistoryModal extends BaseModal {
 	renderFooter(footerEl: HTMLElement): void {
 		const addBtn = footerEl.createEl("button", { cls: "mod-cta" });
 		setIcon(addBtn.createSpan({ cls: "rb-ch-btn-icon" }), "plus");
-		addBtn.createSpan({ text: "Add entry" });
+		addBtn.createSpan({ text: t("modal.cookHistory.addEntry") });
 		addBtn.addEventListener("click", () => {
 			new EntryEditorModal(this.app, this.recipeFile, this.settings, null, async (date, note, image) => {
 				await addCookHistoryEntry(this.app, this.recipeFile, this.settings, date, note, image ?? null);
@@ -45,13 +46,13 @@ export class CookHistoryModal extends BaseModal {
 		});
 
 		const closeBtn = footerEl.createEl("button", { cls: "rb-shell-cancel-btn" });
-		closeBtn.createSpan({ text: "Close" });
+		closeBtn.createSpan({ text: t("common.close") });
 		closeBtn.addEventListener("click", () => this.close());
 	}
 
 	override onOpen(): void {
 		super.onOpen();
-		// "Mark as cooked" writes a new entry through a separate MarkCookedModal
+		// t("modal.markCooked.title") writes a new entry through a separate MarkCookedModal
 		// instance with no reference back to this one, so listen for the file
 		// change itself rather than trying to thread a refresh callback through
 		// that flow.
