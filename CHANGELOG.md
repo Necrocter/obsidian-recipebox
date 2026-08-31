@@ -1,3 +1,21 @@
+## 0.1.12-es.8 -- Necrocter/obsidian-recipebox fork
+
+Tracks upstream 0.1.12. Fork iteration `es.8`.
+
+### Bug Fixes
+
+* **grocery:** for recipes in the RecipeMD/house layout (no `## Ingredientes`
+  section; bullets under `### Para ...` sub-headings between `---` rules), the
+  meal-plan -> grocery auto-add now reads quantities from the body bullets and
+  honours `#ignorar-ingrediente` on them, instead of dumping the bare
+  frontmatter names -- so pantry staples (sal, aceite, pimienta, agua) no
+  longer land on the shopping list, and real items carry their amounts. A name
+  is matched to its bullet by equality or leading-word prefix
+  (`cebolla` <- `cebolla mediana`); combined `sal y pimienta ...` lines are
+  split.
+
+---
+
 ## 0.1.12-es.7 -- Necrocter/obsidian-recipebox fork
 
 Tracks upstream 0.1.12. Fork iteration `es.7`.
