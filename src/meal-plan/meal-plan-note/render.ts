@@ -16,6 +16,23 @@ function isQueueLabel(day: string): boolean {
 	return l === "queue" || l === "meal plan queue" || l === "unscheduled";
 }
 
+/**
+ * Join lines into the final note text: no leading blank lines, never more than
+ * one blank line in a row, exactly one trailing newline. Every write path runs
+ * through this so repeated add/remove cycles can't accrete blank lines after
+ * the H1 (the bug where "## Lunes" kept getting pushed further down).
+ */
+export function joinNoteLines(lines: string[]): string {
+	const out: string[] = [];
+	for (const line of lines) {
+		const blank = line.trim() === "";
+		if (blank && (out.length === 0 || out[out.length - 1] === "")) continue;
+		out.push(blank ? "" : line);
+	}
+	while (out.length > 0 && out[out.length - 1] === "") out.pop();
+	return out.join("\n") + "\n";
+}
+
 export function dayRank(day: string | undefined): number {
 	if (!day || isQueueLabel(day)) return 0;
 	// Accept a localised heading straight from the note ("Lunes") as well as
@@ -73,7 +90,7 @@ export function insertMealPlanEntryIntoText(noteText: string, entry: MealPlanEnt
 		let insertAt = endIdx;
 		while (insertAt > headingIdx + 1 && !lines[insertAt - 1].trim()) insertAt--;
 		lines.splice(insertAt, 0, newLine);
-		return lines.join("\n");
+		return joinNoteLines(lines);
 	}
 
 	// New section — find position by day-rank ordering
@@ -90,7 +107,7 @@ export function insertMealPlanEntryIntoText(noteText: string, entry: MealPlanEnt
 	} else {
 		lines.splice(insertSectionAt, 0, newLine);
 	}
-	return lines.join("\n");
+	return joinNoteLines(lines);
 }
 
 export function writeMealPlanNote(
@@ -129,5 +146,5 @@ export function writeMealPlanNote(
 		lines.push("");
 	}
 
-	return lines.join("\n").trimEnd();
+	return joinNoteLines(lines);
 }

@@ -9,7 +9,7 @@ import { readNoteOrEmpty, writeNote, resolveNotePath } from "../../utils/vault-n
 import { noteTitleFromPath, isH1Line } from "../../utils/note-title";
 import { dayLabel } from "../../i18n";
 import { parseMealPlanNote } from "./parse";
-import { insertMealPlanEntryIntoText } from "./render";
+import { insertMealPlanEntryIntoText, joinNoteLines } from "./render";
 
 function resolveRecipeName(app: App, filePath: string): string {
 	return app.vault.getFileByPath(filePath)?.basename ?? filePath.split("/").pop()?.replace(/\.md$/, "") ?? filePath;
@@ -64,6 +64,8 @@ export async function removeMealPlanEntry(
 
 	// Rebuild with a filename-derived H1 and language-correct day headings, so
 	// removing an entry does not revert the note to "# Meal Plan" / "## Monday".
+	// joinNoteLines collapses the blank lines this re-emission would otherwise
+	// stack up after the H1 on every remove.
 	const lines: string[] = [`# ${noteTitleFromPath(settings.mealPlanPath)}`, ""];
 	for (const section of sections) {
 		if (section.header) lines.push(`## ${dayLabel(section.header)}`);
@@ -72,5 +74,5 @@ export async function removeMealPlanEntry(
 			lines.push(l.raw);
 		}
 	}
-	await writeNote(app, path, lines.join("\n").trimEnd());
+	await writeNote(app, path, joinNoteLines(lines));
 }
