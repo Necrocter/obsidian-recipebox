@@ -9,6 +9,7 @@ import { RecipeBoxSettings } from "../settings/settings-types";
 import { generateEntryId, localDateISO } from "../utils/date";
 import { addToGroceryNote, removeFromGroceryNote } from "../grocery/grocery-note/write";
 import { insertMealPlanEntry, removeMealPlanEntry } from "./meal-plan-note/write";
+import { suppressMealPlanSync } from "../lifecycle/meal-plan-sync-guard";
 import { recordContributions, unrecordContributions, severScheduleLinks } from "../grocery/contribution-history";
 
 function resolveRecipeName(app: App, filePath: string): string {
@@ -108,7 +109,10 @@ export async function setMealPlanEntryMealType(
 	if (idx < 0) return;
 
 	const entry = settings.state.mealPlan[idx];
-	// Rewrite the note line: remove old, insert updated
+	// Rewrite the note line: remove old, insert updated. Suppress the watcher's
+	// reconciliation across the gap where the note has no line for this entry --
+	// otherwise it deletes the entry from state (see meal-plan-sync-guard).
+	suppressMealPlanSync();
 	await removeMealPlanEntry(app, entry, settings);
 	settings.state.mealPlan[idx] = { ...entry, meal: mealType?.trim() || undefined };
 	await save();
@@ -152,6 +156,7 @@ export async function editCustomMealEntry(
 	const idx = settings.state.mealPlan.findIndex(e => e.id === id);
 	if (idx < 0) return;
 	const entry = settings.state.mealPlan[idx];
+	suppressMealPlanSync(); // remove-then-insert; keep the watcher out of the gap
 	await removeMealPlanEntry(app, entry, settings);
 	const updated: MealPlanEntry = {
 		...entry,
@@ -193,6 +198,7 @@ export async function rescheduleMealPlanEntry(
 
 	const entry = settings.state.mealPlan[idx];
 	// Remove from old day section in note (pass old day so we target the right section when duplicates exist)
+	suppressMealPlanSync(); // remove-then-insert; keep the watcher out of the gap
 	await removeMealPlanEntry(app, entry, settings);
 
 	// Update day in state

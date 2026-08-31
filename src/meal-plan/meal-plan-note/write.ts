@@ -10,7 +10,6 @@ import { noteTitleFromPath, isH1Line } from "../../utils/note-title";
 import { dayLabel } from "../../i18n";
 import { parseMealPlanNote } from "./parse";
 import { insertMealPlanEntryIntoText, joinNoteLines } from "./render";
-import { suppressMealPlanSync } from "../../lifecycle/meal-plan-sync-guard";
 
 function resolveRecipeName(app: App, filePath: string): string {
 	return app.vault.getFileByPath(filePath)?.basename ?? filePath.split("/").pop()?.replace(/\.md$/, "") ?? filePath;
@@ -30,9 +29,6 @@ export async function insertMealPlanEntry(app: App, entry: MealPlanEntry, settin
 	}
 
 	const text = await readNoteOrEmpty(app, path) || `# ${noteTitleFromPath(settings.mealPlanPath)}\n`;
-	// This is a plugin-initiated write; keep the vault watcher from reconciling
-	// state against the note mid-edit (see meal-plan-sync-guard).
-	suppressMealPlanSync();
 	await writeNote(app, path, insertMealPlanEntryIntoText(text, entry, name, settings));
 }
 
@@ -78,6 +74,5 @@ export async function removeMealPlanEntry(
 			lines.push(l.raw);
 		}
 	}
-	suppressMealPlanSync();
 	await writeNote(app, path, joinNoteLines(lines));
 }
