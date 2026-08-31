@@ -10,6 +10,7 @@ import { App, Events } from "obsidian";
 import { ContributionMap, GroceryContributionSource, GroceryItem, GroceryItemEntry, MealPlanEntry } from "../types";
 import { writeNote, resolveNotePath } from "../utils/vault-notes";
 import { noteTitleFromPath } from "../utils/note-title";
+import { suppressMealPlanSync } from "../lifecycle/meal-plan-sync-guard";
 import { rebuildGroceryItems } from "./grocery-rebuild";
 import { isGroupCollapsed, setGroupCollapsed, autoCollapseGroups } from "./group-collapse";
 import { addToMealPlan, addToGroceryOnly, removeFromMealPlan, rescheduleMealPlanEntry, addMealPlanEntry, addCustomMealEntry, editCustomMealEntry, setMealPlanEntryMealType, clearMealPlan } from "../meal-plan/meal-plan-actions";
@@ -94,6 +95,7 @@ export class GroceryManager extends Events {
 
 	async clearMealPlan(alsoRemoveFromGrocery: boolean): Promise<number> {
 		const count = await clearMealPlan(this.app, alsoRemoveFromGrocery, this.sink.getSettings(), () => this.sink.save());
+		suppressMealPlanSync();
 		await writeNote(this.app, resolveNotePath(this.sink.getSettings().mealPlanPath), `# ${noteTitleFromPath(this.sink.getSettings().mealPlanPath)}\n`);
 		await this.refresh();
 		return count;
