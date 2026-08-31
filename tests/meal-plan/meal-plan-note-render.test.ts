@@ -4,7 +4,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 // imports getLanguage() from obsidian; Node can't resolve the real package.
 vi.mock("obsidian", () => ({ getLanguage: () => "en" }));
 
-import { dayRank, renderMealPlanLine, insertMealPlanEntryIntoText, writeMealPlanNote } from "../../src/meal-plan/meal-plan-note/render";
+import { dayRank, renderMealPlanLine, insertMealPlanEntryIntoText, writeMealPlanNote, joinNoteLines } from "../../src/meal-plan/meal-plan-note/render";
 import { DEFAULT_SETTINGS } from "../../src/settings/settings-defaults";
 import { setActiveLanguage } from "../../src/i18n";
 import type { MealPlanEntry } from "../../src/types";
@@ -60,7 +60,23 @@ describe("renderMealPlanLine", () => {
 	});
 });
 
+describe("joinNoteLines", () => {
+	it("drops leading blanks, collapses runs of blank lines, and ends with one newline", () => {
+		expect(joinNoteLines(["", "", "# Plan", "", "", "", "## Lunes", "- [ ] [[X]]", "", ""]))
+			.toBe("# Plan\n\n## Lunes\n- [ ] [[X]]\n");
+	});
+});
+
 describe("insertMealPlanEntryIntoText", () => {
+	it("does not accrete blank lines after the H1 across repeated inserts", () => {
+		let note = "# Plan de comida\n\n\n\n\n\n## Lunes\n";
+		for (let i = 0; i < 4; i++) {
+			note = insertMealPlanEntryIntoText(note, entry({ recipePath: `R${i}.md`, day: "Monday" }), `R${i}`, DEFAULT_SETTINGS);
+		}
+		expect(note).not.toMatch(/\n\n\n/);
+		expect(note.indexOf("## Monday")).toBe("# Plan de comida\n\n".length);
+	});
+
 	it("inserts a new line into an existing day section", () => {
 		const noteText = "# Meal Plan\n\n## Monday\n- [ ] [[Pasta]]\n";
 		const e = entry({ recipePath: "Salad.md", day: "Monday" });
