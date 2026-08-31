@@ -24,20 +24,37 @@ function renderGroup(
 	if (terms.length === 0) return;
 	const group = parent.createDiv({ cls: "rb-me-group" });
 
-	// The label is the "show all labels" toggle.
+	// The label is the "show / hide all labels" toggle.
 	const toggle = group.createSpan({
 		cls: "rb-me-group-toggle",
 		attr: { role: "button", tabindex: "0", "aria-label": t("rview.methodsEquipment.toggleAll") },
 	});
 	toggle.createSpan({ cls: "rb-me-group-label", text: label });
 	setIcon(toggle.createSpan({ cls: "rb-me-chevron" }), "chevron-right");
-	const toggleAll = (): void => { group.classList.toggle("is-expanded"); };
+
+	const chips = group.createDiv({ cls: "rb-me-chips" });
+
+	const anyOpen = (): boolean =>
+		group.classList.contains("is-expanded") || !!chips.querySelector(".rb-me-chip.is-open");
+
+	// Chevron points "open" whenever any label is showing, from either path.
+	const syncChevron = (): void => { group.classList.toggle("is-open", anyOpen()); };
+
+	// Toggle acts as "hide everything" if anything is open, otherwise "show all".
+	const toggleAll = (): void => {
+		if (anyOpen()) {
+			group.classList.remove("is-expanded");
+			chips.querySelectorAll(".rb-me-chip.is-open").forEach((c) => c.classList.remove("is-open"));
+		} else {
+			group.classList.add("is-expanded");
+		}
+		syncChevron();
+	};
 	toggle.addEventListener("click", toggleAll);
 	toggle.addEventListener("keydown", (e: KeyboardEvent) => {
 		if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleAll(); }
 	});
 
-	const chips = group.createDiv({ cls: "rb-me-chips" });
 	for (const term of terms) {
 		const display = titleCase(term);
 		const icon = iconFor(term);
@@ -48,7 +65,7 @@ function renderGroup(
 		setIcon(chip.createSpan({ cls: "rb-me-icon" }), icon);
 		chip.createSpan({ cls: "rb-me-label", text: display });
 
-		const toggleOne = (): void => { chip.classList.toggle("is-open"); };
+		const toggleOne = (): void => { chip.classList.toggle("is-open"); syncChevron(); };
 		chip.addEventListener("click", toggleOne);
 		chip.addEventListener("keydown", (e: KeyboardEvent) => {
 			if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleOne(); }

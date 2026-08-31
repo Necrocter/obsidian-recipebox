@@ -6102,7 +6102,8 @@ input[type='search'].rb-gallery-search {
   transition: transform 0.12s ease;
 }
 
-.rb-me-group.is-expanded .rb-me-chevron svg {
+.rb-me-group.is-expanded .rb-me-chevron svg,
+.rb-me-group.is-open .rb-me-chevron svg {
   transform: rotate(180deg);
 }
 
