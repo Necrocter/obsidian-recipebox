@@ -1,8 +1,8 @@
 /**
- * Renders the recipe's cooking methods and equipment as rows of icon chips
- * beneath the meta banner. Each chip shows only its icon; tapping it reveals the
- * label (also available as a hover tooltip). Icons come from
- * method-equipment-icons.ts. No-op when the toggle is off or both lists empty.
+ * Renders the recipe's cooking methods and equipment as flat rows of icons
+ * beneath the meta banner. Icons are always visible; the group label doubles as
+ * a toggle that reveals every label at once, and tapping a single icon reveals
+ * just its label. No-op when the toggle is off or both lists are empty.
  */
 import { setIcon } from "obsidian";
 import { t } from "../../i18n";
@@ -23,15 +23,19 @@ function renderGroup(
 ): void {
 	if (terms.length === 0) return;
 	const group = parent.createDiv({ cls: "rb-me-group" });
-	group.createSpan({ cls: "rb-me-group-label", text: label });
 
-	// Master toggle: reveal / hide every label in this group at once.
-	const groupToggle = group.createEl("button", {
-		cls: "rb-me-toggle",
-		attr: { "aria-label": t("rview.methodsEquipment.toggleAll"), title: t("rview.methodsEquipment.toggleAll") },
+	// The label is the "show all labels" toggle.
+	const toggle = group.createSpan({
+		cls: "rb-me-group-toggle",
+		attr: { role: "button", tabindex: "0", "aria-label": t("rview.methodsEquipment.toggleAll") },
 	});
-	setIcon(groupToggle, "chevron-right");
-	groupToggle.addEventListener("click", () => group.classList.toggle("is-expanded"));
+	toggle.createSpan({ cls: "rb-me-group-label", text: label });
+	setIcon(toggle.createSpan({ cls: "rb-me-chevron" }), "chevron-right");
+	const toggleAll = (): void => { group.classList.toggle("is-expanded"); };
+	toggle.addEventListener("click", toggleAll);
+	toggle.addEventListener("keydown", (e: KeyboardEvent) => {
+		if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleAll(); }
+	});
 
 	const chips = group.createDiv({ cls: "rb-me-chips" });
 	for (const term of terms) {
@@ -44,10 +48,10 @@ function renderGroup(
 		setIcon(chip.createSpan({ cls: "rb-me-icon" }), icon);
 		chip.createSpan({ cls: "rb-me-label", text: display });
 
-		const toggle = (): void => { chip.classList.toggle("is-open"); };
-		chip.addEventListener("click", toggle);
+		const toggleOne = (): void => { chip.classList.toggle("is-open"); };
+		chip.addEventListener("click", toggleOne);
 		chip.addEventListener("keydown", (e: KeyboardEvent) => {
-			if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+			if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleOne(); }
 		});
 
 		if (icon === fallback) console.debug(`[recipe-box] no icon mapped for "${term}"`);
