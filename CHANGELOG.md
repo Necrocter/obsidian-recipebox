@@ -1,3 +1,21 @@
+## 0.1.12-es.10 -- Necrocter/obsidian-recipebox fork
+
+Tracks upstream 0.1.12. Fork iteration `es.10`.
+
+### Bug Fixes
+
+* **meal plan:** dragging a recipe onto a day column in the week grid no longer
+  silently fails. The snapshotted file path was being wiped by a `dragleave`
+  that fires while the cursor is still inside the column, the `dragManager`
+  fallback only looked at two payload keys, and an unresolved drop was
+  forwarded as a bogus card reschedule. The path is now captured on
+  dragenter/dragover and only reset on drop, the fallback searches the whole
+  drag payload for a markdown file (and tries wikilink / note-name
+  resolution), and a drop that still can't be read shows a notice instead of
+  doing nothing.
+
+---
+
 ## 0.1.12-es.9 -- Necrocter/obsidian-recipebox fork
 
 Tracks upstream 0.1.12. Fork iteration `es.9`.
