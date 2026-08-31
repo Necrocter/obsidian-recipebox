@@ -6086,24 +6086,48 @@ input[type='search'].rb-gallery-search {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  height: 1.6rem;
-  padding: 0 0.6rem;
+  height: 1.7rem;
+  width: 1.7rem;
+  padding: 0;
   border-radius: 999px;
   background: var(--background-secondary);
   border: 1px solid var(--background-modifier-border);
   font-size: 0.8rem;
   color: var(--text-normal);
   white-space: nowrap;
+  cursor: pointer;
+  transition: width 0.12s ease, background 0.12s ease;
+}
+
+.rb-me-chip:hover {
+  background: var(--background-modifier-hover);
 }
 
 .rb-me-chip .rb-me-icon {
   display: inline-flex;
+  flex: 0 0 auto;
+  width: 1.7rem;
+  justify-content: center;
   color: var(--text-muted);
 }
 
 .rb-me-chip .rb-me-icon svg {
-  width: 0.9rem;
-  height: 0.9rem;
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+/* Label hidden until the chip is tapped. */
+.rb-me-chip .rb-me-label {
+  display: none;
+}
+
+.rb-me-chip.is-open {
+  width: auto;
+  padding-right: 0.65rem;
+}
+
+.rb-me-chip.is-open .rb-me-label {
+  display: inline;
 }
 
 /* ── Force-hidden utility ──────────────────────────────────────────────────
