@@ -25,6 +25,7 @@ export interface DashboardViewDeps {
 	openImportModal: () => void;
 	openAddGroceryItemModal: () => void;
 	openSuggestMealModal: () => void;
+	openPantryMatchModal: () => void;
 
 	// grocery preview
 	toggleChecked: (key: string, checked: boolean) => void;

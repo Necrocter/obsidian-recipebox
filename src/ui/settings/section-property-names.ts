@@ -67,6 +67,16 @@ function renderBody(
 			})
 		);
 
+	new Setting(body)
+		.setName(t("set.pn.ingredientsList.name"))
+		.setDesc(t("set.pn.ingredientsList.desc"))
+		.addText((c) =>
+			c.setValue(settings.ingredientsListProperty).onChange(async (v) => {
+				settings.ingredientsListProperty = v.trim() || "ingredients";
+				await save();
+			})
+		);
+
 	if (settings.cookHistoryEnabled) {
 		new Setting(body)
 			.setName(t("set.pn.lastMade.name"))

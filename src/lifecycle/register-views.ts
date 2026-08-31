@@ -5,6 +5,7 @@
 import { Notice, TFile } from "obsidian";
 import { tPlural } from "../i18n";
 import RecipeBoxPlugin from "../main";
+import { openPantryMatchModal } from "./pantry-actions";
 import { suppressAutoOpenOnce } from "./recipe-file-detection";
 import { GroceryView, GROCERY_VIEW_TYPE } from "../ui/grocery-view";
 import { RecipeView, RECIPE_VIEW_TYPE } from "../ui/recipe-view/recipe-view";
@@ -308,6 +309,7 @@ export function registerViews(plugin: RecipeBoxPlugin): void {
 						openMealPlan: () => { void plugin.activateMealPlanView(); },
 					}).open();
 				},
+				openPantryMatchModal: () => openPantryMatchModal(plugin),
 				toggleChecked: (key, checked) => { void plugin.manager.toggleChecked(key, checked); },
 				openAddToMealPlanModal: (file: TFile) => {
 					new AddToMealPlanModal(

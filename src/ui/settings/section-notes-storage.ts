@@ -78,6 +78,17 @@ export function renderSectionNotesStorage(
 			})
 		);
 
+	const pantrySetting = new Setting(container)
+		.setName(t("set.notes.pantryPath.name"))
+		.setDesc(t("set.notes.pantryPath.desc"));
+	pantrySetting.addText((c) => {
+		c.setValue(settings.pantryNotePath).onChange(async (v) => {
+			settings.pantryNotePath = v.trim() || localeDefault("pantryNotePath");
+			await save();
+		});
+		new NotePathSuggest(app, c.inputEl);
+	});
+
 	new Setting(container)
 		.setName(t("set.notes.ignoreTag.name"))
 		.setDesc(t("set.notes.ignoreTag.desc"))

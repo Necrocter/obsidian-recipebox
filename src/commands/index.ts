@@ -15,6 +15,7 @@ import { ShareRecipeModal } from "../ui/modals/share-recipe-modal";
 import { isRecipeFile } from "../lifecycle/recipe-file-detection";
 import { RecipeView, RECIPE_VIEW_TYPE } from "../ui/recipe-view/recipe-view";
 import { multiDayMealPlanDeps } from "../lifecycle/register-views";
+import { openPantryMatchModal, openPantryAddModal, syncPantryFromGrocery } from "../lifecycle/pantry-actions";
 
 export function registerCommands(plugin: RecipeBoxPlugin): void {
 	plugin.addCommand({
@@ -129,6 +130,24 @@ export function registerCommands(plugin: RecipeBoxPlugin): void {
 			new ShareRecipeModal(plugin.app, file, plugin.settings, () => plugin.saveSettings()).open();
 			return true;
 		},
+	});
+
+	plugin.addCommand({
+		id: "pantry-match",
+		name: t("command.pantryMatch"),
+		callback: () => openPantryMatchModal(plugin),
+	});
+
+	plugin.addCommand({
+		id: "pantry-add",
+		name: t("command.pantryAdd"),
+		callback: () => openPantryAddModal(plugin),
+	});
+
+	plugin.addCommand({
+		id: "pantry-sync-from-grocery",
+		name: t("command.pantrySync"),
+		callback: () => { void syncPantryFromGrocery(plugin); },
 	});
 
 	plugin.addCommand({

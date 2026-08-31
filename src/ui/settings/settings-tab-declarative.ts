@@ -160,6 +160,12 @@ export function buildDeclarativeSettingDefinitions(
 					aliases: ["ignore ingredient", "exclude ingredient", "ignorar ingrediente"],
 					control: { type: "text", key: "ignoreIngredientTag" },
 				},
+				{
+					name: t("set.notes.pantryPath.name"),
+					desc: t("set.notes.pantryPath.desc"),
+					aliases: ["pantry", "despensa", "what can i cook"],
+					control: { type: "text", key: "pantryNotePath" },
+				},
 			],
 		},
 		{
