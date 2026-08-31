@@ -14,6 +14,18 @@ describe("getRecipeMetaAliases", () => {
 		expect(aliases.favorite).toEqual(expect.arrayContaining(["favourite", "starred"]));
 	});
 
+	it("exposes methods / equipment alias sets, user key first", () => {
+		const aliases = getRecipeMetaAliases({ ...DEFAULT_SETTINGS });
+		expect(aliases.methods[0]).toBe("metodos");
+		expect(aliases.methods).toEqual(expect.arrayContaining(["methods", "method"]));
+		expect(aliases.equipment[0]).toBe("equipo");
+		expect(aliases.equipment).toEqual(expect.arrayContaining(["equipment", "tools", "utensils"]));
+
+		const custom = getRecipeMetaAliases({ ...DEFAULT_SETTINGS, methodsProperty: "tecnicas", equipmentProperty: "utensilios" });
+		expect(custom.methods[0]).toBe("tecnicas");
+		expect(custom.equipment[0]).toBe("utensilios");
+	});
+
 	it("de-duplicates when the configured property matches a fallback", () => {
 		const settings = { ...DEFAULT_SETTINGS, favoriteProperty: "favourite" };
 		const aliases = getRecipeMetaAliases(settings);

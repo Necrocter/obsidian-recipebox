@@ -70,6 +70,17 @@ export function renderSectionRecipeView(
 		);
 
 	new Setting(container)
+		.setName(t("set.rv.showMethodsEquipment.name"))
+		.setDesc(t("set.rv.showMethodsEquipment.desc"))
+		.addToggle((c) =>
+			c.setValue(settings.showMethodsEquipment).onChange(async (v) => {
+				settings.showMethodsEquipment = v;
+				await save();
+				rerender();
+			})
+		);
+
+	new Setting(container)
 		.setName(t("set.rv.showTags.name"))
 		.addToggle((c) =>
 			c.setValue(settings.showTagsInHeader).onChange(async (v) => {

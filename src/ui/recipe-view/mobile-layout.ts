@@ -17,6 +17,7 @@ import { renderFavoriteToggle } from "./favorite-toggle";
 import { renderMealPlanToggle } from "./meal-plan-toggle";
 import { renderMarkCookedButton } from "./mark-cooked-button";
 import { renderMealPlanStatus } from "./meal-plan-status";
+import { renderMethodsEquipmentSection } from "./methods-equipment-section";
 import { renderStarRating } from "./rating";
 import { renderBadgeRow } from "./badges";
 import { renderIngredientsSection } from "./ingredients-section";
@@ -452,6 +453,8 @@ export async function renderMobileLayout(
 	// Meal plan status notice
 	const planEntries = deps.getMealPlan().filter(e => e.recipePath === file.path);
 	renderMealPlanStatus(container, app, file, planEntries, deps);
+
+	renderMethodsEquipmentSection(container, meta, settings);
 
 	// Tabs
 	const tabBar = container.createDiv({ cls: "rb-tab-bar" });

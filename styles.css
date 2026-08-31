@@ -6049,6 +6049,63 @@ input[type='search'].rb-gallery-search {
   }
 }
 
+/* ── Methods & equipment ──────────────────────────────────────────────────
+   Icon + label chips beneath the meta banner in the recipe view. Chip sizing
+   mirrors .rb-badge so it sits consistently with the header badges. */
+.rb-me-section {
+  margin: 0.5rem 0 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.rb-me-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.rb-me-group-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  flex: 0 0 auto;
+  margin-right: 0.1rem;
+}
+
+.rb-me-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.rb-me-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  height: 1.6rem;
+  padding: 0 0.6rem;
+  border-radius: 999px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  font-size: 0.8rem;
+  color: var(--text-normal);
+  white-space: nowrap;
+}
+
+.rb-me-chip .rb-me-icon {
+  display: inline-flex;
+  color: var(--text-muted);
+}
+
+.rb-me-chip .rb-me-icon svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
 /* ── Force-hidden utility ──────────────────────────────────────────────────
    Keep this rule last in the file. It's applied alongside other layout
    classes (e.g. .rb-modal-fields sets display: flex) to force-hide an

@@ -67,6 +67,26 @@ function renderBody(
 			})
 		);
 
+	new Setting(body)
+		.setName(t("set.pn.methods.name"))
+		.setDesc(t("set.pn.methods.desc"))
+		.addText((c) =>
+			c.setValue(settings.methodsProperty).onChange(async (v) => {
+				settings.methodsProperty = v.trim() || "metodos";
+				await save();
+			})
+		);
+
+	new Setting(body)
+		.setName(t("set.pn.equipment.name"))
+		.setDesc(t("set.pn.equipment.desc"))
+		.addText((c) =>
+			c.setValue(settings.equipmentProperty).onChange(async (v) => {
+				settings.equipmentProperty = v.trim() || "equipo";
+				await save();
+			})
+		);
+
 	if (settings.cookHistoryEnabled) {
 		new Setting(body)
 			.setName(t("set.pn.lastMade.name"))

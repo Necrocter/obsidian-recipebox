@@ -16,6 +16,7 @@ import { registerVaultWatchers } from "./lifecycle/register-vault-watchers";
 import { registerAutoOpen, registerContextMenu, suppressAutoOpenOnce } from "./lifecycle/recipe-file-detection";
 import { registerMarkdownRecipeButton } from "./lifecycle/markdown-recipe-button";
 import { registerCommands } from "./commands/index";
+import { registerRbIcons } from "./ui/icons/register-rb-icons";
 import { RecipeBoxSettingsTab } from "./ui/settings/settings-tab";
 import { GROCERY_VIEW_TYPE } from "./ui/grocery-view";
 import { RECIPE_VIEW_TYPE, RecipeView } from "./ui/recipe-view/recipe-view";
@@ -36,6 +37,7 @@ export default class RecipeBoxPlugin extends Plugin {
 	async onload(): Promise<void> {
 		await this.loadSettings();
 		setActiveLanguage(this.settings.language);
+		registerRbIcons();
 
 		this.manager = new GroceryManager(this.app, {
 			getSettings: () => this.settings,

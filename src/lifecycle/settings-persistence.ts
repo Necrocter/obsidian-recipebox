@@ -289,6 +289,8 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 		imageProperty: str(r.imageProperty, d.imageProperty),
 		sourceProperty: str(r.sourceProperty, d.sourceProperty),
 		ingredientsListProperty: str(r.ingredientsListProperty, d.ingredientsListProperty),
+		methodsProperty: str(r.methodsProperty, d.methodsProperty),
+		equipmentProperty: str(r.equipmentProperty, d.equipmentProperty),
 		ratingProperty: str(r.ratingProperty, d.ratingProperty),
 		caloriesProperty: str(r.caloriesProperty, d.caloriesProperty),
 		proteinProperty: str(r.proteinProperty, d.proteinProperty),
@@ -320,6 +322,7 @@ export function mergeSettings(raw: unknown): RecipeBoxSettings {
 			? (r.headerBadges as unknown[]).map(validateBadge).filter((x): x is CustomBadge => x !== null)
 			: d.headerBadges,
 		showRecipeSource: bool(r.showRecipeSource, d.showRecipeSource),
+		showMethodsEquipment: bool(r.showMethodsEquipment, d.showMethodsEquipment),
 		showTagsInHeader: bool(r.showTagsInHeader, d.showTagsInHeader),
 		prefixTagsWithHash: bool(r.prefixTagsWithHash, d.prefixTagsWithHash),
 		showFullTagPath: bool(r.showFullTagPath, d.showFullTagPath),

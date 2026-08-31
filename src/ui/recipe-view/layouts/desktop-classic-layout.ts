@@ -6,6 +6,7 @@ import { MarkdownRenderer } from "obsidian";
 import { findOrOpenLeaf } from "../../../utils/open-leaf";
 import { renderMetaBanner } from "../meta-banner";
 import { renderMealPlanStatus } from "../meal-plan-status";
+import { renderMethodsEquipmentSection } from "../methods-equipment-section";
 import { renderIngredientsSection } from "../ingredients-section";
 import { renderImageCard } from "../image-resolve";
 import { renderInstructionsSection } from "../instructions-section";
@@ -34,6 +35,7 @@ export const renderDesktopClassicLayout: RecipeLayoutRenderer = async ({
     );
 
     renderMealPlanStatus(container, app, context.file, context.mealPlanEntries, deps);
+    renderMethodsEquipmentSection(container, context.meta, context.settings);
 
     if (context.beforeContent.trim()) {
         await MarkdownRenderer.render(app, context.beforeContent, container, context.file.path, component);

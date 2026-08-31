@@ -15,6 +15,8 @@ export interface RecipeMetaAliases {
 	favorite: string[];
 	cookedCount: string[];
 	servings: string[];
+	methods: string[];
+	equipment: string[];
 }
 
 function uniqueKeys(keys: string[]): string[] {
@@ -44,5 +46,7 @@ export function getRecipeMetaAliases(settings: RecipeBoxSettings): RecipeMetaAli
 		favorite: uniqueKeys([settings.favoriteProperty, RECIPE_FRONTMATTER.favorite, "favourite", "starred"]),
 		cookedCount: uniqueKeys([settings.cookedCountProperty, RECIPE_FRONTMATTER.cookedCount, "cooked_count", "timesCooked", "times_cooked"]),
 		servings: uniqueKeys([settings.servingsProperty, RECIPE_FRONTMATTER.servings, "serves", "serving", "yield", "portions"]),
+		methods: uniqueKeys([settings.methodsProperty, "metodos", "métodos", "methods", "method", "techniques"]),
+		equipment: uniqueKeys([settings.equipmentProperty, "equipo", "equipment", "tools", "utensils", "utensilios"]),
 	};
 }

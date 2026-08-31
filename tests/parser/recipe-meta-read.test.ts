@@ -48,6 +48,17 @@ describe("readRecipeMeta", () => {
 		expect(readRecipeMeta(cache, DEFAULT_SETTINGS).diet).toEqual(["vegan", "gluten-free"]);
 	});
 
+	it("reads methods / equipment as normalized string arrays from metodos / equipo", () => {
+		const cache = cacheWith({ metodos: ["Licuar", "Hornear"], equipo: "Licuadora; Horno" });
+		const meta = readRecipeMeta(cache, DEFAULT_SETTINGS);
+		expect(meta.methods).toEqual(["licuar", "hornear"]);
+		expect(meta.equipment).toEqual(["licuadora", "horno"]);
+	});
+
+	it("methods / equipment default to empty arrays", () => {
+		expect(readRecipeMeta(cacheWith({}), DEFAULT_SETTINGS)).toMatchObject({ methods: [], equipment: [] });
+	});
+
 	it("derives total time from prep + cook when total is absent", () => {
 		const cache = cacheWith({ prepTime: 10, cookTime: 20 });
 		expect(readRecipeMeta(cache, DEFAULT_SETTINGS).times).toEqual({ prep: 10, cook: 20, total: 30 });
