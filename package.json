@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node esbuild.config.mjs",
+    "dev:vault": "bash scripts/dev-vault.sh",
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production && eslint src/",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
