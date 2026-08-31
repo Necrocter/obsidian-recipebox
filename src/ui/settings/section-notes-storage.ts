@@ -83,7 +83,7 @@ export function renderSectionNotesStorage(
 		.setDesc(t("set.notes.pantryPath.desc"));
 	pantrySetting.addText((c) => {
 		c.setValue(settings.pantryNotePath).onChange(async (v) => {
-			settings.pantryNotePath = v.trim() || "Pantry.md";
+			settings.pantryNotePath = v.trim() || localeDefault("pantryNotePath");
 			await save();
 		});
 		new NotePathSuggest(app, c.inputEl);
