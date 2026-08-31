@@ -6103,7 +6103,7 @@ input[type='search'].rb-gallery-search {
 }
 
 .rb-me-group.is-expanded .rb-me-chevron svg {
-  transform: rotate(90deg);
+  transform: rotate(180deg);
 }
 
 .rb-me-chips {
