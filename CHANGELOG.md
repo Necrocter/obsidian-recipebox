@@ -1,3 +1,18 @@
+## 0.1.12-es.11 -- Necrocter/obsidian-recipebox fork
+
+Tracks upstream 0.1.12. Fork iteration `es.11`.
+
+### Bug Fixes
+
+* **meal plan:** a scheduled recipe no longer disappears when you set its meal
+  type or drag it to another day. Those actions rewrite the note line as
+  remove-then-insert; since es.5 the vault watcher's reconciliation runs on the
+  leading edge of its debounce, so it fired in the gap, found the line missing
+  and dropped the entry from state. Plugin-initiated meal-plan-note writes now
+  open a short suppression window that the watcher honours.
+
+---
+
 ## 0.1.12-es.10 -- Necrocter/obsidian-recipebox fork
 
 Tracks upstream 0.1.12. Fork iteration `es.10`.
