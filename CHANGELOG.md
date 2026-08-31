@@ -1,3 +1,18 @@
+## 0.1.12-es.9 -- Necrocter/obsidian-recipebox fork
+
+Tracks upstream 0.1.12. Fork iteration `es.9`.
+
+### Bug Fixes
+
+* **meal plan:** blank lines no longer accumulate between the note title and the
+  first day heading on every add/remove. `removeMealPlanEntry` was re-emitting
+  the header section's blank raw lines on top of its own, and nothing collapsed
+  them. All meal-plan-note writes now go through a single line-joiner that
+  allows no leading blank lines and at most one blank line in a row; an
+  over-spaced note self-heals on the next write.
+
+---
+
 ## 0.1.12-es.8 -- Necrocter/obsidian-recipebox fork
 
 Tracks upstream 0.1.12. Fork iteration `es.8`.
